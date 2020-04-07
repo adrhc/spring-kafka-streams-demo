@@ -5,9 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class SpringKafkaStreamsApplication {
-
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		SpringApplication.run(SpringKafkaStreamsApplication.class, args);
+		Thread.sleep(Long.MAX_VALUE);
 	}
-
 }
