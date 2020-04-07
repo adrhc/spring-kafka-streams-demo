@@ -16,6 +16,7 @@ class SpringKafkaStreamsApplicationTests {
 
 	@Test
 	void contextLoads() {
+		// see header __TypeId__ with the value: ro.go.adrhc.springkafkastreams.persons.Person
 		template.send(personsTopic, "adr", new Person("adr", 34));
 	}
 }
