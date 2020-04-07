@@ -18,6 +18,10 @@ import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.support.serializer.JsonSerde;
 import ro.go.adrhc.springkafkastreams.persons.Person;
 
+import java.util.Map;
+
+import static org.springframework.kafka.support.serializer.JsonSerializer.TYPE_MAPPINGS;
+
 @Configuration
 @EnableKafka
 @EnableKafkaStreams
@@ -27,6 +31,8 @@ public class KafkaStreamsConfig {
 	private String personsTopic;
 	@Value("${topic.persons-upper}")
 	private String personsUpperTopic;
+	@Value("${spring.kafka.streams.properties.spring.json.type.mapping:NULL}")
+	private String typeMapping;
 
 	@Bean
 	public KStream<String, Person> kStream(StreamsBuilder streamsBuilder) {
@@ -53,8 +59,18 @@ public class KafkaStreamsConfig {
 					}
 				})
 				.map((k, v) -> new KeyValue<>(k.toUpperCase(), v))
-				.to(personsUpperTopic, Produced.with(Serdes.String(), new JsonSerde<>()));
+				.to(personsUpperTopic, Produced.with(Serdes.String(), serde()));
 		return stream;
+	}
+
+	@Bean
+	public JsonSerde serde() {
+		JsonSerde serde = new JsonSerde();
+		if (typeMapping.equals("NULL")) {
+			return serde;
+		}
+		serde.configure(Map.of(TYPE_MAPPINGS, typeMapping), false);
+		return serde;
 	}
 
 	@Bean
