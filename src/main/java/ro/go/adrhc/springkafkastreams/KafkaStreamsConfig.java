@@ -7,8 +7,6 @@ import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.Produced;
-import org.apache.kafka.streams.kstream.ValueTransformer;
-import org.apache.kafka.streams.processor.ProcessorContext;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +15,7 @@ import org.springframework.kafka.annotation.EnableKafkaStreams;
 import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.support.serializer.JsonSerde;
 import ro.go.adrhc.springkafkastreams.persons.Person;
+import ro.go.adrhc.springkafkastreams.transformers.debug.DebugValueTransformer;
 
 import java.util.Map;
 
@@ -39,25 +38,7 @@ public class KafkaStreamsConfig {
 		KStream<String, Person> stream = streamsBuilder.stream(personsTopic);
 		stream
 				.peek((k, v) -> log.debug("key: {}, value: {}", k, v))
-				.transformValues(() -> new ValueTransformer<Person, Person>() {
-					private ProcessorContext context;
-
-					@Override
-					public void init(ProcessorContext context) {
-						this.context = context;
-					}
-
-					@Override
-					public Person transform(Person value) {
-						this.context.headers().forEach(h -> log.debug(h.toString()));
-						return value;
-					}
-
-					@Override
-					public void close() {
-
-					}
-				})
+				.transformValues(DebugValueTransformer::new)
 				.map((k, v) -> new KeyValue<>(k.toUpperCase(), v))
 				.to(personsUpperTopic, Produced.with(Serdes.String(), serde()));
 		return stream;
@@ -65,7 +46,7 @@ public class KafkaStreamsConfig {
 
 	@Bean
 	public JsonSerde serde() {
-		JsonSerde serde = new JsonSerde();
+		JsonSerde<?> serde = new JsonSerde();
 		if (typeMapping.equals("NULL")) {
 			return serde;
 		}
