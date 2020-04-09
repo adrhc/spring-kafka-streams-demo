@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.persons;
+package ro.go.adrhc.springkafkastreams.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

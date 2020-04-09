@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.kafka.core.KafkaTemplate;
-import ro.go.adrhc.springkafkastreams.persons.Person;
+import ro.go.adrhc.springkafkastreams.model.Person;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -23,7 +23,7 @@ class AbstractSend {
 	void send() {
 		log.debug("profiles: {}", String.join(", ", env.getActiveProfiles()));
 		log.debug("personsTopic: {}", personsTopic);
-		// see header __TypeId__ with the value: ro.go.adrhc.springkafkastreams.persons.Person
+		// see header __TypeId__ with the value: ro.go.adrhc.springkafkastreams.model.Person
 		template.send(personsTopic, "adr", new Person("adr", ThreadLocalRandom.current().nextInt()));
 	}
 }
