@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SerdeHelper {
 	@Autowired
-	private JsonSerde jsonSerde;
+	private JsonSerde<?> jsonSerde;
 
 	public <V> Produced<String, V> stringKeyProduced(String name) {
 		return Produced.with(Serdes.String(), (Serde<V>) jsonSerde).withName(name);
