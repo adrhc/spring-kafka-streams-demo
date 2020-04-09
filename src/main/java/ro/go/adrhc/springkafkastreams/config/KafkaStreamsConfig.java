@@ -14,7 +14,7 @@ import ro.go.adrhc.springkafkastreams.helper.SerdeHelper;
 import ro.go.adrhc.springkafkastreams.model.Person;
 import ro.go.adrhc.springkafkastreams.transformers.debug.ValueTransformerWithKeyDebugger;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @EnableKafka
 @EnableKafkaStreams
 @EnableConfigurationProperties
@@ -46,4 +46,11 @@ public class KafkaStreamsConfig {
 				.to(properties.getStarsMultiplied(), serde.stringKeyProduced("starsMultipliedTopic"));
 		return stream;
 	}
+
+/*
+	@Bean
+	public StreamsBuilderFactoryBean defaultKafkaStreamsBuilder(KafkaStreamsConfiguration configuration) {
+		return new StreamsBuilderFactoryBean(configuration, new CleanupConfig(true, true));
+	}
+*/
 }

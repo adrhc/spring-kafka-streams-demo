@@ -1,29 +1,28 @@
-package ro.go.adrhc.springkafkastreams.send;
+package ro.go.adrhc.springkafkastreams.producers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.kafka.core.KafkaTemplate;
-import ro.go.adrhc.springkafkastreams.model.Person;
+import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 @Slf4j
-class AbstractSend {
+public class AbstractStarProducer {
 	@Autowired
-	private KafkaTemplate<String, Person> template;
-	@Value("${topic.persons}")
-	private String personsTopic;
+	private KafkaTemplate<String, Integer> template;
+	@Autowired
+	private TopicsProperties properties;
 	@Autowired
 	private Environment env;
 
 	@Test
 	void send() {
 		log.debug("profiles: {}", String.join(", ", env.getActiveProfiles()));
-		log.debug("personsTopic: {}", personsTopic);
+		log.debug("stars topic: {}", properties.getStars());
 		// see header __TypeId__ with the value: ro.go.adrhc.springkafkastreams.model.Person
-		template.send(personsTopic, "adr", new Person("adr", ThreadLocalRandom.current().nextInt()));
+		template.send(properties.getStars(), "adr", ThreadLocalRandom.current().nextInt(0, 100));
 	}
 }
