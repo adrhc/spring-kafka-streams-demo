@@ -43,7 +43,6 @@ public class KafkaStreamsConfig {
 		return stream;
 	}
 
-/*
 	@Bean
 	public KStream<String, Integer> starsToMultiplied(StreamsBuilder streamsBuilder) {
 		KStream<String, Integer> stream = serde.integerStream(properties.getStars(), streamsBuilder);
@@ -53,7 +52,6 @@ public class KafkaStreamsConfig {
 				.to(properties.getStarsMultiplied(), serde.producedWithInteger("to-starsMultipliedTopic"));
 		return stream;
 	}
-*/
 
 /*
 	@Bean
