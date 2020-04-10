@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.streams.KeyValue;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.Environment;
 import org.springframework.kafka.core.KafkaTemplate;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
@@ -14,7 +15,8 @@ import static ro.go.adrhc.springkafkastreams.util.AbstractTestDTOFactory.createP
 @Slf4j
 class AbstractPersonProducer {
 	@Autowired
-	private KafkaTemplate<String, Person> template;
+	@Qualifier("personTemplate")
+	private KafkaTemplate<String, Person> personTemplate;
 	@Autowired
 	private TopicsProperties properties;
 	@Autowired
@@ -25,7 +27,8 @@ class AbstractPersonProducer {
 		log.debug("profiles: {}", String.join(", ", env.getActiveProfiles()));
 		log.debug("persons topic: {}", properties.getPersons());
 		KeyValue<String, Person> pair = createPerson();
+		log.debug("pair: {}", pair);
 		// see header __TypeId__ with the value: ro.go.adrhc.springkafkastreams.model.Person
-		template.send(properties.getPersons(), pair.key, pair.value);
+		personTemplate.send(properties.getPersons(), pair.key, pair.value);
 	}
 }
