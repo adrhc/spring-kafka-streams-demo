@@ -15,28 +15,28 @@ public class TopicsProperties {
 		return persons;
 	}
 
-	public String getPersonsUpper() {
-		return personsUpper;
-	}
-
-	public String getStars() {
-		return stars;
-	}
-
-	public String getStarsMultiplied() {
-		return starsMultiplied;
-	}
-
 	public void setPersons(String persons) {
 		this.persons = persons;
+	}
+
+	public String getPersonsUpper() {
+		return personsUpper;
 	}
 
 	public void setPersonsUpper(String personsUpper) {
 		this.personsUpper = personsUpper;
 	}
 
+	public String getStars() {
+		return stars;
+	}
+
 	public void setStars(String stars) {
 		this.stars = stars;
+	}
+
+	public String getStarsMultiplied() {
+		return starsMultiplied;
 	}
 
 	public void setStarsMultiplied(String starsMultiplied) {

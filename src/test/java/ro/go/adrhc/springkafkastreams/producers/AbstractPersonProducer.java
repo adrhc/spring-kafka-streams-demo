@@ -1,6 +1,7 @@
 package ro.go.adrhc.springkafkastreams.producers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.streams.KeyValue;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -8,7 +9,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
 import ro.go.adrhc.springkafkastreams.model.Person;
 
-import java.util.concurrent.ThreadLocalRandom;
+import static ro.go.adrhc.springkafkastreams.util.AbstractTestDTOFactory.createPerson;
 
 @Slf4j
 class AbstractPersonProducer {
@@ -23,8 +24,8 @@ class AbstractPersonProducer {
 	void send() {
 		log.debug("profiles: {}", String.join(", ", env.getActiveProfiles()));
 		log.debug("persons topic: {}", properties.getPersons());
+		KeyValue<String, Person> pair = createPerson();
 		// see header __TypeId__ with the value: ro.go.adrhc.springkafkastreams.model.Person
-		template.send(properties.getPersons(), "adr",
-				new Person("adr", ThreadLocalRandom.current().nextInt(0, 100)));
+		template.send(properties.getPersons(), pair.key, pair.value);
 	}
 }
