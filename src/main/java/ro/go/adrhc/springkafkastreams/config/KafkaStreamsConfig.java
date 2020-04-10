@@ -42,7 +42,10 @@ public class KafkaStreamsConfig {
 		KStream<String, Person> stream = serde.kStreamOf(properties.getPersons(), streamsBuilder);
 		stream
 				.transformValues(new ValueTransformerWithKeyDebugger<>())
-				.map((k, v) -> new KeyValue<>(k.toUpperCase(), v))
+				.map((k, v) -> {
+					v.setName(v.getName().toUpperCase());
+					return new KeyValue<>(k, v);
+				})
 				.to(properties.getPersonsUpper(), serde.stringKeyProduced("to-personsUpperTopic"));
 		return stream;
 	}
@@ -66,8 +69,8 @@ public class KafkaStreamsConfig {
 				Joined.with(Serdes.String(), (Serde<Person>) jsonSerde, Serdes.Integer(),
 						joinName(properties.getPersonsUpper(), properties.getStarsMultiplied())));
 		stream
-				.peek(log::debug)
-				.to(properties.getStarsMultiplied());
+				.transformValues(new ValueTransformerWithKeyDebugger<>())
+				.to(properties.getPersonsStars(), serde.stringKeyProduced("to-personsStarsTopic"));
 		return stream;
 	}
 

@@ -30,4 +30,9 @@ public class TopicsConfig {
 	public NewTopic starsMultipliedTopic() {
 		return TopicBuilder.name(properties.getStarsMultiplied()).build();
 	}
+
+	@Bean
+	public NewTopic personsStars() {
+		return TopicBuilder.name(properties.getPersonsStars()).build();
+	}
 }

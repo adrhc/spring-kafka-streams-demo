@@ -19,7 +19,7 @@ public class ValueTransformerWithKeyDebugger<K, V> implements ValueTransformerWi
 
 			@Override
 			public V transform(K readOnlyKey, V value) {
-				log.debug("key: {}, value: {}", readOnlyKey, value);
+				log.debug("topic: {}, key: {}, value: {}", this.context.topic(), readOnlyKey, value);
 				this.context.headers().forEach(h -> log.debug(h.toString()));
 				return value;
 			}

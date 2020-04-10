@@ -1,29 +1,17 @@
 package ro.go.adrhc.springkafkastreams.model;
 
-public class PersonStars {
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+import java.io.Serializable;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+public class PersonStars implements Serializable {
 	private Person person;
 	private Integer stars;
-
-	public PersonStars() {}
-
-	public PersonStars(Person person, Integer stars) {
-		this.person = person;
-		this.stars = stars;
-	}
-
-	public Integer getStars() {
-		return stars;
-	}
-
-	public void setStars(Integer stars) {
-		this.stars = stars;
-	}
-
-	public Person getPerson() {
-		return person;
-	}
-
-	public void setPerson(Person person) {
-		this.person = person;
-	}
 }
