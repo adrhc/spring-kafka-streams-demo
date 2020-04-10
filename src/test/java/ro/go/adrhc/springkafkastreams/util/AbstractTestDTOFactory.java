@@ -7,11 +7,13 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class AbstractTestDTOFactory {
 	public static KeyValue<String, Integer> createStar() {
-		return KeyValue.pair("adr", ThreadLocalRandom.current().nextInt(0, 100));
+		int no = ThreadLocalRandom.current().nextInt(0, 100);
+		return KeyValue.pair("adr-" + no, no);
 	}
 
 	public static KeyValue<String, Person> createPerson() {
-		return KeyValue.pair("adr",
-				new Person("adr", ThreadLocalRandom.current().nextInt(0, 100)));
+		int age = ThreadLocalRandom.current().nextInt(0, 100);
+		String key = "adr-" + age;
+		return KeyValue.pair(key, new Person(key, age));
 	}
 }
