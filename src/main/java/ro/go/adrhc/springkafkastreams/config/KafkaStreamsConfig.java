@@ -27,7 +27,7 @@ public class KafkaStreamsConfig {
 	@Bean
 	public KStream<String, Transaction> transactions(StreamsBuilder streamsBuilder) {
 		KStream<String, Transaction> transactions = serde.transactionsStream(streamsBuilder);
-		transactions.foreach(log::debug);
+		transactions.foreach((k, v) -> log.debug("received (key = {}):\n{}", k, v));
 		return transactions;
 	}
 
