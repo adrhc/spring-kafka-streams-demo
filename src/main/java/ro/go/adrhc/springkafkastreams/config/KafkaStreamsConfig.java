@@ -39,8 +39,10 @@ public class KafkaStreamsConfig {
 	@Bean
 //	public KStream<Windowed<String>, Integer> transactions(StreamsBuilder streamsBuilder) {
 	public KStream<String, Transaction> transactions(StreamsBuilder streamsBuilder) {
+		// Hopping time windows
 //		TimeWindows period = TimeWindows.of(Duration.ofDays(30)).advanceBy(Duration.ofDays(1));
-		TimeWindows period = TimeWindows.of(Duration.ofDays(30));
+		// Tumbling time windows
+		TimeWindows period = TimeWindows.of(Duration.ofDays(30)).advanceBy(Duration.ofDays(30));;
 		Materialized<String, Integer, WindowStore<Bytes, byte[]>> aggStore =
 				Materialized.<String, Integer, WindowStore<Bytes, byte[]>>
 						as(properties.getTransactions() + "-store")
