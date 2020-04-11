@@ -13,6 +13,7 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.EnableKafkaStreams;
 import ro.go.adrhc.springkafkastreams.helper.StreamsHelper;
 import ro.go.adrhc.springkafkastreams.model.Transaction;
+import ro.go.adrhc.springkafkastreams.transformers.debug.ValueTransformerWithKeyDebugger;
 
 import java.time.Duration;
 
@@ -55,7 +56,7 @@ public class KafkaStreamsConfig {
 		KTable<Windowed<String>, Integer> aggTable = transactions
 //		KStream<Windowed<String>, Integer> transactions = serde.transactionsStream(streamsBuilder)
 //				.transform(new TransformerDebugger<>())
-//				.transformValues(new ValueTransformerWithKeyDebugger<>())
+				.transformValues(new ValueTransformerWithKeyDebugger<>())
 				.groupByKey(serde.transactionsByClientID())
 //				.windowedBy(TimeWindows.of(Duration.of(1, MONTHS)).advanceBy(Duration.ofMinutes(1))
 //				.windowedBy(TimeWindows.of(Duration.of(1, MONTHS)))
