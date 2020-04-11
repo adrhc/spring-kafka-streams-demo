@@ -15,5 +15,6 @@ public class TopicsProperties {
 	private String stars;
 	private String starsMultiplied;
 	private String personsStars;
+	private String transactions;
 	private boolean starsAsStream;
 }

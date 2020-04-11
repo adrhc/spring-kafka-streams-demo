@@ -14,6 +14,7 @@ import org.springframework.kafka.support.ProducerListener;
 import org.springframework.kafka.support.converter.RecordMessageConverter;
 import org.springframework.kafka.support.serializer.JsonSerde;
 import ro.go.adrhc.springkafkastreams.model.Person;
+import ro.go.adrhc.springkafkastreams.model.Transaction;
 
 import java.util.Map;
 
@@ -21,11 +22,22 @@ import java.util.Map;
 public class KafkaTemplateConfig {
 	private final KafkaProperties properties;
 	private final JsonSerde<Person> personSerde;
+	private final JsonSerde<Transaction> transactionSerde;
 
 	public KafkaTemplateConfig(KafkaProperties properties,
-			@Qualifier("personSerde") JsonSerde<Person> personSerde) {
+			@Qualifier("personSerde") JsonSerde<Person> personSerde,
+			@Qualifier("transactionSerde") JsonSerde<Transaction> transactionSerde) {
 		this.properties = properties;
 		this.personSerde = personSerde;
+		this.transactionSerde = transactionSerde;
+	}
+
+	@Bean
+	public KafkaTemplate<?, Transaction> transactionTemplate(
+			ObjectProvider<ProducerListener<Object, Transaction>> kafkaProducerListener,
+			ObjectProvider<RecordMessageConverter> messageConverter) {
+		return kafkaTemplateImpl("transactions",
+				transactionSerde.serializer(), kafkaProducerListener, messageConverter);
 	}
 
 	@Bean
@@ -37,7 +49,7 @@ public class KafkaTemplateConfig {
 	}
 
 	@Bean
-	public KafkaTemplate<?, ?> starTemplate(
+	public KafkaTemplate<?, Integer> starTemplate(
 			ObjectProvider<ProducerListener<Object, Integer>> kafkaProducerListener,
 			ObjectProvider<RecordMessageConverter> messageConverter) {
 		return kafkaTemplateImpl("stars",

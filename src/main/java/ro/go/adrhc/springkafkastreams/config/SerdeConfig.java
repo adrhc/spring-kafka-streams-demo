@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.support.serializer.JsonSerde;
 import ro.go.adrhc.springkafkastreams.model.Person;
 import ro.go.adrhc.springkafkastreams.model.PersonStars;
+import ro.go.adrhc.springkafkastreams.model.Transaction;
 
 import java.util.Map;
 
@@ -16,6 +17,11 @@ import static org.springframework.kafka.support.serializer.JsonSerializer.TYPE_M
 public class SerdeConfig {
 	@Value("${type-mapping:}")
 	private String typeMapping;
+
+	@Bean
+	public JsonSerde<Transaction> transactionSerde() {
+		return jsonSerdeImpl();
+	}
 
 	@Bean
 	public JsonSerde<Person> personSerde() {
