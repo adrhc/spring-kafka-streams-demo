@@ -6,8 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.TopicBuilder;
 
-import static org.apache.kafka.streams.StreamsConfig.DEFAULT_TIMESTAMP_EXTRACTOR_CLASS_CONFIG;
-
 @Configuration
 public class TopicsConfig {
 	@Autowired
@@ -52,9 +50,6 @@ public class TopicsConfig {
 
 	@Bean
 	public NewTopic transactionsTopic() {
-		TopicBuilder builder = TopicBuilder.name(properties.getTransactions());
-		builder.config(DEFAULT_TIMESTAMP_EXTRACTOR_CLASS_CONFIG,
-				"ro.go.adrhc.springkafkastreams.util.TransactionTimestampExtractor");
-		return builder.build();
+		return TopicBuilder.name(properties.getTransactions()).build();
 	}
 }

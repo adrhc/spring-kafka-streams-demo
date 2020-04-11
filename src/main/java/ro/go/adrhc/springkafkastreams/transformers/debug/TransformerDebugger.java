@@ -1,17 +1,18 @@
 package ro.go.adrhc.springkafkastreams.transformers.debug;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.streams.kstream.ValueTransformerWithKey;
-import org.apache.kafka.streams.kstream.ValueTransformerWithKeySupplier;
+import org.apache.kafka.streams.KeyValue;
+import org.apache.kafka.streams.kstream.Transformer;
+import org.apache.kafka.streams.kstream.TransformerSupplier;
 import org.apache.kafka.streams.processor.ProcessorContext;
 
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.localDateTimeOfLong;
 
 @Slf4j
-public class ValueTransformerWithKeyDebugger<K, V> implements ValueTransformerWithKeySupplier<K, V, V> {
-	public ValueTransformerWithKey<K, V, V> get() {
-		return new ValueTransformerWithKey<>() {
-
+public class TransformerDebugger<K, V> implements TransformerSupplier<K, V, KeyValue<K, V>> {
+	@Override
+	public Transformer<K, V, KeyValue<K, V>> get() {
+		return new Transformer<>() {
 			private ProcessorContext context;
 
 			@Override
@@ -20,15 +21,17 @@ public class ValueTransformerWithKeyDebugger<K, V> implements ValueTransformerWi
 			}
 
 			@Override
-			public V transform(K readOnlyKey, V value) {
+			public KeyValue<K, V> transform(K key, V value) {
 				log.debug("\n\ttopic: {}\n\ttimestamp: {}\n\tkey: {}\n\tvalue: {}",
-						this.context.topic(), localDateTimeOfLong(this.context.timestamp()), readOnlyKey, value);
+						this.context.topic(), localDateTimeOfLong(this.context.timestamp()), key, value);
 				this.context.headers().forEach(h -> log.debug(h.toString()));
-				return value;
+				return KeyValue.pair(key, value);
 			}
 
 			@Override
-			public void close() {}
+			public void close() {
+
+			}
 		};
 	}
 }

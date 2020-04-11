@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.util;
+package ro.go.adrhc.springkafkastreams.util.streams;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.kafka.clients.consumer.ConsumerRecord;

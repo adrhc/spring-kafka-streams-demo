@@ -15,9 +15,10 @@ import static ro.go.adrhc.springkafkastreams.util.DateUtils.localDateTimeToLong;
 @NoArgsConstructor
 @ToString
 public class Transaction implements Serializable {
+	private LocalDateTime time;
 	private String merchantId;
 	private String clientId;
-	private LocalDateTime time;
+	private int amount;
 
 	public long ofEpochSecond() {
 		return localDateTimeToLong(time);

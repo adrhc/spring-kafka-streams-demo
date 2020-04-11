@@ -34,9 +34,10 @@ public class AbstractTestDTOFactory {
 				randomInt(1, 12), 1)
 				.atTime(LocalTime.now()).truncatedTo(SECONDS)
 				.plusDays(randomInt(0, 30));
-		return new Transaction(
+		return new Transaction(ldt,
 				"merchant-" + randomInt(0, 10),
-				"client-" + randomInt(0, 5), ldt);
+				"client-" + randomInt(0, 5),
+				randomInt(1, 100));
 	}
 
 	private static int randomInt(int origin, int includingBound) {
