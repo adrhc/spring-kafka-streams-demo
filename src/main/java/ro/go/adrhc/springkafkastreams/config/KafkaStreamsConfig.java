@@ -17,7 +17,7 @@ import ro.go.adrhc.springkafkastreams.transformers.debug.ValueTransformerWithKey
 
 import java.time.Duration;
 
-import static ro.go.adrhc.springkafkastreams.util.DateUtils.localDateTimeOfLong;
+import static ro.go.adrhc.springkafkastreams.util.DateUtils.localDateTimeOfMilliseconds;
 
 /**
  * Join persons-stream with stars-table into personsStarsTopic.
@@ -42,7 +42,8 @@ public class KafkaStreamsConfig {
 		// Hopping time windows
 //		TimeWindows period = TimeWindows.of(Duration.ofDays(30)).advanceBy(Duration.ofDays(1));
 		// Tumbling time windows
-		TimeWindows period = TimeWindows.of(Duration.ofDays(30)).advanceBy(Duration.ofDays(30));;
+		TimeWindows period = TimeWindows.of(Duration.ofDays(30)).advanceBy(Duration.ofDays(30));
+		;
 		Materialized<String, Integer, WindowStore<Bytes, byte[]>> aggStore =
 				Materialized.<String, Integer, WindowStore<Bytes, byte[]>>
 						as(properties.getTransactions() + "-store")
@@ -53,7 +54,7 @@ public class KafkaStreamsConfig {
 		KTable<Windowed<String>, Integer> aggTable = transactions
 //		KStream<Windowed<String>, Integer> transactions = serde.transactionsStream(streamsBuilder)
 //				.transform(new TransformerDebugger<>())
-				.transformValues(new ValueTransformerWithKeyDebugger<>())
+//				.transformValues(new ValueTransformerWithKeyDebugger<>())
 				.groupByKey(serde.transactionsByClientID())
 //				.windowedBy(TimeWindows.of(Duration.of(1, MONTHS)).advanceBy(Duration.ofMinutes(1))
 //				.windowedBy(TimeWindows.of(Duration.of(1, MONTHS)))
@@ -63,8 +64,8 @@ public class KafkaStreamsConfig {
 		aggTable.toStream()
 				.foreach((windowedClientId, amount) -> log.debug("\nkey = {}, begin = {}, end: {}, amount = {}",
 						windowedClientId.key(),
-						localDateTimeOfLong(windowedClientId.window().start()),
-						localDateTimeOfLong(windowedClientId.window().end()), amount));
+						localDateTimeOfMilliseconds(windowedClientId.window().start()),
+						localDateTimeOfMilliseconds(windowedClientId.window().end()), amount));
 
 		return transactions;
 	}

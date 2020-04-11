@@ -17,7 +17,7 @@ class DateUtilsTest {
 		log.debug("initial long time: {}", time);
 		String initFormatted = localDateTimeToString(initLdt);
 		log.debug("initial formatted time: {}", initFormatted);
-		LocalDateTime ldt = localDateTimeOfLong(time);
+		LocalDateTime ldt = localDateTimeOfSeconds(time);
 		assertThat(ldt).isEqualToIgnoringNanos(initLdt);
 		String formatted = localDateTimeToString(ldt);
 		log.debug("formatted time: {}", formatted);
