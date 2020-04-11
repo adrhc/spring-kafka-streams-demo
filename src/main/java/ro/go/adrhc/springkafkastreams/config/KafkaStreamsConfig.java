@@ -60,7 +60,8 @@ public class KafkaStreamsConfig {
 
 		aggTable.toStream()
 				.foreach((windowedClientId, amount) -> log.debug("\nkey = {}, begin = {}, end: {}, amount = {}",
-						windowedClientId.key(), localDateTimeOfLong(windowedClientId.window().start()),
+						windowedClientId.key(),
+						localDateTimeOfLong(windowedClientId.window().start()),
 						localDateTimeOfLong(windowedClientId.window().end()), amount));
 
 		return transactions;
