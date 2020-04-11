@@ -42,9 +42,9 @@ public class KafkaStreamsConfig {
 		// Hopping time windows
 //		TimeWindows period = TimeWindows.of(Duration.ofDays(30)).advanceBy(Duration.ofDays(1));
 		// Tumbling time windows
-//		TimeWindows period = TimeWindows.of(Duration.ofDays(30));
+		TimeWindows period = TimeWindows.of(Duration.ofDays(30));
 		// Tumbling time windows
-		TimeWindows period = TimeWindows.of(Duration.ofMinutes(1));
+//		TimeWindows period = TimeWindows.of(Duration.ofMinutes(1));
 
 		Materialized<String, Integer, WindowStore<Bytes, byte[]>> aggStore =
 				Materialized.<String, Integer, WindowStore<Bytes, byte[]>>
@@ -56,7 +56,7 @@ public class KafkaStreamsConfig {
 		KTable<Windowed<String>, Integer> aggTable = transactions
 //		KStream<Windowed<String>, Integer> transactions = serde.transactionsStream(streamsBuilder)
 //				.transform(new TransformerDebugger<>())
-				.transformValues(new ValueTransformerWithKeyDebugger<>())
+//				.transformValues(new ValueTransformerWithKeyDebugger<>())
 				.groupByKey(serde.transactionsByClientID())
 //				.windowedBy(TimeWindows.of(Duration.of(1, MONTHS)).advanceBy(Duration.ofMinutes(1))
 //				.windowedBy(TimeWindows.of(Duration.of(1, MONTHS)))
