@@ -11,6 +11,7 @@ import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
 import ro.go.adrhc.springkafkastreams.model.Person;
 
 import static ro.go.adrhc.springkafkastreams.util.AbstractTestDTOFactory.createPerson;
+import static ro.go.adrhc.springkafkastreams.util.AbstractTestDTOFactory.createStar;
 
 @Slf4j
 class AbstractPersonAndStarProducer {
@@ -32,8 +33,9 @@ class AbstractPersonAndStarProducer {
 		log.debug("stars topic: {}", properties.getStars());
 		KeyValue<String, Person> personPair = createPerson();
 		log.debug("personPair: {}", personPair);
-		log.debug("star key = {}, value = {}", personPair.key, personPair.value.getAge());
-		starTemplate.send(properties.getStars(), personPair.key, personPair.value.getAge());
+		KeyValue<String, Integer> starPair = createStar(personPair.key);
+		log.debug("starPair: {}", starPair);
+		starTemplate.send(properties.getStars(), starPair.key, starPair.value);
 		personTemplate.send(properties.getPersons(), personPair.key, personPair.value);
 	}
 }
