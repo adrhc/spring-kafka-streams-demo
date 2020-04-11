@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.kafka.annotation.EnableKafka;
+import org.springframework.kafka.annotation.EnableKafkaStreams;
 import ro.go.adrhc.springkafkastreams.helper.SerdeHelper;
 import ro.go.adrhc.springkafkastreams.model.Transaction;
 
@@ -14,6 +16,8 @@ import ro.go.adrhc.springkafkastreams.model.Transaction;
  * Join persons-stream with stars-table into personsStarsTopic.
  */
 @Configuration
+@EnableKafka
+@EnableKafkaStreams
 @Profile("!test")
 @Slf4j
 public class KafkaStreamsConfig {

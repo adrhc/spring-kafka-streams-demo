@@ -14,17 +14,17 @@ import ro.go.adrhc.springkafkastreams.model.Transaction;
 
 @Component
 public class SerdeHelper {
-	@Autowired
-	private TopicsProperties properties;
-	@Autowired
-	@Qualifier("personSerde")
-	private JsonSerde<Person> personSerde;
-	@Autowired
-	@Qualifier("transactionSerde")
-	private JsonSerde<Transaction> transactionSerde;
-	@Autowired
-	@Qualifier("personStarsSerde")
-	private JsonSerde<PersonStars> personStarsSerde;
+	private final TopicsProperties properties;
+	private final JsonSerde<Person> personSerde;
+	private final JsonSerde<Transaction> transactionSerde;
+	private final JsonSerde<PersonStars> personStarsSerde;
+
+	public SerdeHelper(TopicsProperties properties, @Qualifier("personSerde") JsonSerde<Person> personSerde, @Qualifier("transactionSerde") JsonSerde<Transaction> transactionSerde, @Qualifier("personStarsSerde") JsonSerde<PersonStars> personStarsSerde) {
+		this.properties = properties;
+		this.personSerde = personSerde;
+		this.transactionSerde = transactionSerde;
+		this.personStarsSerde = personStarsSerde;
+	}
 
 	public Produced<String, PersonStars> producedWithPersonStars(String name) {
 		return Produced.with(Serdes.String(), personStarsSerde).withName(name);
