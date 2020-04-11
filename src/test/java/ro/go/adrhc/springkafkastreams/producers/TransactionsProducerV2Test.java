@@ -1,7 +1,7 @@
 package ro.go.adrhc.springkafkastreams.producers;
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.RepeatedTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,12 +25,12 @@ public class TransactionsProducerV2Test {
 	@Autowired
 	private Environment env;
 
-	@Test
+	@RepeatedTest(100)
 	void send() {
 		log.debug("profiles: {}", String.join(", ", env.getActiveProfiles()));
-		log.debug("stars topic: {}", properties.getStars());
+		log.debug("transactions topic: {}", properties.getTransactions());
 		Transaction transaction = randomTransaction();
-		log.debug("transaction: {}", transaction);
-		transactionTemplate.send(properties.getStars(), transaction.getClientId(), transaction);
+		log.debug("transaction:\n{}", transaction);
+		transactionTemplate.send(properties.getTransactions(), transaction.getClientId(), transaction);
 	}
 }
