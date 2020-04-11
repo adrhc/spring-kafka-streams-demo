@@ -30,12 +30,12 @@ public class AbstractTestDTOFactory {
 	}
 
 	public static Transaction randomTransaction() {
-		LocalDateTime ldt = LocalDate.of(randomInt(2019, 2020),
-				randomInt(1, 12), 1)
-				.atTime(LocalTime.now()).truncatedTo(SECONDS)
-				.plusDays(randomInt(0, 30));
+		LocalDateTime ldt = LocalDate.of(randomInt(2020, 2020),
+				randomInt(1, 2), 1)
+				.plusDays(randomInt(0, 30))
+				.atTime(LocalTime.now()).truncatedTo(SECONDS);
 		return new Transaction(ldt,
-				"merchant-" + randomInt(1, 5),
+				"merchant-" + randomInt(1, 2),
 				"client-" + randomInt(1, 2),
 				randomInt(1, 100));
 	}
