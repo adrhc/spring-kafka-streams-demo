@@ -7,18 +7,19 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class AbstractTestDTOFactory {
 	public static KeyValue<String, Integer> createStar() {
-		int no = ThreadLocalRandom.current().nextInt(0, 10);
-		return KeyValue.pair("adr-" + no, no);
+		int key = ThreadLocalRandom.current().nextInt(0, 10);
+		return createStar("adr-" + key);
 	}
 
 	public static KeyValue<String, Integer> createStar(String key) {
-		int no = ThreadLocalRandom.current().nextInt(0, 10);
-		return KeyValue.pair(key, no);
+		int value = ThreadLocalRandom.current().nextInt(0, 100);
+		return KeyValue.pair(key, value);
 	}
 
 	public static KeyValue<String, Person> createPerson() {
-		int age = ThreadLocalRandom.current().nextInt(0, 10);
-		String key = "adr-" + age;
+		int no = ThreadLocalRandom.current().nextInt(0, 10);
+		int age = ThreadLocalRandom.current().nextInt(0, 100);
+		String key = "adr-" + no;
 		return KeyValue.pair(key, new Person(key, age));
 	}
 }
