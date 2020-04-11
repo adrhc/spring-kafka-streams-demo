@@ -1,15 +1,18 @@
 package ro.go.adrhc.springkafkastreams.util;
 
+import org.apache.commons.lang3.RandomUtils;
 import org.apache.kafka.streams.KeyValue;
 import ro.go.adrhc.springkafkastreams.model.Person;
 import ro.go.adrhc.springkafkastreams.model.Transaction;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.ZoneOffset;
 import java.util.concurrent.ThreadLocalRandom;
 
+import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.SECONDS;
+import static ro.go.adrhc.springkafkastreams.config.KafkaStreamsConfig.DELAY;
 
 public class AbstractTestDTOFactory {
 	public static KeyValue<String, Integer> createStar() {
@@ -30,17 +33,15 @@ public class AbstractTestDTOFactory {
 	}
 
 	public static Transaction randomTransaction() {
-		LocalDateTime ldt = LocalDate.of(randomInt(2020, 2020),
-				randomInt(1, 2), 1)
-				.plusDays(randomInt(0, 30))
-				.atTime(LocalTime.now()).truncatedTo(SECONDS);
+		Instant randomInstant = Instant.now().minus(randomInt(1, DELAY), DAYS);
+		LocalDateTime ldt = LocalDateTime.ofInstant(randomInstant, ZoneOffset.UTC).truncatedTo(SECONDS);
 		return new Transaction(ldt,
-				"merchant-" + randomInt(1, 2),
-				"client-" + randomInt(1, 2),
+				"merchant-" + randomInt(1, 10),
+				"client-" + randomInt(1, 1),
 				randomInt(1, 100));
 	}
 
 	private static int randomInt(int origin, int includingBound) {
-		return ThreadLocalRandom.current().nextInt(origin, includingBound + 1);
+		return RandomUtils.nextInt(origin, includingBound + 1);
 	}
 }

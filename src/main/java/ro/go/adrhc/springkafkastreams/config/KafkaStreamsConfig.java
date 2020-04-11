@@ -13,14 +13,15 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.EnableKafkaStreams;
 import ro.go.adrhc.springkafkastreams.helper.StreamsHelper;
 import ro.go.adrhc.springkafkastreams.model.Transaction;
-import ro.go.adrhc.springkafkastreams.transformers.debug.ValueTransformerWithKeyDebugger;
 
 import java.time.Duration;
 
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.localDateTimeOf;
 
 /**
- * Join persons-stream with stars-table into personsStarsTopic.
+ * see https://issues.apache.org/jira/browse/KAFKA-6817
+ * see https://stackoverflow.com/questions/49872827/unknownproduceridexception-in-kafka-streams-when-enabling-exactly-once
+ * transactional.id.expiration.ms set by default to 7 days
  */
 @Configuration
 @EnableKafka
@@ -28,6 +29,7 @@ import static ro.go.adrhc.springkafkastreams.util.DateUtils.localDateTimeOf;
 @Profile("!test")
 @Slf4j
 public class KafkaStreamsConfig {
+	public static final int DELAY = 5;
 	private final TopicsProperties properties;
 	private final StreamsHelper serde;
 
@@ -42,14 +44,17 @@ public class KafkaStreamsConfig {
 		// Hopping time windows
 //		TimeWindows period = TimeWindows.of(Duration.ofDays(30)).advanceBy(Duration.ofDays(1));
 		// Tumbling time windows
-		TimeWindows period = TimeWindows.of(Duration.ofDays(30));
+//		TimeWindows period = TimeWindows.of(Duration.ofDays(30));
+		TimeWindows period = TimeWindows.of(Duration.ofDays(1)).grace(Duration.ofDays(DELAY));
 		// Tumbling time windows
 //		TimeWindows period = TimeWindows.of(Duration.ofMinutes(1));
 
 		Materialized<String, Integer, WindowStore<Bytes, byte[]>> aggStore =
 				Materialized.<String, Integer, WindowStore<Bytes, byte[]>>
 						as(properties.getTransactions() + "-store")
-						.withValueSerde(Serdes.Integer());
+						.withValueSerde(Serdes.Integer())
+						.withRetention(Duration.ofDays(DELAY));
+//						.withRetention(Duration.ofDays(12 * 30));
 
 		KStream<String, Transaction> transactions = serde.transactionsStream(streamsBuilder);
 
