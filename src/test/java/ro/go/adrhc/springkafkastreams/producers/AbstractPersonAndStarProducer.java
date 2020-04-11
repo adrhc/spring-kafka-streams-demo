@@ -33,7 +33,7 @@ class AbstractPersonAndStarProducer {
 		KeyValue<String, Person> personPair = createPerson();
 		log.debug("personPair: {}", personPair);
 		log.debug("star key = {}, value = {}", personPair.key, personPair.value.getAge());
-		personTemplate.send(properties.getPersons(), personPair.key, personPair.value);
 		starTemplate.send(properties.getStars(), personPair.key, personPair.value.getAge());
+		personTemplate.send(properties.getPersons(), personPair.key, personPair.value);
 	}
 }

@@ -23,16 +23,28 @@ public class TopicsConfig {
 
 	@Bean
 	public NewTopic starsTopic() {
-		return TopicBuilder.name(properties.getStars()).build();
+		TopicBuilder builder = TopicBuilder.name(properties.getStars());
+		if (!properties.isStarsAsStream()) {
+			builder.compact();
+		}
+		return builder.build();
 	}
 
 	@Bean
 	public NewTopic starsMultipliedTopic() {
-		return TopicBuilder.name(properties.getStarsMultiplied()).build();
+		TopicBuilder builder = TopicBuilder.name(properties.getStarsMultiplied());
+		if (!properties.isStarsAsStream()) {
+			builder.compact();
+		}
+		return builder.build();
 	}
 
 	@Bean
 	public NewTopic personsStars() {
-		return TopicBuilder.name(properties.getPersonsStars()).build();
+		TopicBuilder builder = TopicBuilder.name(properties.getPersonsStars());
+		if (!properties.isStarsAsStream()) {
+			builder.compact();
+		}
+		return builder.build();
 	}
 }

@@ -2,9 +2,7 @@ package ro.go.adrhc.springkafkastreams.helper;
 
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
-import org.apache.kafka.streams.kstream.Consumed;
-import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.Produced;
+import org.apache.kafka.streams.kstream.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.kafka.support.serializer.JsonSerde;
@@ -46,6 +44,11 @@ public class SerdeHelper {
 	}
 
 	public KStream<String, Integer> integerStream(String topic, StreamsBuilder streamsBuilder) {
-		return streamsBuilder.stream(topic, consumedWithInteger("stream-" + topic));
+		return streamsBuilder.stream(topic, consumedWithInteger("table-" + topic));
+	}
+
+	public KTable<String, Integer> integerTable(String topic, StreamsBuilder streamsBuilder) {
+		return streamsBuilder.table(topic,
+				consumedWithInteger("table-" + topic), Materialized.as("store-" + topic));
 	}
 }
