@@ -31,8 +31,9 @@ public class AbstractTestDTOFactory {
 
 	public static Transaction randomTransaction() {
 		LocalDateTime ldt = LocalDate.of(randomInt(2019, 2020),
-				randomInt(1, 12), randomInt(1, 31))
-				.atTime(LocalTime.now()).truncatedTo(SECONDS);
+				randomInt(1, 12), 1)
+				.atTime(LocalTime.now()).truncatedTo(SECONDS)
+				.plusDays(randomInt(0, 30));
 		return new Transaction(
 				"merchant-" + randomInt(0, 10),
 				"client-" + randomInt(0, 5), ldt);
