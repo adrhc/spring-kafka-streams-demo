@@ -64,7 +64,7 @@ public class KafkaStreamsConfig {
 				.aggregate(() -> 0, (k, v, sum) -> sum + v.getAmount(), aggStore);
 
 		aggTable.toStream()
-				.foreach((windowedClientId, amount) -> log.debug("\nkey = {}, begin = {}, end: {}, amount = {}",
+				.foreach((windowedClientId, amount) -> log.debug("\n\tkey = {}, begin = {}, end: {}, amount = {}",
 						windowedClientId.key(),
 						localDateTimeOf(windowedClientId.window().start()),
 						localDateTimeOf(windowedClientId.window().end()), amount));
