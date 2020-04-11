@@ -20,9 +20,6 @@ import ro.go.adrhc.springkafkastreams.transformers.debug.ValueTransformerWithKey
 import static ro.go.adrhc.springkafkastreams.util.KStreamsUtils.joinName;
 
 /**
- * Requires clean topics!
- * Don't use starsasstream profile!
- * <p>
  * Join persons-stream with stars-table into personsStarsTopic.
  */
 @Configuration
