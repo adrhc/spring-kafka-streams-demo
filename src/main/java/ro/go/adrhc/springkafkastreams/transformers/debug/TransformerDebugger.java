@@ -6,7 +6,7 @@ import org.apache.kafka.streams.kstream.Transformer;
 import org.apache.kafka.streams.kstream.TransformerSupplier;
 import org.apache.kafka.streams.processor.ProcessorContext;
 
-import static ro.go.adrhc.springkafkastreams.util.DateUtils.localDateTimeOfSeconds;
+import static ro.go.adrhc.springkafkastreams.util.DateUtils.localDateTimeOf;
 
 @Slf4j
 public class TransformerDebugger<K, V> implements TransformerSupplier<K, V, KeyValue<K, V>> {
@@ -23,7 +23,7 @@ public class TransformerDebugger<K, V> implements TransformerSupplier<K, V, KeyV
 			@Override
 			public KeyValue<K, V> transform(K key, V value) {
 				log.debug("\n\ttopic: {}\n\ttimestamp: {}\n\tkey: {}\n\tvalue: {}",
-						this.context.topic(), localDateTimeOfSeconds(this.context.timestamp()), key, value);
+						this.context.topic(), localDateTimeOf(this.context.timestamp()), key, value);
 				this.context.headers().forEach(h -> log.debug(h.toString()));
 				return KeyValue.pair(key, value);
 			}

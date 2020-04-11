@@ -9,8 +9,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.concurrent.ThreadLocalRandom;
 
-import static java.time.temporal.ChronoUnit.SECONDS;
-
 public class AbstractTestDTOFactory {
 	public static KeyValue<String, Integer> createStar() {
 		int key = ThreadLocalRandom.current().nextInt(0, 10);
@@ -32,8 +30,7 @@ public class AbstractTestDTOFactory {
 	public static Transaction randomTransaction() {
 		LocalDateTime ldt = LocalDate.of(randomInt(2019, 2020),
 				randomInt(1, 12), 1)
-				.atTime(LocalTime.now()).truncatedTo(SECONDS)
-				.plusDays(randomInt(0, 30));
+				.atTime(LocalTime.now()).plusDays(randomInt(0, 30));
 		return new Transaction(ldt,
 				"merchant-" + randomInt(1, 5),
 				"client-" + randomInt(1, 2),

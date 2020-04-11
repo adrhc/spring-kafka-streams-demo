@@ -8,7 +8,7 @@ import lombok.ToString;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import static ro.go.adrhc.springkafkastreams.util.DateUtils.localDateTimeToLong;
+import static ro.go.adrhc.springkafkastreams.util.DateUtils.millisecondsOf;
 
 @Data
 @AllArgsConstructor
@@ -20,7 +20,7 @@ public class Transaction implements Serializable {
 	private String clientId;
 	private int amount;
 
-	public long ofEpochSecond() {
-		return localDateTimeToLong(time);
+	public long toEpochMilli() {
+		return millisecondsOf(time);
 	}
 }

@@ -13,13 +13,13 @@ class DateUtilsTest {
 	@Test
 	void dateUtilsTest() {
 		LocalDateTime initLdt = LocalDateTime.now();
-		long time = localDateTimeToLong(initLdt);
-		log.debug("initial long time: {}", time);
-		String initFormatted = localDateTimeToString(initLdt);
+		long milliseconds = millisecondsOf(initLdt);
+		log.debug("initial long time: {}", milliseconds);
+		String initFormatted = format(initLdt);
 		log.debug("initial formatted time: {}", initFormatted);
-		LocalDateTime ldt = localDateTimeOfSeconds(time);
+		LocalDateTime ldt = localDateTimeOf(milliseconds);
 		assertThat(ldt).isEqualToIgnoringNanos(initLdt);
-		String formatted = localDateTimeToString(ldt);
+		String formatted = format(ldt);
 		log.debug("formatted time: {}", formatted);
 		assertThat(formatted).isEqualTo(initFormatted);
 	}

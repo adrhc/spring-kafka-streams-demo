@@ -10,19 +10,15 @@ public class DateUtils {
 	private static DateTimeFormatter formatter =
 			DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM);
 
-	public static long localDateTimeToLong(LocalDateTime ldt) {
-		return ldt.toEpochSecond(ZoneOffset.UTC);
+	public static long millisecondsOf(LocalDateTime ldt) {
+		return ldt.toInstant(ZoneOffset.UTC).toEpochMilli();
 	}
 
-	public static LocalDateTime localDateTimeOfMilliseconds(long milliseconds) {
+	public static LocalDateTime localDateTimeOf(long milliseconds) {
 		return LocalDateTime.ofInstant(Instant.ofEpochMilli(milliseconds), ZoneOffset.UTC);
 	}
 
-	public static LocalDateTime localDateTimeOfSeconds(long seconds) {
-		return LocalDateTime.ofEpochSecond(seconds, 0, ZoneOffset.UTC);
-	}
-
-	public static String localDateTimeToString(LocalDateTime ldt) {
+	public static String format(LocalDateTime ldt) {
 		return formatter.format(ldt);
 	}
 }

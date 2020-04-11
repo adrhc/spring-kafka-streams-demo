@@ -12,7 +12,7 @@ import java.util.function.Function;
 public class TransactionTimestampExtractor implements TimestampExtractor {
 	private static final Map<Class<?>, Function<Object, Long>> map = Map.of(
 			JsonNode.class, value -> ((JsonNode) value).get("timestamp").longValue(),
-			Transaction.class, value -> ((Transaction) value).ofEpochSecond());
+			Transaction.class, value -> ((Transaction) value).toEpochMilli());
 
 	@Override
 	public long extract(ConsumerRecord<Object, Object> record, long partitionTime) {

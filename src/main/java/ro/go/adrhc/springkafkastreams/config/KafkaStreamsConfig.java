@@ -13,11 +13,10 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.EnableKafkaStreams;
 import ro.go.adrhc.springkafkastreams.helper.StreamsHelper;
 import ro.go.adrhc.springkafkastreams.model.Transaction;
-import ro.go.adrhc.springkafkastreams.transformers.debug.ValueTransformerWithKeyDebugger;
 
 import java.time.Duration;
 
-import static ro.go.adrhc.springkafkastreams.util.DateUtils.localDateTimeOfMilliseconds;
+import static ro.go.adrhc.springkafkastreams.util.DateUtils.localDateTimeOf;
 
 /**
  * Join persons-stream with stars-table into personsStarsTopic.
@@ -42,8 +41,10 @@ public class KafkaStreamsConfig {
 		// Hopping time windows
 //		TimeWindows period = TimeWindows.of(Duration.ofDays(30)).advanceBy(Duration.ofDays(1));
 		// Tumbling time windows
-		TimeWindows period = TimeWindows.of(Duration.ofDays(30)).advanceBy(Duration.ofDays(30));
-		;
+//		TimeWindows period = TimeWindows.of(Duration.ofDays(30));
+		// Tumbling time windows
+		TimeWindows period = TimeWindows.of(Duration.ofMinutes(1));
+
 		Materialized<String, Integer, WindowStore<Bytes, byte[]>> aggStore =
 				Materialized.<String, Integer, WindowStore<Bytes, byte[]>>
 						as(properties.getTransactions() + "-store")
@@ -64,8 +65,8 @@ public class KafkaStreamsConfig {
 		aggTable.toStream()
 				.foreach((windowedClientId, amount) -> log.debug("\nkey = {}, begin = {}, end: {}, amount = {}",
 						windowedClientId.key(),
-						localDateTimeOfMilliseconds(windowedClientId.window().start()),
-						localDateTimeOfMilliseconds(windowedClientId.window().end()), amount));
+						localDateTimeOf(windowedClientId.window().start()),
+						localDateTimeOf(windowedClientId.window().end()), amount));
 
 		return transactions;
 	}
