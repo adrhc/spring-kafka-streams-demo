@@ -51,7 +51,7 @@ public class KafkaStreamsConfig {
 
 		Materialized<String, Integer, WindowStore<Bytes, byte[]>> aggStore =
 				Materialized.<String, Integer, WindowStore<Bytes, byte[]>>
-						as(properties.getTransactions() + "-store")
+						as(properties.getTransactions()) // changelog
 						.withValueSerde(Serdes.Integer())
 						.withRetention(Duration.ofDays(DELAY + 1));
 //						.withRetention(Duration.ofDays(12 * 30));

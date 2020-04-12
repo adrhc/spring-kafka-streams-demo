@@ -67,7 +67,7 @@ public class StreamsHelper {
 	public KTable<String, Integer> starsTable(StreamsBuilder streamsBuilder) {
 		return streamsBuilder.table(properties.getStars(),
 				consumedWithInteger(properties.getStars() + "-table"),
-				Materialized.as(properties.getStars() + "-store"));
+				Materialized.as(properties.getStars())); // changelog
 	}
 
 	public Grouped<String, Transaction> transactionsByClientID() {
