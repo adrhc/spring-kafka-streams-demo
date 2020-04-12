@@ -40,7 +40,11 @@ public class AbstractTestDTOFactory {
 	}
 
 	public static ClientProfile randomClientProfile() {
-		return new ClientProfile(CLIENT_ID_SUPP.get(), 300);
+		return new ClientProfile(CLIENT_ID_SUPP.get(), 500);
+	}
+
+	public static ClientProfile randomClientProfile(int dailyMaxAmount) {
+		return new ClientProfile(CLIENT_ID_SUPP.get(), dailyMaxAmount);
 	}
 
 	public static Transaction randomTransaction() {

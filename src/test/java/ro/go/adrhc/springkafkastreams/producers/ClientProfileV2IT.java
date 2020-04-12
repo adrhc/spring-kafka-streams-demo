@@ -29,7 +29,7 @@ public class ClientProfileV2IT {
 	void upsert() {
 		log.debug("profiles: {}", String.join(", ", env.getActiveProfiles()));
 		log.debug("ClientProfile topic: {}", properties.getClientProfile());
-		ClientProfile clientProfile = randomClientProfile();
+		ClientProfile clientProfile = randomClientProfile(500);
 		log.debug("clientProfile:\n\t{}", clientProfile);
 		transactionTemplate.send(properties.getClientProfile(), clientProfile.getClientId(), clientProfile);
 	}

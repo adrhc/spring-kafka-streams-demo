@@ -8,45 +8,9 @@ import org.springframework.kafka.config.TopicBuilder;
 
 @Configuration
 public class TopicsConfig {
-	@Autowired
-	private TopicsProperties properties;
+	private final TopicsProperties properties;
 
-	@Bean
-	public NewTopic personsTopic() {
-		return TopicBuilder.name(properties.getPersons()).build();
-	}
-
-	@Bean
-	public NewTopic personsUpperTopic() {
-		return TopicBuilder.name(properties.getPersonsUpper()).build();
-	}
-
-	@Bean
-	public NewTopic starsTopic() {
-		TopicBuilder builder = TopicBuilder.name(properties.getStars());
-		if (!properties.isStarsAsStream()) {
-			builder.compact();
-		}
-		return builder.build();
-	}
-
-	@Bean
-	public NewTopic starsMultipliedTopic() {
-		TopicBuilder builder = TopicBuilder.name(properties.getStarsMultiplied());
-		if (!properties.isStarsAsStream()) {
-			builder.compact();
-		}
-		return builder.build();
-	}
-
-	@Bean
-	public NewTopic personsStarsTopic() {
-		TopicBuilder builder = TopicBuilder.name(properties.getPersonsStars());
-		if (!properties.isStarsAsStream()) {
-			builder.compact();
-		}
-		return builder.build();
-	}
+	public TopicsConfig(TopicsProperties properties) {this.properties = properties;}
 
 	@Bean
 	public NewTopic transactionsTopic() {
@@ -55,7 +19,7 @@ public class TopicsConfig {
 
 	@Bean
 	public NewTopic dailyExpensesTopic() {
-		return TopicBuilder.name(properties.getTransactions()).compact().build();
+		return TopicBuilder.name(properties.getDailyExpenses()).compact().build();
 	}
 
 	@Bean
