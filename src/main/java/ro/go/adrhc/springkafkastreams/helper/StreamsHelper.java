@@ -37,16 +37,16 @@ public class StreamsHelper {
 		return Produced.with(Serdes.String(), Serdes.Integer()).withName(processorName);
 	}
 
-	public Consumed<String, Person> consumedWithPerson(String name) {
-		return Consumed.with(Serdes.String(), personSerde).withName(name);
+	public Consumed<String, Person> consumedWithPerson(String processorName) {
+		return Consumed.with(Serdes.String(), personSerde).withName(processorName);
 	}
 
-	public Consumed<String, Transaction> consumedWithTransaction(String name) {
-		return Consumed.with(Serdes.String(), transactionSerde).withName(name);
+	public Consumed<String, Transaction> consumedWithTransaction(String processorName) {
+		return Consumed.with(Serdes.String(), transactionSerde).withName(processorName);
 	}
 
-	public Consumed<String, Integer> consumedWithInteger(String name) {
-		return Consumed.with(Serdes.String(), Serdes.Integer()).withName(name);
+	public Consumed<String, Integer> consumedWithInteger(String processorName) {
+		return Consumed.with(Serdes.String(), Serdes.Integer()).withName(processorName);
 	}
 
 	public KStream<String, Person> personsStream(StreamsBuilder streamsBuilder) {

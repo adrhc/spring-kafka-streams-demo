@@ -6,10 +6,11 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.time.temporal.TemporalAccessor;
 
 public class DateUtils {
-	private static final DateTimeFormatter FORMATTER =
+	private static final DateTimeFormatter LocalDate_FORMATTER =
+			DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
+	private static final DateTimeFormatter LocalDateTime_FORMATTER =
 			DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM);
 
 	public static long millisecondsOf(LocalDateTime ldt) {
@@ -24,7 +25,11 @@ public class DateUtils {
 		return LocalDateTime.ofInstant(Instant.ofEpochMilli(milliseconds), ZoneOffset.UTC);
 	}
 
-	public static String format(TemporalAccessor temporalAccessor) {
-		return FORMATTER.format(temporalAccessor);
+	public static String format(LocalDate localDateTime) {
+		return LocalDate_FORMATTER.format(localDateTime);
+	}
+
+	public static String format(LocalDateTime localDateTime) {
+		return LocalDateTime_FORMATTER.format(localDateTime);
 	}
 }

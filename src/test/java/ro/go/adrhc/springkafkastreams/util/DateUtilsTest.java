@@ -27,5 +27,7 @@ class DateUtilsTest {
 		assertThat(formatted).isEqualTo(initFormatted);
 		LocalDate ld = localDateOf(milliseconds);
 		log.debug("formatted LocalDate: {}", format(ld));
+		formatted = ld.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM));
+		log.debug("MEDIUM format: " + formatted);
 	}
 }

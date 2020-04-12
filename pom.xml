@@ -40,6 +40,11 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.rainerhahnekamp</groupId>
+            <artifactId>sneakythrow</artifactId>
+            <version>1.2.0</version>
+        </dependency>
 
         <dependency>
 			<groupId>org.springframework.boot</groupId>

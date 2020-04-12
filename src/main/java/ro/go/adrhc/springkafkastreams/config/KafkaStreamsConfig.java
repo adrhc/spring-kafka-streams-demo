@@ -14,9 +14,12 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.EnableKafkaStreams;
 import ro.go.adrhc.springkafkastreams.helper.StreamsHelper;
 import ro.go.adrhc.springkafkastreams.model.Transaction;
+import ro.go.adrhc.springkafkastreams.util.WindowUtils;
 
 import java.time.Duration;
+import java.util.Optional;
 
+import static ro.go.adrhc.springkafkastreams.util.DateUtils.format;
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.localDateOf;
 import static ro.go.adrhc.springkafkastreams.util.WindowUtils.keyOf;
 
@@ -41,7 +44,6 @@ public class KafkaStreamsConfig {
 	}
 
 	@Bean
-//	public KStream<Windowed<String>, Integer> transactions(StreamsBuilder streamsBuilder) {
 	public KStream<String, Transaction> transactions(StreamsBuilder streamsBuilder) {
 		// Hopping time windows
 //		TimeWindows period = TimeWindows.of(Duration.ofDays(30)).advanceBy(Duration.ofDays(1));
@@ -77,13 +79,18 @@ public class KafkaStreamsConfig {
 		 * WindowKeySchema.extractWindow(byte[] binaryKey, long windowSize)
 		 */
 		aggTable.toStream()
-				.peek((windowedClientId, amount) -> log.debug("\n\tkey = {}, [{} to {}), amount = {}",
-						windowedClientId.key(),
-						localDateOf(windowedClientId.window().start()),
-						localDateOf(windowedClientId.window().end()), amount))
+//				.peek((windowedClientId, amount) -> log.debug("\n\tkey = {}, [{} to {}), amount = {}",
+//						windowedClientId.key(),
+//						localDateOf(windowedClientId.window().start()),
+//						localDateOf(windowedClientId.window().end()), amount))
 				.map((w, amount) -> KeyValue.pair(keyOf(w), amount))
-				.to(properties.getDailyExpenses(),
-						serde.producedWithInteger(properties.getDailyExpenses()));
+				.through(properties.getDailyExpenses(),
+						serde.producedWithInteger(properties.getDailyExpenses()))
+				.foreach((k, amount) -> {
+					Optional<WindowUtils.WindowBasedKey<String>> wkOptional = WindowUtils.parse(k);
+					wkOptional.ifPresent(wk -> log.debug("\n\tMAIL: {} spent {} GBP on {}",
+							wk.getData(), amount, format(wkOptional.get().getTime())));
+				});
 
 		return transactions;
 	}
