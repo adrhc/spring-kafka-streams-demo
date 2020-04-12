@@ -17,7 +17,7 @@ import static ro.go.adrhc.springkafkastreams.config.KafkaStreamsConfig.DELAY;
 public class AbstractTestDTOFactory {
 	public static KeyValue<String, Integer> createStar() {
 		int key = ThreadLocalRandom.current().nextInt(0, 10);
-		return createStar("adr-" + key);
+		return createStar("star" + key);
 	}
 
 	public static KeyValue<String, Integer> createStar(String key) {
@@ -28,7 +28,7 @@ public class AbstractTestDTOFactory {
 	public static KeyValue<String, Person> createPerson() {
 		int no = ThreadLocalRandom.current().nextInt(0, 10);
 		int age = ThreadLocalRandom.current().nextInt(0, 100);
-		String key = "adr-" + no;
+		String key = "person" + no;
 		return KeyValue.pair(key, new Person(key, age));
 	}
 
@@ -36,8 +36,8 @@ public class AbstractTestDTOFactory {
 		Instant randomInstant = Instant.now().minus(randomInt(1, DELAY), DAYS);
 		LocalDateTime ldt = LocalDateTime.ofInstant(randomInstant, ZoneOffset.UTC).truncatedTo(SECONDS);
 		return new Transaction(ldt,
-				"merchant-" + randomInt(1, 10),
-				"client-" + randomInt(1, 1),
+				"merchant" + randomInt(1, 10),
+				"client" + randomInt(1, 1),
 				randomInt(1, 100));
 	}
 

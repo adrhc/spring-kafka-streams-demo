@@ -25,16 +25,16 @@ public class StreamsHelper {
 		this.personStarsSerde = personStarsSerde;
 	}
 
-	public Produced<String, PersonStars> producedWithPersonStars(String name) {
-		return Produced.with(Serdes.String(), personStarsSerde).withName(name);
+	public Produced<String, PersonStars> producedWithPersonStars(String processorName) {
+		return Produced.with(Serdes.String(), personStarsSerde).withName(processorName);
 	}
 
-	public Produced<String, Person> producedWithPerson(String name) {
-		return Produced.with(Serdes.String(), personSerde).withName(name);
+	public Produced<String, Person> producedWithPerson(String processorName) {
+		return Produced.with(Serdes.String(), personSerde).withName(processorName);
 	}
 
-	public Produced<String, Integer> producedWithInteger(String name) {
-		return Produced.with(Serdes.String(), Serdes.Integer()).withName(name);
+	public Produced<String, Integer> producedWithInteger(String processorName) {
+		return Produced.with(Serdes.String(), Serdes.Integer()).withName(processorName);
 	}
 
 	public Consumed<String, Person> consumedWithPerson(String name) {

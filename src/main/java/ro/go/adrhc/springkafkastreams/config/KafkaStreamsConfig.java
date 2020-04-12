@@ -3,6 +3,7 @@ package ro.go.adrhc.springkafkastreams.config;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.common.utils.Bytes;
+import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.*;
 import org.apache.kafka.streams.state.WindowStore;
@@ -16,7 +17,8 @@ import ro.go.adrhc.springkafkastreams.model.Transaction;
 
 import java.time.Duration;
 
-import static ro.go.adrhc.springkafkastreams.util.DateUtils.localDateTimeOf;
+import static ro.go.adrhc.springkafkastreams.util.DateUtils.localDateOf;
+import static ro.go.adrhc.springkafkastreams.util.WindowUtils.keyOf;
 
 /**
  * see https://issues.apache.org/jira/browse/KAFKA-6817
@@ -75,10 +77,13 @@ public class KafkaStreamsConfig {
 		 * WindowKeySchema.extractWindow(byte[] binaryKey, long windowSize)
 		 */
 		aggTable.toStream()
-				.foreach((windowedClientId, amount) -> log.debug("\n\tkey = {}, begin = {}, end: {}, amount = {}",
+				.peek((windowedClientId, amount) -> log.debug("\n\tkey = {}, [{} to {}), amount = {}",
 						windowedClientId.key(),
-						localDateTimeOf(windowedClientId.window().start()),
-						localDateTimeOf(windowedClientId.window().end()), amount));
+						localDateOf(windowedClientId.window().start()),
+						localDateOf(windowedClientId.window().end()), amount))
+				.map((w, amount) -> KeyValue.pair(keyOf(w), amount))
+				.to(properties.getDailyExpenses(),
+						serde.producedWithInteger(properties.getDailyExpenses()));
 
 		return transactions;
 	}

@@ -52,4 +52,9 @@ public class TopicsConfig {
 	public NewTopic transactionsTopic() {
 		return TopicBuilder.name(properties.getTransactions()).build();
 	}
+
+	@Bean
+	public NewTopic dailyExpensesTopic() {
+		return TopicBuilder.name(properties.getTransactions()).compact().build();
+	}
 }
