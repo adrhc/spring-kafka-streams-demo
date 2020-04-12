@@ -11,7 +11,7 @@ public class WindowUtils {
 	private static final ThreadLocal<MessageFormat> WINDOW_KEY =
 			ThreadLocal.withInitial(() -> new MessageFormat("{0}-{1}"));
 	private static final DateTimeFormatter keyLocalDateFormat =
-			DateTimeFormatter.ofPattern("yyyyMMdd");
+			DateTimeFormatter.ofPattern("yyyy.MM.dd");
 
 	public static <T> String keyOf(Windowed<T> windowed) {
 		return WINDOW_KEY.get().format(new Object[]{windowed.key().toString(),
