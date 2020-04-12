@@ -68,6 +68,12 @@ public class KafkaStreamsConfig {
 				.windowedBy(period)
 				.aggregate(() -> 0, (k, v, sum) -> sum + v.getAmount(), aggStore);
 
+		/*
+		 * TimeWindowedKStream: "windowed" implies that the KTable key is a combined key of the original record key and a window ID
+		 * CachingWindowStore.putAndMaybeForward: binaryWindowKey = cacheFunction.key(entry.key()).get()
+		 * WindowKeySchema.toStoreKeyBinary(key, windowStartTimestamp, 0)
+		 * WindowKeySchema.extractWindow(byte[] binaryKey, long windowSize)
+		 */
 		aggTable.toStream()
 				.foreach((windowedClientId, amount) -> log.debug("\n\tkey = {}, begin = {}, end: {}, amount = {}",
 						windowedClientId.key(),
