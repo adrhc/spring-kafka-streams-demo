@@ -53,7 +53,7 @@ public class KafkaStreamsConfig {
 				Materialized.<String, Integer, WindowStore<Bytes, byte[]>>
 						as(properties.getTransactions() + "-store")
 						.withValueSerde(Serdes.Integer())
-						.withRetention(Duration.ofDays(DELAY));
+						.withRetention(Duration.ofDays(DELAY + 1));
 //						.withRetention(Duration.ofDays(12 * 30));
 
 		KStream<String, Transaction> transactions = serde.transactionsStream(streamsBuilder);
