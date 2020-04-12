@@ -19,7 +19,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Map;
 
-import static ro.go.adrhc.springkafkastreams.util.KConsumerUtils.consumeFromTopics;
+import static ro.go.adrhc.springkafkastreams.util.KConsumerUtils.consumerOf;
 
 @ActiveProfiles({"v2", "test"})
 @SpringBootTest
@@ -42,10 +42,7 @@ class KTableConsumerIT {
 
 		@Bean
 		public Consumer<String, Integer> consumer() {
-			ConsumerFactory<String, Integer> factory = kafkaConsumerFactory();
-			Consumer<String, Integer> consumer = factory.createConsumer();
-			consumeFromTopics(consumer, "kstreams1-transactions.v2-changelog");
-			return consumer;
+			return consumerOf(kafkaConsumerFactory(), "kstreams1-transactions.v2-changelog");
 		}
 
 		@Bean
