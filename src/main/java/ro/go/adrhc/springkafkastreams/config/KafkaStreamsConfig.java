@@ -93,5 +93,10 @@ public class KafkaStreamsConfig {
 
 		return stream;
 	}
+
+	@Bean
+	public StreamsBuilderFactoryBean defaultKafkaStreamsBuilder(KafkaStreamsConfiguration configuration) {
+		return new StreamsBuilderFactoryBean(configuration, new CleanupConfig(true, true));
+	}
 */
 }
