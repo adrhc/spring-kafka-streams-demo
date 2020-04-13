@@ -6,12 +6,14 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Person implements Serializable {
-	private String name;
-	private int age;
+public class DailyExpenses implements Serializable {
+	private String clientId;
+	private LocalDate time;
+	private int amount;
 }

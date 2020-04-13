@@ -1,9 +1,6 @@
 package ro.go.adrhc.springkafkastreams.util;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
@@ -13,8 +10,12 @@ public class DateUtils {
 	private static final DateTimeFormatter LocalDateTime_FORMATTER =
 			DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM);
 
+	public static long millisecondsOf(LocalDate localDate) {
+		return localDate.toEpochSecond(LocalTime.MIDNIGHT, ZoneOffset.UTC) * 1000;
+	}
+
 	public static long millisecondsOf(LocalDateTime ldt) {
-		return ldt.toInstant(ZoneOffset.UTC).toEpochMilli();
+		return ldt.toEpochSecond(ZoneOffset.UTC) * 1000;
 	}
 
 	public static LocalDate localDateOf(long milliseconds) {

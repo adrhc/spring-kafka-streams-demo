@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.millisecondsOf;
@@ -15,7 +16,7 @@ import static ro.go.adrhc.springkafkastreams.util.DateUtils.millisecondsOf;
 @NoArgsConstructor
 @ToString
 public class Transaction implements Serializable {
-	private LocalDateTime time;
+	private LocalDate time;
 	private String merchantId;
 	private String clientId;
 	private int amount;

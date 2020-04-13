@@ -1,15 +1,15 @@
 package ro.go.adrhc.springkafkastreams.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.io.Serializable;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
 @ToString
 public class ClientProfile implements Serializable {
 	private String clientId;

@@ -18,8 +18,8 @@ import static ro.go.adrhc.springkafkastreams.util.AbstractTestDTOFactory.randomC
 @Slf4j
 public class ClientProfileV2IT {
 	@Autowired
-	@Qualifier("transactionTemplate")
-	private KafkaTemplate<String, ClientProfile> transactionTemplate;
+	@Qualifier("jsonTemplate")
+	private KafkaTemplate<Object, Object> jsonTemplate;
 	@Autowired
 	private TopicsProperties properties;
 	@Autowired
@@ -31,6 +31,6 @@ public class ClientProfileV2IT {
 		log.debug("ClientProfile topic: {}", properties.getClientProfile());
 		ClientProfile clientProfile = randomClientProfile(500);
 		log.debug("clientProfile:\n\t{}", clientProfile);
-		transactionTemplate.send(properties.getClientProfile(), clientProfile.getClientId(), clientProfile);
+		jsonTemplate.send(properties.getClientProfile(), clientProfile.getClientId(), clientProfile);
 	}
 }

@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.support.serializer.JsonSerde;
-import ro.go.adrhc.springkafkastreams.model.Person;
-import ro.go.adrhc.springkafkastreams.model.PersonStars;
+import ro.go.adrhc.springkafkastreams.model.ClientProfile;
+import ro.go.adrhc.springkafkastreams.model.DailyExpenses;
 import ro.go.adrhc.springkafkastreams.model.Transaction;
 
 import java.util.Map;
@@ -24,12 +24,12 @@ public class SerdeConfig {
 	}
 
 	@Bean
-	public JsonSerde<Person> personSerde() {
+	public JsonSerde<ClientProfile> clientProfileSerde() {
 		return jsonSerdeImpl();
 	}
 
 	@Bean
-	public JsonSerde<PersonStars> personStarsSerde() {
+	public JsonSerde<DailyExpenses> dailyExpensesSerde() {
 		return jsonSerdeImpl();
 	}
 

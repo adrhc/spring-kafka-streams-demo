@@ -1,7 +1,6 @@
 package ro.go.adrhc.springkafkastreams.config;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.common.serialization.IntegerSerializer;
 import org.apache.kafka.common.serialization.Serializer;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,50 +12,29 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.ProducerListener;
 import org.springframework.kafka.support.converter.RecordMessageConverter;
 import org.springframework.kafka.support.serializer.JsonSerde;
-import ro.go.adrhc.springkafkastreams.model.Person;
-import ro.go.adrhc.springkafkastreams.model.Transaction;
 
 import java.util.Map;
 
 @Configuration
 public class KafkaTemplateConfig {
 	private final KafkaProperties properties;
-	private final JsonSerde<Person> personSerde;
-	private final JsonSerde<Transaction> transactionSerde;
+	private final JsonSerde<Object> jsonSerde;
 
 	public KafkaTemplateConfig(KafkaProperties properties,
-			@Qualifier("personSerde") JsonSerde<Person> personSerde,
-			@Qualifier("transactionSerde") JsonSerde<Transaction> transactionSerde) {
+			@Qualifier("jsonSerde") JsonSerde<Object> jsonSerde) {
 		this.properties = properties;
-		this.personSerde = personSerde;
-		this.transactionSerde = transactionSerde;
+		this.jsonSerde = jsonSerde;
 	}
 
 	@Bean
-	public KafkaTemplate<?, Transaction> transactionTemplate(
-			ObjectProvider<ProducerListener<Object, Transaction>> kafkaProducerListener,
+	public KafkaTemplate<Object, Object> jsonTemplate(
+			ObjectProvider<ProducerListener<Object, Object>> kafkaProducerListener,
 			ObjectProvider<RecordMessageConverter> messageConverter) {
-		return kafkaTemplateImpl("transactions",
-				transactionSerde.serializer(), kafkaProducerListener, messageConverter);
+		return kafkaTemplateImpl(properties.getClientId(),
+				jsonSerde.serializer(), kafkaProducerListener, messageConverter);
 	}
 
-	@Bean
-	public KafkaTemplate<?, Person> personTemplate(
-			ObjectProvider<ProducerListener<Object, Person>> kafkaProducerListener,
-			ObjectProvider<RecordMessageConverter> messageConverter) {
-		return kafkaTemplateImpl("persons",
-				personSerde.serializer(), kafkaProducerListener, messageConverter);
-	}
-
-	@Bean
-	public KafkaTemplate<?, Integer> starTemplate(
-			ObjectProvider<ProducerListener<Object, Integer>> kafkaProducerListener,
-			ObjectProvider<RecordMessageConverter> messageConverter) {
-		return kafkaTemplateImpl("stars",
-				new IntegerSerializer(), kafkaProducerListener, messageConverter);
-	}
-
-	private <V> KafkaTemplate<?, V> kafkaTemplateImpl(
+	private <V> KafkaTemplate<Object, V> kafkaTemplateImpl(
 			String clientIdPrefix, Serializer<V> valueSerializer,
 			ObjectProvider<ProducerListener<Object, V>> kafkaProducerListener,
 			ObjectProvider<RecordMessageConverter> messageConverter) {
