@@ -13,5 +13,5 @@ import java.io.Serializable;
 @ToString
 public class OverdueDailyExpenses implements Serializable {
 	private int dailyMaxAmount;
-	private DailyExpenses dailyExpenses;
+	private DailyTotalSpent dailyTotalSpent;
 }

@@ -11,7 +11,7 @@ import org.springframework.kafka.support.serializer.JsonSerde;
 import org.springframework.stereotype.Component;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
 import ro.go.adrhc.springkafkastreams.model.ClientProfile;
-import ro.go.adrhc.springkafkastreams.model.DailyExpenses;
+import ro.go.adrhc.springkafkastreams.model.DailyTotalSpent;
 import ro.go.adrhc.springkafkastreams.model.Transaction;
 
 import java.time.Duration;
@@ -22,9 +22,9 @@ public class StreamsHelper {
 	private final TopicsProperties properties;
 	private final JsonSerde<Transaction> transactionSerde;
 	private final JsonSerde<ClientProfile> clientProfileSerde;
-	private final JsonSerde<DailyExpenses> dailyExpensesSerde;
+	private final JsonSerde<DailyTotalSpent> dailyExpensesSerde;
 
-	public StreamsHelper(TopicsProperties properties, @Qualifier("transactionSerde") JsonSerde<Transaction> transactionSerde, @Qualifier("clientProfileSerde") JsonSerde<ClientProfile> clientProfileSerde, JsonSerde<DailyExpenses> dailyExpensesSerde) {
+	public StreamsHelper(TopicsProperties properties, @Qualifier("transactionSerde") JsonSerde<Transaction> transactionSerde, @Qualifier("clientProfileSerde") JsonSerde<ClientProfile> clientProfileSerde, JsonSerde<DailyTotalSpent> dailyExpensesSerde) {
 		this.properties = properties;
 		this.transactionSerde = transactionSerde;
 		this.clientProfileSerde = clientProfileSerde;
@@ -43,14 +43,13 @@ public class StreamsHelper {
 		return Consumed.with(Serdes.String(), Serdes.Integer()).withName(processorName);
 	}
 
-	private Consumed<String, DailyExpenses> consumedWithDailyExpensesDetails(String processorName) {
+	private Consumed<String, DailyTotalSpent> consumedWithDailyExpensesDetails(String processorName) {
 		return Consumed.with(Serdes.String(), dailyExpensesSerde).withName(processorName);
 	}
 
-	public Materialized<String, Integer, WindowStore<Bytes, byte[]>>
-	dailyTransactionsByClientId(String flavour) {
+	public Materialized<String, Integer, WindowStore<Bytes, byte[]>> dailySpentByClientId() {
 		return Materialized.<String, Integer, WindowStore<Bytes, byte[]>>
-				as("dailyTransactionsByClientId_" + flavour)
+				as("dailySpentByClientId")
 				.withKeySerde(Serdes.String())
 				.withValueSerde(Serdes.Integer())
 				.withRetention(Duration.ofDays(DELAY + 1));
@@ -77,17 +76,17 @@ public class StreamsHelper {
 						.withValueSerde(clientProfileSerde));
 	}
 
-	public Joined<String, DailyExpenses, ClientProfile> dailyExpensesDetailsByClientIdJoin() {
+	public Joined<String, DailyTotalSpent, ClientProfile> dailyExpensesDetailsByClientIdJoin() {
 		return Joined.with(Serdes.String(), dailyExpensesSerde,
 				clientProfileSerde, "dailyExpenses_join_clientProfiles");
 	}
 
 	public KStream<String, Integer> dailyExpenses(StreamsBuilder streamsBuilder) {
-		return streamsBuilder.stream(properties.getDailyExpenses(),
-				this.consumedWithDailyExpenses(properties.getDailyExpenses()));
+		return streamsBuilder.stream(properties.getDailyTotalSpent(),
+				this.consumedWithDailyExpenses(properties.getDailyTotalSpent()));
 	}
 
-	public KStream<String, DailyExpenses> dailyExpensesDetails(StreamsBuilder streamsBuilder) {
+	public KStream<String, DailyTotalSpent> dailyExpensesDetails(StreamsBuilder streamsBuilder) {
 		return streamsBuilder.stream(properties.getDailyExpensesDetails(),
 				this.consumedWithDailyExpensesDetails(properties.getDailyExpensesDetails()));
 	}

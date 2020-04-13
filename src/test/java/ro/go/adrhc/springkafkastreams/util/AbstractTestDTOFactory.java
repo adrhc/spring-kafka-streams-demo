@@ -2,7 +2,7 @@ package ro.go.adrhc.springkafkastreams.util;
 
 import org.apache.commons.lang3.RandomUtils;
 import ro.go.adrhc.springkafkastreams.model.ClientProfile;
-import ro.go.adrhc.springkafkastreams.model.DailyExpenses;
+import ro.go.adrhc.springkafkastreams.model.DailyTotalSpent;
 import ro.go.adrhc.springkafkastreams.model.Transaction;
 
 import java.time.Instant;
@@ -32,8 +32,8 @@ public class AbstractTestDTOFactory {
 		return new ClientProfile(CLIENT_ID_SUPP.get(), dailyMaxAmount);
 	}
 
-	public static DailyExpenses randomDailyExpenses() {
-		return new DailyExpenses(CLIENT_ID_SUPP.get(), LocalDate.now(), AMOUNT_SUPP.getAsInt());
+	public static DailyTotalSpent randomDailyTotalSpent() {
+		return new DailyTotalSpent(CLIENT_ID_SUPP.get(), LocalDate.now(), AMOUNT_SUPP.getAsInt());
 	}
 
 	public static Transaction randomTransaction() {

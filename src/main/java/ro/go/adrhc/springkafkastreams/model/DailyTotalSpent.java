@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class DailyExpenses implements Serializable {
+public class DailyTotalSpent implements Serializable {
 	private String clientId;
 	private LocalDate time;
 	private int amount;

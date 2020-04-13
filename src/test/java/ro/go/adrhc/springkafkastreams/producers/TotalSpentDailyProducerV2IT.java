@@ -9,17 +9,18 @@ import org.springframework.core.env.Environment;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
-import ro.go.adrhc.springkafkastreams.model.DailyExpenses;
+import ro.go.adrhc.springkafkastreams.model.DailyTotalSpent;
 
-import static ro.go.adrhc.springkafkastreams.util.AbstractTestDTOFactory.randomDailyExpenses;
+import static ro.go.adrhc.springkafkastreams.util.AbstractTestDTOFactory.randomDailyTotalSpent;
+import static ro.go.adrhc.springkafkastreams.util.WindowUtils.keyOf;
 
 @ActiveProfiles({"v2", "test"})
 @SpringBootTest
 @Slf4j
-public class DailyExpensesDetailsV2IT {
+public class TotalSpentDailyProducerV2IT {
 	@Autowired
-	@Qualifier("jsonTemplate")
-	private KafkaTemplate<Object, Object> jsonTemplate;
+	@Qualifier("intTemplate")
+	private KafkaTemplate<Object, Integer> intTemplate;
 	@Autowired
 	private TopicsProperties properties;
 	@Autowired
@@ -28,9 +29,10 @@ public class DailyExpensesDetailsV2IT {
 	@Test
 	void upsert() {
 		log.debug("profiles: {}", String.join(", ", env.getActiveProfiles()));
-		log.debug("DailyExpenses topic: {}", properties.getDailyExpenses());
-		DailyExpenses dailyExpenses = randomDailyExpenses();
-		log.debug("dailyExpenses:\n\t{}", dailyExpenses);
-		jsonTemplate.send(properties.getDailyExpensesDetails(), dailyExpenses.getClientId(), dailyExpenses);
+		log.debug("totalSpentDaily topic: {}", properties.getDailyTotalSpent());
+		DailyTotalSpent dailyTotalSpent = randomDailyTotalSpent();
+		log.debug("totalSpentDaily:\n\t{}", dailyTotalSpent);
+		intTemplate.send(properties.getDailyTotalSpent(),
+				keyOf(dailyTotalSpent), dailyTotalSpent.getAmount());
 	}
 }
