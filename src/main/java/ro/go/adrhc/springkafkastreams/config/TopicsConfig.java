@@ -17,17 +17,17 @@ public class TopicsConfig {
 	}
 
 	@Bean
-	public NewTopic dailyExpensesTopic() {
+	public NewTopic dailyTotalSpentTopic() {
 		return TopicBuilder.name(properties.getDailyTotalSpent()).compact().build();
 	}
 
 	@Bean
 	public NewTopic clientProfileTopic() {
-		return TopicBuilder.name(properties.getClientProfile()).compact().build();
+		return TopicBuilder.name(properties.getClientProfiles()).compact().build();
 	}
 
 	@Bean
-	public NewTopic dailyExpensesDetailsTopic() {
-		return TopicBuilder.name(properties.getDailyExceeded()).compact().build();
+	public NewTopic dailyExceededTopic() {
+		return TopicBuilder.name(properties.getDailyExceeds()).compact().build();
 	}
 }

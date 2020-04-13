@@ -28,9 +28,9 @@ public class ClientProfileProducerV2IT {
 	@Test
 	void upsert() {
 		log.debug("profiles: {}", String.join(", ", env.getActiveProfiles()));
-		log.debug("ClientProfile topic: {}", properties.getClientProfile());
+		log.debug("ClientProfile topic: {}", properties.getClientProfiles());
 		ClientProfile clientProfile = randomClientProfile();
 		log.debug("clientProfile:\n\t{}", clientProfile);
-		jsonTemplate.send(properties.getClientProfile(), clientProfile.getClientId(), clientProfile);
+		jsonTemplate.send(properties.getClientProfiles(), clientProfile.getClientId(), clientProfile);
 	}
 }

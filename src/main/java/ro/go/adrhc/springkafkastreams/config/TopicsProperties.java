@@ -10,14 +10,8 @@ import org.springframework.stereotype.Component;
 @Data
 @NoArgsConstructor
 public class TopicsProperties {
-	private String persons;
-	private String personsUpper;
-	private String stars;
-	private String starsMultiplied;
-	private String personsStars;
 	private String transactions;
 	private String dailyTotalSpent;
-	private String dailyExceeded;
-	private String clientProfile;
-	private boolean starsAsStream;
+	private String dailyExceeds;
+	private String clientProfiles;
 }

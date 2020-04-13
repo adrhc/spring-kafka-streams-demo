@@ -62,7 +62,7 @@ public class KafkaStreamsConfig {
 
 		transactions
 //				.transform(new TransformerDebugger<>())
-				.transformValues(new ValueTransformerWithKeyDebugger<>())
+//				.transformValues(new ValueTransformerWithKeyDebugger<>())
 				.groupByKey(helper.transactionsGroupedByClientId())
 				// group by 1 day
 				.windowedBy(TimeWindows.of(Duration.ofDays(1)).grace(Duration.ofDays(DELAY)))
@@ -71,7 +71,7 @@ public class KafkaStreamsConfig {
 						helper.dailyTotalSpentByClientId())
 				.toStream((win, amount) -> keyOf(win)) // clientId-date, amount
 				.peek((k, amount) -> log.debug("\n\tclientId/day = {}, total spent = {}", k, amount))
-				// save clientId-day:amount into table (compact stream)
+				// save clientId-day:amount into a compact stream (aka table)
 				.through(properties.getDailyTotalSpent(),
 						helper.produceInteger(properties.getDailyTotalSpent()))
 				// clientId-day:amount map to clientId:DailyTotalSpent
@@ -85,20 +85,22 @@ public class KafkaStreamsConfig {
 							.orElse(null);
 				})
 				// clientId:DailyTotalSpent joint clientId:ClientProfile
-				.join(clientProfileTable, (de, cp) -> {
-							if (cp.getDailyMaxAmount() < de.getAmount()) {
-								return new DailyExceeded(cp.getDailyMaxAmount(), de);
+				.join(clientProfileTable, (dts, cp) -> {
+							if (cp.getDailyMaxAmount() < dts.getAmount()) {
+								return new DailyExceeded(cp.getDailyMaxAmount(), dts);
 							}
-							log.debug("\n\tskipping daily total spent under {}\n\t{}\n\t{}", cp.getDailyMaxAmount(), de, cp);
+							log.debug("\n\tskipping daily total spent under {}\n\t{}\n\t{}", cp.getDailyMaxAmount(), dts, cp);
 							return null;
 						},
 						helper.dailyTotalSpentJoinClientProfile())
 				// skip under dailyMaxAmount
 				.filter((k, v) -> v != null)
-				.foreach((clientId, ode) -> {
-					DailyTotalSpent de = ode.getDailyTotalSpent();
+				.through(properties.getDailyExceeds(),
+						helper.produceDailyExceeded(properties.getDailyExceeds()))
+				.foreach((clientId, de) -> {
+					DailyTotalSpent dts = de.getDailyTotalSpent();
 					log.debug("\n\tMAIL: {} spent {} GBP on {} (alert set for over {})",
-							de.getClientId(), de.getAmount(), format(de.getTime()), ode.getDailyMaxAmount());
+							clientId, dts.getAmount(), format(dts.getTime()), de.getDailyMaxAmount());
 				});
 
 		return transactions;

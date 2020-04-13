@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
 import ro.go.adrhc.springkafkastreams.model.ClientProfile;
 import ro.go.adrhc.springkafkastreams.model.DailyTotalSpent;
+import ro.go.adrhc.springkafkastreams.model.DailyExceeded;
 import ro.go.adrhc.springkafkastreams.model.Transaction;
 
 import java.time.Duration;
@@ -23,16 +24,22 @@ public class StreamsHelper {
 	private final JsonSerde<Transaction> transactionSerde;
 	private final JsonSerde<ClientProfile> clientProfileSerde;
 	private final JsonSerde<DailyTotalSpent> dailyTotalSpentSerde;
+	private final JsonSerde<DailyExceeded> dailyExceededSerde;
 
-	public StreamsHelper(TopicsProperties properties, @Qualifier("transactionSerde") JsonSerde<Transaction> transactionSerde, @Qualifier("clientProfileSerde") JsonSerde<ClientProfile> clientProfileSerde, @Qualifier("dailyTotalSpentSerde") JsonSerde<DailyTotalSpent> dailyTotalSpentSerde) {
+	public StreamsHelper(TopicsProperties properties, @Qualifier("transactionSerde") JsonSerde<Transaction> transactionSerde, @Qualifier("clientProfileSerde") JsonSerde<ClientProfile> clientProfileSerde, @Qualifier("dailyTotalSpentSerde") JsonSerde<DailyTotalSpent> dailyTotalSpentSerde, @Qualifier("dailyExceededSerde") JsonSerde<DailyExceeded> dailyExceededSerde) {
 		this.properties = properties;
 		this.transactionSerde = transactionSerde;
 		this.clientProfileSerde = clientProfileSerde;
 		this.dailyTotalSpentSerde = dailyTotalSpentSerde;
+		this.dailyExceededSerde = dailyExceededSerde;
 	}
 
 	public Produced<String, Integer> produceInteger(String processorName) {
 		return Produced.with(Serdes.String(), Serdes.Integer()).withName(processorName);
+	}
+
+	public Produced<String, DailyExceeded> produceDailyExceeded(String processorName) {
+		return Produced.with(Serdes.String(), dailyExceededSerde).withName(processorName);
 	}
 
 	private Consumed<String, Transaction> consumeTransaction(String processorName) {
@@ -56,21 +63,21 @@ public class StreamsHelper {
 	}
 
 	public KStream<String, ClientProfile> clientProfileStream(StreamsBuilder streamsBuilder) {
-		return streamsBuilder.stream(properties.getClientProfile(),
+		return streamsBuilder.stream(properties.getClientProfiles(),
 				Consumed.<String, ClientProfile>
-						as(properties.getClientProfile())
+						as(properties.getClientProfiles())
 						.withKeySerde(Serdes.String())
 						.withValueSerde(clientProfileSerde));
 	}
 
 	public KTable<String, ClientProfile> clientProfileTable(StreamsBuilder streamsBuilder) {
-		return streamsBuilder.table(properties.getClientProfile(),
+		return streamsBuilder.table(properties.getClientProfiles(),
 				Consumed.<String, ClientProfile>
-						as(properties.getClientProfile())
+						as(properties.getClientProfiles())
 						.withKeySerde(Serdes.String())
 						.withValueSerde(clientProfileSerde),
 				Materialized.<String, ClientProfile, KeyValueStore<Bytes, byte[]>>
-						as(properties.getClientProfile())
+						as(properties.getClientProfiles())
 						.withKeySerde(Serdes.String())
 						.withValueSerde(clientProfileSerde));
 	}
@@ -86,8 +93,8 @@ public class StreamsHelper {
 	}
 
 	public KStream<String, DailyTotalSpent> dailyExceeds(StreamsBuilder streamsBuilder) {
-		return streamsBuilder.stream(properties.getDailyExceeded(),
-				this.consumeDailyTotalSpent(properties.getDailyExceeded()));
+		return streamsBuilder.stream(properties.getDailyExceeds(),
+				this.consumeDailyTotalSpent(properties.getDailyExceeds()));
 	}
 
 	public KStream<String, Transaction> transactions(StreamsBuilder streamsBuilder) {
