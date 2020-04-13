@@ -26,4 +26,9 @@ public class TopicsConfig {
 	public NewTopic clientProfileTopic() {
 		return TopicBuilder.name(properties.getClientProfile()).compact().build();
 	}
+
+	@Bean
+	public NewTopic dailyExpensesDetailsTopic() {
+		return TopicBuilder.name(properties.getDailyExpensesDetails()).compact().build();
+	}
 }

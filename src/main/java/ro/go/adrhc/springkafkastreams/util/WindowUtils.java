@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.streams.kstream.Windowed;
+import ro.go.adrhc.springkafkastreams.model.DailyExpenses;
 
 import java.text.MessageFormat;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -19,6 +19,11 @@ public class WindowUtils {
 			ThreadLocal.withInitial(() -> new MessageFormat("{0}-{1}"));
 	private static final DateTimeFormatter keyLocalDateFormat =
 			DateTimeFormatter.ofPattern("yyyy.MM.dd");
+
+	public static String keyOf(DailyExpenses dailyExpenses) {
+		return WINDOW_KEY.get().format(new Object[]{dailyExpenses.getClientId(),
+				dailyExpenses.getTime().format(keyLocalDateFormat)});
+	}
 
 	public static <T> String keyOf(Windowed<T> windowed) {
 		return WINDOW_KEY.get().format(new Object[]{windowed.key().toString(),

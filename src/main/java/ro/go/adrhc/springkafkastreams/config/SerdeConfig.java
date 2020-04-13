@@ -20,26 +20,26 @@ public class SerdeConfig {
 
 	@Bean
 	public JsonSerde<Transaction> transactionSerde() {
-		return jsonSerdeImpl();
+		return jsonSerdeImpl(Transaction.class);
 	}
 
 	@Bean
 	public JsonSerde<ClientProfile> clientProfileSerde() {
-		return jsonSerdeImpl();
+		return jsonSerdeImpl(ClientProfile.class);
 	}
 
 	@Bean
 	public JsonSerde<DailyExpenses> dailyExpensesSerde() {
-		return jsonSerdeImpl();
+		return jsonSerdeImpl(DailyExpenses.class);
 	}
 
 	@Bean
 	public JsonSerde<?> jsonSerde() {
-		return jsonSerdeImpl();
+		return jsonSerdeImpl(null);
 	}
 
-	private <T> JsonSerde<T> jsonSerdeImpl() {
-		JsonSerde<T> serde = new JsonSerde<>();
+	private <T> JsonSerde<T> jsonSerdeImpl(Class<T> tClass) {
+		JsonSerde<T> serde = new JsonSerde<>(tClass);
 		if (typeMapping.isEmpty()) {
 			serde.configure(Map.of(TRUSTED_PACKAGES, "*"), false);
 			return serde;

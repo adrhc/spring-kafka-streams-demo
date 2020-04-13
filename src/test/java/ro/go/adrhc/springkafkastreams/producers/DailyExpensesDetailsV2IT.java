@@ -1,7 +1,7 @@
 package ro.go.adrhc.springkafkastreams.producers;
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,14 +9,14 @@ import org.springframework.core.env.Environment;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
-import ro.go.adrhc.springkafkastreams.model.Transaction;
+import ro.go.adrhc.springkafkastreams.model.DailyExpenses;
 
-import static ro.go.adrhc.springkafkastreams.util.AbstractTestDTOFactory.randomTransaction;
+import static ro.go.adrhc.springkafkastreams.util.AbstractTestDTOFactory.randomDailyExpenses;
 
 @ActiveProfiles({"v2", "test"})
 @SpringBootTest
 @Slf4j
-public class TransactionsProducerV2IT {
+public class DailyExpensesDetailsV2IT {
 	@Autowired
 	@Qualifier("jsonTemplate")
 	private KafkaTemplate<Object, Object> jsonTemplate;
@@ -25,12 +25,12 @@ public class TransactionsProducerV2IT {
 	@Autowired
 	private Environment env;
 
-	@RepeatedTest(1)
-	void send() {
+	@Test
+	void upsert() {
 		log.debug("profiles: {}", String.join(", ", env.getActiveProfiles()));
-		log.debug("transactions topic: {}", properties.getTransactions());
-		Transaction transaction = randomTransaction();
-		log.debug("transaction:\n{}", transaction);
-		jsonTemplate.send(properties.getTransactions(), transaction.getClientId(), transaction);
+		log.debug("DailyExpenses topic: {}", properties.getDailyExpenses());
+		DailyExpenses dailyExpenses = randomDailyExpenses();
+		log.debug("dailyExpenses:\n\t{}", dailyExpenses);
+		jsonTemplate.send(properties.getDailyExpensesDetails(), dailyExpenses.getClientId(), dailyExpenses);
 	}
 }

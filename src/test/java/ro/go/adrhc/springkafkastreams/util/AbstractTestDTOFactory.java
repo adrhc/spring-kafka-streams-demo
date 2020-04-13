@@ -2,11 +2,13 @@ package ro.go.adrhc.springkafkastreams.util;
 
 import org.apache.commons.lang3.RandomUtils;
 import ro.go.adrhc.springkafkastreams.model.ClientProfile;
+import ro.go.adrhc.springkafkastreams.model.DailyExpenses;
 import ro.go.adrhc.springkafkastreams.model.Transaction;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
+import java.util.function.IntSupplier;
 import java.util.function.Supplier;
 
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -17,13 +19,19 @@ public class AbstractTestDTOFactory {
 			() -> "client" + randomInt(1, 1);
 	private static final Supplier<String> MERCHANT_ID_SUPP =
 			() -> "merchant" + randomInt(1, 10);
+	private static final IntSupplier AMOUNT_SUPP =
+			() -> randomInt(0, 1000);
 
 	public static ClientProfile randomClientProfile() {
-		return new ClientProfile(CLIENT_ID_SUPP.get(), 500);
+		return new ClientProfile(CLIENT_ID_SUPP.get(), AMOUNT_SUPP.getAsInt());
 	}
 
 	public static ClientProfile randomClientProfile(int dailyMaxAmount) {
 		return new ClientProfile(CLIENT_ID_SUPP.get(), dailyMaxAmount);
+	}
+
+	public static DailyExpenses randomDailyExpenses() {
+		return new DailyExpenses(CLIENT_ID_SUPP.get(), LocalDate.now(), AMOUNT_SUPP.getAsInt());
 	}
 
 	public static Transaction randomTransaction() {

@@ -16,8 +16,8 @@
 
 	<properties>
 		<java.version>11</java.version>
-        <kafka.version>2.4.1</kafka.version>
-        <spring-kafka.version>2.4.5.RELEASE</spring-kafka.version>
+<!--        <kafka.version>2.4.1</kafka.version>-->
+<!--        <spring-kafka.version>2.4.5.RELEASE</spring-kafka.version>-->
     </properties>
 
 	<dependencies>
@@ -29,14 +29,14 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-json</artifactId>
 		</dependency>
-<!--		<dependency>-->
-<!--			<groupId>org.apache.kafka</groupId>-->
-<!--			<artifactId>kafka-streams</artifactId>-->
-<!--		</dependency>-->
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.kafka</groupId>-->
-<!--			<artifactId>spring-kafka</artifactId>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>org.apache.kafka</groupId>
+			<artifactId>kafka-streams</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.kafka</groupId>
+			<artifactId>spring-kafka</artifactId>
+		</dependency>
 
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -51,6 +51,7 @@
         <!--
             Appendix A: Override Spring Boot Dependencies to use Spring for Apache Kafka 2.4
         -->
+<!--
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
@@ -98,6 +99,7 @@
             <classifier>test</classifier>
             <scope>test</scope>
         </dependency>
+-->
 
         <dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -120,11 +122,11 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.kafka</groupId>-->
-<!--			<artifactId>spring-kafka-test</artifactId>-->
-<!--			<scope>test</scope>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>org.springframework.kafka</groupId>
+			<artifactId>spring-kafka-test</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>

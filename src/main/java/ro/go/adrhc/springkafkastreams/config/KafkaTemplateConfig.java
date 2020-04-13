@@ -1,6 +1,7 @@
 package ro.go.adrhc.springkafkastreams.config;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.serialization.IntegerSerializer;
 import org.apache.kafka.common.serialization.Serializer;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -27,10 +28,18 @@ public class KafkaTemplateConfig {
 	}
 
 	@Bean
+	public KafkaTemplate<Object, Integer> intTemplate(
+			ObjectProvider<ProducerListener<Object, Integer>> kafkaProducerListener,
+			ObjectProvider<RecordMessageConverter> messageConverter) {
+		return kafkaTemplateImpl(properties.getClientId() + "-int",
+				new IntegerSerializer(), kafkaProducerListener, messageConverter);
+	}
+
+	@Bean
 	public KafkaTemplate<Object, Object> jsonTemplate(
 			ObjectProvider<ProducerListener<Object, Object>> kafkaProducerListener,
 			ObjectProvider<RecordMessageConverter> messageConverter) {
-		return kafkaTemplateImpl(properties.getClientId(),
+		return kafkaTemplateImpl(properties.getClientId() + "-json",
 				jsonSerde.serializer(), kafkaProducerListener, messageConverter);
 	}
 
