@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.support.serializer.JsonSerde;
 import ro.go.adrhc.springkafkastreams.model.ClientProfile;
 import ro.go.adrhc.springkafkastreams.model.DailyExpenses;
+import ro.go.adrhc.springkafkastreams.model.OverdueDailyExpenses;
 import ro.go.adrhc.springkafkastreams.model.Transaction;
 
 import java.util.Map;
@@ -31,6 +32,11 @@ public class SerdeConfig {
 	@Bean
 	public JsonSerde<DailyExpenses> dailyExpensesSerde() {
 		return jsonSerdeImpl(DailyExpenses.class);
+	}
+
+	@Bean
+	public JsonSerde<OverdueDailyExpenses> overdueDailyExpensesSerde() {
+		return jsonSerdeImpl(OverdueDailyExpenses.class);
 	}
 
 	@Bean

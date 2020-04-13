@@ -19,11 +19,13 @@ public class AbstractTestDTOFactory {
 			() -> "client" + randomInt(1, 1);
 	private static final Supplier<String> MERCHANT_ID_SUPP =
 			() -> "merchant" + randomInt(1, 10);
+	private static final IntSupplier MAX_AMOUNT_SUPP =
+			() -> randomInt(500, 1000);
 	private static final IntSupplier AMOUNT_SUPP =
-			() -> randomInt(0, 1000);
+			() -> randomInt(0, 500);
 
 	public static ClientProfile randomClientProfile() {
-		return new ClientProfile(CLIENT_ID_SUPP.get(), AMOUNT_SUPP.getAsInt());
+		return new ClientProfile(CLIENT_ID_SUPP.get(), MAX_AMOUNT_SUPP.getAsInt());
 	}
 
 	public static ClientProfile randomClientProfile(int dailyMaxAmount) {
