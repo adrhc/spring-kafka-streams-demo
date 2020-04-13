@@ -17,7 +17,7 @@ public class TopicsProperties {
 	private String personsStars;
 	private String transactions;
 	private String dailyTotalSpent;
-	private String dailyExpensesDetails;
+	private String dailyExceeded;
 	private String clientProfile;
 	private boolean starsAsStream;
 }

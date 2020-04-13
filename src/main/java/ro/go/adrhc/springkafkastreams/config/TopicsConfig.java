@@ -28,6 +28,6 @@ public class TopicsConfig {
 
 	@Bean
 	public NewTopic dailyExpensesDetailsTopic() {
-		return TopicBuilder.name(properties.getDailyExpensesDetails()).compact().build();
+		return TopicBuilder.name(properties.getDailyExceeded()).compact().build();
 	}
 }

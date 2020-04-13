@@ -22,41 +22,40 @@ public class StreamsHelper {
 	private final TopicsProperties properties;
 	private final JsonSerde<Transaction> transactionSerde;
 	private final JsonSerde<ClientProfile> clientProfileSerde;
-	private final JsonSerde<DailyTotalSpent> dailyExpensesSerde;
+	private final JsonSerde<DailyTotalSpent> dailyTotalSpentSerde;
 
-	public StreamsHelper(TopicsProperties properties, @Qualifier("transactionSerde") JsonSerde<Transaction> transactionSerde, @Qualifier("clientProfileSerde") JsonSerde<ClientProfile> clientProfileSerde, JsonSerde<DailyTotalSpent> dailyExpensesSerde) {
+	public StreamsHelper(TopicsProperties properties, @Qualifier("transactionSerde") JsonSerde<Transaction> transactionSerde, @Qualifier("clientProfileSerde") JsonSerde<ClientProfile> clientProfileSerde, @Qualifier("dailyTotalSpentSerde") JsonSerde<DailyTotalSpent> dailyTotalSpentSerde) {
 		this.properties = properties;
 		this.transactionSerde = transactionSerde;
 		this.clientProfileSerde = clientProfileSerde;
-		this.dailyExpensesSerde = dailyExpensesSerde;
+		this.dailyTotalSpentSerde = dailyTotalSpentSerde;
 	}
 
-	public Produced<String, Integer> producedWithInteger(String processorName) {
+	public Produced<String, Integer> produceInteger(String processorName) {
 		return Produced.with(Serdes.String(), Serdes.Integer()).withName(processorName);
 	}
 
-	private Consumed<String, Transaction> consumedWithTransaction(String processorName) {
+	private Consumed<String, Transaction> consumeTransaction(String processorName) {
 		return Consumed.with(Serdes.String(), transactionSerde).withName(processorName);
 	}
 
-	private Consumed<String, Integer> consumedWithDailyExpenses(String processorName) {
+	private Consumed<String, Integer> consumeInteger(String processorName) {
 		return Consumed.with(Serdes.String(), Serdes.Integer()).withName(processorName);
 	}
 
-	private Consumed<String, DailyTotalSpent> consumedWithDailyExpensesDetails(String processorName) {
-		return Consumed.with(Serdes.String(), dailyExpensesSerde).withName(processorName);
+	private Consumed<String, DailyTotalSpent> consumeDailyTotalSpent(String processorName) {
+		return Consumed.with(Serdes.String(), dailyTotalSpentSerde).withName(processorName);
 	}
 
-	public Materialized<String, Integer, WindowStore<Bytes, byte[]>> dailySpentByClientId() {
+	public Materialized<String, Integer, WindowStore<Bytes, byte[]>> dailyTotalSpentByClientId() {
 		return Materialized.<String, Integer, WindowStore<Bytes, byte[]>>
-				as("dailySpentByClientId")
+				as("dailyTotalSpentByClientId")
 				.withKeySerde(Serdes.String())
 				.withValueSerde(Serdes.Integer())
 				.withRetention(Duration.ofDays(DELAY + 1));
-//				.withRetention(Duration.ofDays(12 * 30));
 	}
 
-	public KStream<String, ClientProfile> clientProfiles(StreamsBuilder streamsBuilder) {
+	public KStream<String, ClientProfile> clientProfileStream(StreamsBuilder streamsBuilder) {
 		return streamsBuilder.stream(properties.getClientProfile(),
 				Consumed.<String, ClientProfile>
 						as(properties.getClientProfile())
@@ -64,7 +63,7 @@ public class StreamsHelper {
 						.withValueSerde(clientProfileSerde));
 	}
 
-	public KTable<String, ClientProfile> clientProfilesTable(StreamsBuilder streamsBuilder) {
+	public KTable<String, ClientProfile> clientProfileTable(StreamsBuilder streamsBuilder) {
 		return streamsBuilder.table(properties.getClientProfile(),
 				Consumed.<String, ClientProfile>
 						as(properties.getClientProfile())
@@ -76,27 +75,27 @@ public class StreamsHelper {
 						.withValueSerde(clientProfileSerde));
 	}
 
-	public Joined<String, DailyTotalSpent, ClientProfile> dailyExpensesDetailsByClientIdJoin() {
-		return Joined.with(Serdes.String(), dailyExpensesSerde,
-				clientProfileSerde, "dailyExpenses_join_clientProfiles");
+	public Joined<String, DailyTotalSpent, ClientProfile> dailyTotalSpentJoinClientProfile() {
+		return Joined.with(Serdes.String(), dailyTotalSpentSerde,
+				clientProfileSerde, "dailyTotalSpentJoinClientProfile");
 	}
 
-	public KStream<String, Integer> dailyExpenses(StreamsBuilder streamsBuilder) {
+	public KStream<String, Integer> dailyTotalSpent(StreamsBuilder streamsBuilder) {
 		return streamsBuilder.stream(properties.getDailyTotalSpent(),
-				this.consumedWithDailyExpenses(properties.getDailyTotalSpent()));
+				this.consumeInteger(properties.getDailyTotalSpent()));
 	}
 
-	public KStream<String, DailyTotalSpent> dailyExpensesDetails(StreamsBuilder streamsBuilder) {
-		return streamsBuilder.stream(properties.getDailyExpensesDetails(),
-				this.consumedWithDailyExpensesDetails(properties.getDailyExpensesDetails()));
+	public KStream<String, DailyTotalSpent> dailyExceeds(StreamsBuilder streamsBuilder) {
+		return streamsBuilder.stream(properties.getDailyExceeded(),
+				this.consumeDailyTotalSpent(properties.getDailyExceeded()));
 	}
 
-	public KStream<String, Transaction> transactionsStream(StreamsBuilder streamsBuilder) {
+	public KStream<String, Transaction> transactions(StreamsBuilder streamsBuilder) {
 		return streamsBuilder.stream(properties.getTransactions(),
-				this.consumedWithTransaction(properties.getTransactions()));
+				this.consumeTransaction(properties.getTransactions()));
 	}
 
-	public Grouped<String, Transaction> transactionsByClientId() {
-		return Grouped.with("transactionsByClientId_group", Serdes.String(), transactionSerde);
+	public Grouped<String, Transaction> transactionsGroupedByClientId() {
+		return Grouped.with("transactionsGroupedByClientId", Serdes.String(), transactionSerde);
 	}
 }

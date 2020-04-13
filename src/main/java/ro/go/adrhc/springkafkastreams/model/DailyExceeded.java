@@ -11,7 +11,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class OverdueDailyExpenses implements Serializable {
+public class DailyExceeded implements Serializable {
 	private int dailyMaxAmount;
 	private DailyTotalSpent dailyTotalSpent;
 }

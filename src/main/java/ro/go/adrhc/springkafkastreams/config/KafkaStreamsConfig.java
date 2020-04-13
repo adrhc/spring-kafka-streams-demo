@@ -1,8 +1,10 @@
 package ro.go.adrhc.springkafkastreams.config;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.KStream;
+import org.apache.kafka.streams.kstream.KTable;
 import org.apache.kafka.streams.kstream.TimeWindows;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,13 +14,17 @@ import org.springframework.kafka.annotation.EnableKafkaStreams;
 import org.springframework.kafka.support.serializer.JsonSerde;
 import ro.go.adrhc.springkafkastreams.helper.StreamsHelper;
 import ro.go.adrhc.springkafkastreams.model.ClientProfile;
+import ro.go.adrhc.springkafkastreams.model.DailyExceeded;
 import ro.go.adrhc.springkafkastreams.model.DailyTotalSpent;
 import ro.go.adrhc.springkafkastreams.model.Transaction;
 import ro.go.adrhc.springkafkastreams.transformers.debug.ValueTransformerWithKeyDebugger;
+import ro.go.adrhc.springkafkastreams.util.WindowUtils;
 
 import java.time.Duration;
+import java.util.Optional;
 
 import static ro.go.adrhc.springkafkastreams.helper.StreamsHelper.DELAY;
+import static ro.go.adrhc.springkafkastreams.util.DateUtils.format;
 import static ro.go.adrhc.springkafkastreams.util.WindowUtils.keyOf;
 
 /**
@@ -51,56 +57,24 @@ public class KafkaStreamsConfig {
 		// Tumbling time windows
 //		TimeWindows period = TimeWindows.of(Duration.ofDays(1)).grace(Duration.ofDays(DELAY));
 
-		KStream<String, Transaction> transactions = helper.transactionsStream(streamsBuilder);
+		KTable<String, ClientProfile> clientProfileTable = helper.clientProfileTable(streamsBuilder);
+		KStream<String, Transaction> transactions = helper.transactions(streamsBuilder);
 
-		// amount spent per day
 		transactions
 //				.transform(new TransformerDebugger<>())
 				.transformValues(new ValueTransformerWithKeyDebugger<>())
-				.groupByKey(helper.transactionsByClientId())
+				.groupByKey(helper.transactionsGroupedByClientId())
+				// group by 1 day
 				.windowedBy(TimeWindows.of(Duration.ofDays(1)).grace(Duration.ofDays(DELAY)))
+				// aggregate amount per clientId-day
 				.aggregate(() -> 0, (k, v, sum) -> sum + v.getAmount(),
-						helper.dailySpentByClientId())
+						helper.dailyTotalSpentByClientId())
 				.toStream((win, amount) -> keyOf(win)) // clientId-date, amount
 				.peek((k, amount) -> log.debug("\n\tclientId/day = {}, total spent = {}", k, amount))
-				.to(properties.getDailyTotalSpent(),
-						helper.producedWithInteger(properties.getDailyTotalSpent()));
-		return transactions;
-
-/*
-		KStream<String, ClientProfile> clientProfiles = helper.clientProfiles(streamsBuilder);
-		clientProfiles.foreach((k, de) -> log.debug("\n\tkey = {}, value = {}", k, de));
-		return clientProfiles;
-*/
-
-/*
-		KTable<String, ClientProfile> clientProfilesTable = helper.clientProfilesTable(streamsBuilder);
-		KStream<String, ClientProfile> clientProfiles = clientProfilesTable.toStream();
-		clientProfiles.foreach((k, de) -> log.debug("\n\tkey = {}, value = {}", k, de));
-		return clientProfiles;
-*/
-
-/*
-		// start from dailyExpensesDetails
-		KTable<String, ClientProfile> clientProfilesTable = helper.clientProfilesTable(streamsBuilder);
-		KStream<String, DailyTotalSpent> dailyExpensesDetails = helper.dailyExpensesDetails(streamsBuilder);
-		dailyExpensesDetails
-				.join(clientProfilesTable, (de, cp) -> de,
-						Joined.<String, DailyTotalSpent, ClientProfile>
-								as("dailyExpenses_join_clientProfiles")
-								.withKeySerde(Serdes.String())
-								.withValueSerde(dailyExpensesSerde)
-								.withOtherValueSerde(clientProfileSerde))
-				.foreach((k, de) -> log.debug("\n\tkey = {}, value = {}", k, de));
-		return dailyExpensesDetails;
-*/
-
-/*
-		// start from dailyTotalSpent
-		KTable<String, ClientProfile> clientProfilesTable = helper.clientProfilesTable(streamsBuilder);
-		KStream<String, Integer> dailyTotalSpent = helper.dailyTotalSpent(streamsBuilder);
-		dailyTotalSpent
-				.peek((k, amount) -> log.debug("\n\tclientId/day = {}, total spent = {}", k, amount))
+				// save clientId-day:amount into table (compact stream)
+				.through(properties.getDailyTotalSpent(),
+						helper.produceInteger(properties.getDailyTotalSpent()))
+				// clientId-day:amount map to clientId:DailyTotalSpent
 				.map((k, amount) -> {
 					Optional<WindowUtils.WindowBasedKey<String>> winBasedKeyOptional = WindowUtils.parse(k);
 					return winBasedKeyOptional
@@ -110,59 +84,27 @@ public class KafkaStreamsConfig {
 							})
 							.orElse(null);
 				})
-				.join(clientProfilesTable, (de, cp) -> {
+				// clientId:DailyTotalSpent joint clientId:ClientProfile
+				.join(clientProfileTable, (de, cp) -> {
 							if (cp.getDailyMaxAmount() < de.getAmount()) {
-								return new OverdueDailyExpenses(cp.getDailyMaxAmount(), de);
+								return new DailyExceeded(cp.getDailyMaxAmount(), de);
 							}
-							log.debug("\n\t{}\n\t{}", de, cp);
+							log.debug("\n\tskipping daily total spent under {}\n\t{}\n\t{}", cp.getDailyMaxAmount(), de, cp);
 							return null;
 						},
-						helper.dailyExpensesDetailsByClientIdJoin())
+						helper.dailyTotalSpentJoinClientProfile())
+				// skip under dailyMaxAmount
 				.filter((k, v) -> v != null)
 				.foreach((clientId, ode) -> {
 					DailyTotalSpent de = ode.getDailyTotalSpent();
-					log.debug("\n\tMAIL: {} spent {} GBP on {} (alert set for more than {})",
+					log.debug("\n\tMAIL: {} spent {} GBP on {} (alert set for over {})",
 							de.getClientId(), de.getAmount(), format(de.getTime()), ode.getDailyMaxAmount());
 				});
-		return dailyTotalSpent;
-*/
 
-/*
-		windowedDailyExpenses
-				.map((w, amount) -> {
-					LocalDate time = localDateOf(w.window().start());
-					return KeyValue.pair(w.key(), new DailyTotalSpent(w.key(), time, amount));
-				}, Named.as("clientId_and_DailyExpenses_mapper"))
-				.peek((k, de) -> log.debug("\n\tkey = {}, value = {}", k, de))
-				.join(clientProfilesTable, (de, cp) -> de, helper.dailyExpensesByClientIdJoin())
-				.foreach((k, de) -> log.debug("\n\tkey = {}, value = {}", k, de));
-*/
-/*
-				.foreach((k, amount) -> {
-					Optional<WindowUtils.WindowBasedKey<String>> wkOptional = WindowUtils.parse(k);
-					wkOptional.ifPresent(wk -> log.debug("\n\tMAIL: {} spent {} GBP on {}",
-							wk.getData(), amount, format(wkOptional.get().getTime())));
-				}, Named.as("mail_sender"));
-*/
+		return transactions;
 	}
 
 /*
-	@Bean
-	public KStream<String, PersonStars> personJoinStars(StreamsBuilder streamsBuilder) {
-		KStream<String, Person> persons = serde.personStream(properties.getPersons(), streamsBuilder);
-		KTable<String, Integer> stars = serde.integerTable(properties.getStars(), streamsBuilder);
-
-		KStream<String, PersonStars> stream = persons
-				.join(stars, PersonStars::new,
-						Joined.with(Serdes.String(), personSerde, Serdes.Integer(),
-								joinName(properties.getPersonsUpper(), properties.getStars())));
-		stream
-				.transformValues(new ValueTransformerWithKeyDebugger<>())
-				.to(properties.getPersonsStars(), serde.producedWithPersonStars("to-personsStarsTopic"));
-
-		return stream;
-	}
-
 	@Bean
 	public StreamsBuilderFactoryBean defaultKafkaStreamsBuilder(KafkaStreamsConfiguration configuration) {
 		return new StreamsBuilderFactoryBean(configuration, new CleanupConfig(true, true));

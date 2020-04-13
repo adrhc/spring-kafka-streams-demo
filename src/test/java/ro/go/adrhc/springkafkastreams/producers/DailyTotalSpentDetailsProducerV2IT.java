@@ -31,6 +31,6 @@ public class DailyTotalSpentDetailsProducerV2IT {
 		log.debug("DailyTotalSpent topic: {}", properties.getDailyTotalSpent());
 		DailyTotalSpent dailyTotalSpent = randomDailyTotalSpent();
 		log.debug("dailyTotalSpent:\n\t{}", dailyTotalSpent);
-		jsonTemplate.send(properties.getDailyExpensesDetails(), dailyTotalSpent.getClientId(), dailyTotalSpent);
+		jsonTemplate.send(properties.getDailyExceeded(), dailyTotalSpent.getClientId(), dailyTotalSpent);
 	}
 }
