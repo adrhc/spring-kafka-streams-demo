@@ -30,4 +30,9 @@ public class TopicsConfig {
 	public NewTopic dailyExceededTopic() {
 		return TopicBuilder.name(properties.getDailyExceeds()).compact().build();
 	}
+
+	@Bean
+	public NewTopic periodTotalExpensesTopic() {
+		return TopicBuilder.name(properties.getPeriodTotalExpenses()).compact().build();
+	}
 }

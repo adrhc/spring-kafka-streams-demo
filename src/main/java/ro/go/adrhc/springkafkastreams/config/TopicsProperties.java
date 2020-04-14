@@ -14,4 +14,5 @@ public class TopicsProperties {
 	private String dailyTotalSpent;
 	private String dailyExceeds;
 	private String clientProfiles;
+	private String periodTotalExpenses;
 }

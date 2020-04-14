@@ -12,7 +12,7 @@ import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
 import ro.go.adrhc.springkafkastreams.model.DailyTotalSpent;
 
 import static ro.go.adrhc.springkafkastreams.util.AbstractTestDTOFactory.randomDailyTotalSpent;
-import static ro.go.adrhc.springkafkastreams.util.WindowUtils.keyOf;
+import static ro.go.adrhc.springkafkastreams.util.LocalDateBasedKey.keyOf;
 
 @ActiveProfiles({"v2", "test"})
 @SpringBootTest
@@ -33,6 +33,7 @@ public class TotalSpentDailyProducerV2IT {
 		DailyTotalSpent dailyTotalSpent = randomDailyTotalSpent();
 		log.debug("totalSpentDaily:\n\t{}", dailyTotalSpent);
 		intTemplate.send(properties.getDailyTotalSpent(),
-				keyOf(dailyTotalSpent), dailyTotalSpent.getAmount());
+				keyOf(dailyTotalSpent.getClientId(), dailyTotalSpent.getTime()),
+				dailyTotalSpent.getAmount());
 	}
 }
