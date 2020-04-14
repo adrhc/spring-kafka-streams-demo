@@ -25,7 +25,7 @@ public class TransactionsProducerV2IT {
 	@Autowired
 	private Environment env;
 
-	@RepeatedTest(15)
+	@RepeatedTest(2)
 	void send() {
 		log.debug("profiles: {}", String.join(", ", env.getActiveProfiles()));
 		log.debug("transactions topic: {}", properties.getTransactions());

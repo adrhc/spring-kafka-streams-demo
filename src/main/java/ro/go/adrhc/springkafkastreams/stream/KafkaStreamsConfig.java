@@ -40,14 +40,10 @@ import static ro.go.adrhc.springkafkastreams.util.WindowUtils.keyOf;
 public class KafkaStreamsConfig {
 	private final TopicsProperties properties;
 	private final StreamsHelper helper;
-	private final JsonSerde<ClientProfile> clientProfileSerde;
-	private final JsonSerde<DailyTotalSpent> dailyExpensesSerde;
 
-	public KafkaStreamsConfig(TopicsProperties properties, StreamsHelper helper, JsonSerde<ClientProfile> clientProfileSerde, JsonSerde<DailyTotalSpent> dailyExpensesSerde) {
+	public KafkaStreamsConfig(TopicsProperties properties, StreamsHelper helper) {
 		this.properties = properties;
 		this.helper = helper;
-		this.clientProfileSerde = clientProfileSerde;
-		this.dailyExpensesSerde = dailyExpensesSerde;
 	}
 
 	@Bean
@@ -61,6 +57,8 @@ public class KafkaStreamsConfig {
 		KStream<String, Transaction> transactions = helper.transactionsStream(streamsBuilder);
 
 		transactions
+				.peek((clientId, transaction) -> log.debug("\n\t{} spent {} GBP on {}", clientId,
+						transaction.getAmount(), format(transaction.getTime())))
 //				.transform(new TransformerDebugger<>())
 //				.transformValues(new ValueTransformerWithKeyDebugger<>())
 				.groupByKey(helper.transactionsGroupedByClientId())
@@ -70,7 +68,6 @@ public class KafkaStreamsConfig {
 				.aggregate(() -> 0, (k, v, sum) -> sum + v.getAmount(),
 						helper.dailyTotalSpentByClientId())
 				.toStream((win, amount) -> keyOf(win)) // clientId-date, amount
-				.peek((k, amount) -> log.debug("\n\tclientId/day = {}, total spent = {}", k, amount))
 				// save clientId-day:amount into a compact stream (aka table)
 				.through(properties.getDailyTotalSpent(),
 						helper.produceInteger(properties.getDailyTotalSpent()))
@@ -79,8 +76,9 @@ public class KafkaStreamsConfig {
 					Optional<WindowUtils.WindowBasedKey<String>> winBasedKeyOptional = WindowUtils.parse(k);
 					return winBasedKeyOptional
 							.map(it -> {
-								String key = it.getData();
-								return KeyValue.pair(key, new DailyTotalSpent(key, it.getTime(), amount));
+								String clientId = it.getData();
+								log.debug("\n\t{} spent a total of {} GBP on {}", clientId, amount, format(it.getTime()));
+								return KeyValue.pair(clientId, new DailyTotalSpent(clientId, it.getTime(), amount));
 							})
 							.orElse(null);
 				})
@@ -89,7 +87,7 @@ public class KafkaStreamsConfig {
 							if (cp.getDailyMaxAmount() < dts.getAmount()) {
 								return new DailyExceeded(cp.getDailyMaxAmount(), dts);
 							}
-							log.debug("\n\tskipping daily total spent under {}\n\t{}\n\t{}", cp.getDailyMaxAmount(), dts, cp);
+							log.debug("\n\tskipping daily total spent under {} GBP\n\t{}\n\t{}", cp.getDailyMaxAmount(), dts, cp);
 							return null;
 						},
 						helper.dailyTotalSpentJoinClientProfile())
