@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.config;
+package ro.go.adrhc.springkafkastreams.stream;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.streams.KeyValue;
@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.EnableKafkaStreams;
 import org.springframework.kafka.support.serializer.JsonSerde;
+import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
 import ro.go.adrhc.springkafkastreams.helper.StreamsHelper;
 import ro.go.adrhc.springkafkastreams.model.ClientProfile;
 import ro.go.adrhc.springkafkastreams.model.DailyExceeded;
@@ -94,13 +95,15 @@ public class KafkaStreamsConfig {
 						helper.dailyTotalSpentJoinClientProfile())
 				// skip under dailyMaxAmount
 				.filter((k, v) -> v != null)
-				.through(properties.getDailyExceeds(),
-						helper.produceDailyExceeded(properties.getDailyExceeds()))
+				.to(properties.getDailyExceeds(),
+						helper.produceDailyExceeded(properties.getDailyExceeds()));
+/*
 				.foreach((clientId, de) -> {
 					DailyTotalSpent dts = de.getDailyTotalSpent();
 					log.debug("\n\tMAIL: {} spent {} GBP on {} (alert set for over {})",
 							clientId, dts.getAmount(), format(dts.getTime()), de.getDailyMaxAmount());
 				});
+*/
 
 		return transactions;
 	}
