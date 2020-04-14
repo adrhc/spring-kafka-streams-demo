@@ -11,8 +11,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class ClientProfile implements Serializable {
-	private String clientId;
-	private int dailyMaxAmount;
+public class PeriodExceeded implements Serializable {
 	private int periodMaxAmount;
+	private PeriodTotalSpent periodTotalSpent;
 }

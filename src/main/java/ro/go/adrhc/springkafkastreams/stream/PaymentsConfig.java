@@ -5,7 +5,6 @@ import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
-import org.apache.kafka.streams.kstream.Produced;
 import org.apache.kafka.streams.kstream.TimeWindows;
 import org.apache.kafka.streams.state.KeyValueStore;
 import org.apache.kafka.streams.state.StoreBuilder;
@@ -75,25 +74,32 @@ public class PaymentsConfig {
 				// clientIdDay:amount -> clientId:DailyTotalSpent
 				.map(PaymentsUtils::clientIdDailyTotalSpentOf)
 				// clientId:DailyTotalSpent join clientId:ClientProfile
-				.join(clientProfileTable, PaymentsUtils::joinDailyTotalSpentWithClientProfileOnClientId,
+				.join(clientProfileTable,
+						PaymentsUtils::joinDailyTotalSpentWithClientProfileOnClientId,
 						helper.dailyTotalSpentJoinClientProfile())
 				// skip for less than dailyMaxAmount
 				.filter((clientId, dailyExceeded) -> dailyExceeded != null)
 				// clientId:DailyExceeded stream
 				.to(properties.getDailyExceeds(), helper.produceDailyExceeded());
 
-		StoreBuilder<KeyValueStore<String, Integer>> periodTotalExpensesStore =
+		StoreBuilder<KeyValueStore<String, Integer>> periodTotalSpentStore =
 				Stores.keyValueStoreBuilder(
-						Stores.persistentKeyValueStore("periodTotalExpensesStore"),
+						Stores.persistentKeyValueStore("periodTotalSpentStore"),
 						Serdes.String(), Serdes.Integer());
-		streamsBuilder.addStateStore(periodTotalExpensesStore);
+		streamsBuilder.addStateStore(periodTotalSpentStore);
 
-		// calculating total expenses for period
+		// calculating total expenses for a period
 		transactions
 				.flatTransform(new PeriodTotalExpensesAggregator(totalPeriod,
-						periodTotalExpensesStore.name()), periodTotalExpensesStore.name())
+						periodTotalSpentStore.name()), periodTotalSpentStore.name())
 				.peek((clientIdPeriod, amount) -> printPeriodTotalExpenses(clientIdPeriod, amount, totalPeriod))
-				.to(properties.getPeriodTotalExpenses(), Produced.with(Serdes.String(), Serdes.Integer()));
+				.map(PaymentsUtils::clientIdPeriodTotalSpentOf)
+				.join(clientProfileTable,
+						PaymentsUtils.joinPeriodTotalSpentWithClientProfileOnClientId(totalPeriod),
+						helper.periodTotalSpentJoinClientProfile())
+				// skip for less than periodMaxAmount
+				.filter((clientId, periodExceeded) -> periodExceeded != null)
+				.to(properties.getPeriodTotalSpent(), helper.producePeriodExceeded());
 
 		return transactions;
 	}

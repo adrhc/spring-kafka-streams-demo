@@ -4,10 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.support.serializer.JsonSerde;
-import ro.go.adrhc.springkafkastreams.model.ClientProfile;
-import ro.go.adrhc.springkafkastreams.model.DailyExceeded;
-import ro.go.adrhc.springkafkastreams.model.DailyTotalSpent;
-import ro.go.adrhc.springkafkastreams.model.Transaction;
+import ro.go.adrhc.springkafkastreams.model.*;
 
 import java.util.Map;
 
@@ -32,6 +29,16 @@ public class SerdeConfig {
 	@Bean
 	public JsonSerde<DailyTotalSpent> dailyTotalSpentSerde() {
 		return jsonSerdeImpl(DailyTotalSpent.class);
+	}
+
+	@Bean
+	public JsonSerde<PeriodTotalSpent> periodTotalSpentSerde() {
+		return jsonSerdeImpl(PeriodTotalSpent.class);
+	}
+
+	@Bean
+	public JsonSerde<PeriodExceeded> periodExceededSerde() {
+		return jsonSerdeImpl(PeriodExceeded.class);
 	}
 
 	@Bean

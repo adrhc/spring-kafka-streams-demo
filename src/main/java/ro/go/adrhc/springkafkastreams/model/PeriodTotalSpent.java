@@ -6,13 +6,14 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class ClientProfile implements Serializable {
+public class PeriodTotalSpent implements Serializable {
 	private String clientId;
-	private int dailyMaxAmount;
-	private int periodMaxAmount;
+	private LocalDate time;
+	private int amount;
 }
