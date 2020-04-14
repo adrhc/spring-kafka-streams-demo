@@ -99,7 +99,7 @@ public class PaymentsConfig {
 						helper.periodTotalSpentJoinClientProfile())
 				// skip for less than periodMaxAmount
 				.filter((clientId, periodExceeded) -> periodExceeded != null)
-				.to(properties.getPeriodTotalSpent(), helper.producePeriodExceeded());
+				.to(properties.getPeriodExceeds(), helper.producePeriodExceeded());
 
 		return transactions;
 	}
