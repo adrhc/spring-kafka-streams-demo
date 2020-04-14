@@ -33,6 +33,6 @@ public class TopicsConfig {
 
 	@Bean
 	public NewTopic periodTotalSpentTopic() {
-		return TopicBuilder.name(properties.getPeriodTotalExpenses()).compact().build();
+		return TopicBuilder.name(properties.getPeriodTotalSpent()).compact().build();
 	}
 }
