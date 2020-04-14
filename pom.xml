@@ -130,6 +130,7 @@
 	</dependencies>
 
 	<build>
+		<directory>/tmp/target-${project.groupId}-${project.artifactId}</directory>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
