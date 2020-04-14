@@ -7,6 +7,9 @@ import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
 import org.apache.kafka.streams.kstream.Produced;
 import org.apache.kafka.streams.kstream.TimeWindows;
+import org.apache.kafka.streams.state.KeyValueStore;
+import org.apache.kafka.streams.state.StoreBuilder;
+import org.apache.kafka.streams.state.Stores;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +19,6 @@ import org.springframework.kafka.annotation.EnableKafkaStreams;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
 import ro.go.adrhc.springkafkastreams.helper.StreamsHelper;
 import ro.go.adrhc.springkafkastreams.model.ClientProfile;
-import ro.go.adrhc.springkafkastreams.model.DailyTotalSpent;
 import ro.go.adrhc.springkafkastreams.model.Transaction;
 import ro.go.adrhc.springkafkastreams.transformers.debug.PeriodTotalExpensesAggregator;
 
@@ -49,13 +51,12 @@ public class PaymentsConfig {
 	}
 
 	@Bean
-	public KStream<String, ?> payments(StreamsBuilder streamsBuilder) {
+	public KStream<String, ?> transactions(StreamsBuilder streamsBuilder) {
 		KTable<String, ClientProfile> clientProfileTable = helper.clientProfileTable(streamsBuilder);
-		// monthlyTotalSpentTable needed only for its registered store
-		KTable<String, Integer> monthlyTotalSpentTable = helper.periodTotalExpensesTable(streamsBuilder);
 		KStream<String, Transaction> transactions = helper.transactionsStream(streamsBuilder);
 
-		KStream<String, DailyTotalSpent> dailyTotalSpent = transactions
+		// calculating total expenses per day
+		transactions
 				.peek((clientId, transaction) -> log.debug("\n\t{} spent {} GBP on {}", clientId,
 						transaction.getAmount(), format(transaction.getTime())))
 //				.transform(new TransformerDebugger<>())
@@ -72,21 +73,25 @@ public class PaymentsConfig {
 				.through(properties.getDailyTotalSpent(),
 						helper.produceInteger(properties.getDailyTotalSpent()))
 				// clientIdDay:amount -> clientId:DailyTotalSpent
-				.map(PaymentsUtils::clientIdDailyTotalSpentOf);
-
-		// calculating total expenses per day
-		dailyTotalSpent
+				.map(PaymentsUtils::clientIdDailyTotalSpentOf)
 				// clientId:DailyTotalSpent join clientId:ClientProfile
 				.join(clientProfileTable, PaymentsUtils::joinDailyTotalSpentWithClientProfileOnClientId,
 						helper.dailyTotalSpentJoinClientProfile())
 				// skip for less than dailyMaxAmount
 				.filter((clientId, dailyExceeded) -> dailyExceeded != null)
+				// clientId:DailyExceeded stream
 				.to(properties.getDailyExceeds(), helper.produceDailyExceeded());
 
+		StoreBuilder<KeyValueStore<String, Integer>> periodTotalExpensesStore =
+				Stores.keyValueStoreBuilder(
+						Stores.persistentKeyValueStore("periodTotalExpensesStore"),
+						Serdes.String(), Serdes.Integer());
+		streamsBuilder.addStateStore(periodTotalExpensesStore);
+
 		// calculating total expenses for period
-		dailyTotalSpent
-				.flatTransform(new PeriodTotalExpensesAggregator(totalPeriod, properties),
-						properties.getPeriodTotalExpenses())
+		transactions
+				.flatTransform(new PeriodTotalExpensesAggregator(totalPeriod,
+						periodTotalExpensesStore.name()), periodTotalExpensesStore.name())
 				.peek((clientIdPeriod, amount) -> printPeriodTotalExpenses(clientIdPeriod, amount, totalPeriod))
 				.to(properties.getPeriodTotalExpenses(), Produced.with(Serdes.String(), Serdes.Integer()));
 
