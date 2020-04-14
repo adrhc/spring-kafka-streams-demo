@@ -87,7 +87,7 @@ public class KafkaStreamsConfig {
 							if (cp.getDailyMaxAmount() < dts.getAmount()) {
 								return new DailyExceeded(cp.getDailyMaxAmount(), dts);
 							}
-							log.debug("\n\tskipping daily total spent under {} GBP\n\t{}\n\t{}", cp.getDailyMaxAmount(), dts, cp);
+							log.trace("\n\tskipping daily total spent under {} GBP\n\t{}\n\t{}", cp.getDailyMaxAmount(), dts, cp);
 							return null;
 						},
 						helper.dailyTotalSpentJoinClientProfile())
