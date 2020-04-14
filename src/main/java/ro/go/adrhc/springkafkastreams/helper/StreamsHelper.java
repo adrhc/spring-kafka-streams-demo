@@ -87,17 +87,17 @@ public class StreamsHelper {
 				clientProfileSerde, "dailyTotalSpentJoinClientProfile");
 	}
 
-	public KStream<String, Integer> dailyTotalSpent(StreamsBuilder streamsBuilder) {
+	public KStream<String, Integer> dailyTotalSpentStream(StreamsBuilder streamsBuilder) {
 		return streamsBuilder.stream(properties.getDailyTotalSpent(),
 				this.consumeInteger(properties.getDailyTotalSpent()));
 	}
 
-	public KStream<String, DailyTotalSpent> dailyExceeds(StreamsBuilder streamsBuilder) {
+	public KStream<String, DailyTotalSpent> dailyExceedsStream(StreamsBuilder streamsBuilder) {
 		return streamsBuilder.stream(properties.getDailyExceeds(),
 				this.consumeDailyTotalSpent(properties.getDailyExceeds()));
 	}
 
-	public KStream<String, Transaction> transactions(StreamsBuilder streamsBuilder) {
+	public KStream<String, Transaction> transactionsStream(StreamsBuilder streamsBuilder) {
 		return streamsBuilder.stream(properties.getTransactions(),
 				this.consumeTransaction(properties.getTransactions()));
 	}

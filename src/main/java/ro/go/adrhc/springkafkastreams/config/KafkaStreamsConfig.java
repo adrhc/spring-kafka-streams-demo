@@ -17,7 +17,6 @@ import ro.go.adrhc.springkafkastreams.model.ClientProfile;
 import ro.go.adrhc.springkafkastreams.model.DailyExceeded;
 import ro.go.adrhc.springkafkastreams.model.DailyTotalSpent;
 import ro.go.adrhc.springkafkastreams.model.Transaction;
-import ro.go.adrhc.springkafkastreams.transformers.debug.ValueTransformerWithKeyDebugger;
 import ro.go.adrhc.springkafkastreams.util.WindowUtils;
 
 import java.time.Duration;
@@ -58,7 +57,7 @@ public class KafkaStreamsConfig {
 //		TimeWindows period = TimeWindows.of(Duration.ofDays(1)).grace(Duration.ofDays(DELAY));
 
 		KTable<String, ClientProfile> clientProfileTable = helper.clientProfileTable(streamsBuilder);
-		KStream<String, Transaction> transactions = helper.transactions(streamsBuilder);
+		KStream<String, Transaction> transactions = helper.transactionsStream(streamsBuilder);
 
 		transactions
 //				.transform(new TransformerDebugger<>())
