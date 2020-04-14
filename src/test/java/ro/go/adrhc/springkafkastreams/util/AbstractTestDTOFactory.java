@@ -42,7 +42,7 @@ public class AbstractTestDTOFactory {
 		return new Transaction(ldt,
 				MERCHANT_ID_SUPP.get(),
 				CLIENT_ID_SUPP.get(),
-				randomInt(1, 100));
+				AMOUNT_SUPP.getAsInt());
 	}
 
 	private static int randomInt(int origin, int includingBound) {
