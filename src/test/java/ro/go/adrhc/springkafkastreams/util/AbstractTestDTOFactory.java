@@ -22,7 +22,7 @@ public class AbstractTestDTOFactory {
 	private static final IntSupplier MAX_AMOUNT_SUPP =
 			() -> randomInt(50, 100);
 	private static final IntSupplier AMOUNT_SUPP =
-			() -> randomInt(0, 50);
+			() -> randomInt(0, 10);
 
 	public static ClientProfile randomClientProfile() {
 		return new ClientProfile(CLIENT_ID_SUPP.get(), MAX_AMOUNT_SUPP.getAsInt());
