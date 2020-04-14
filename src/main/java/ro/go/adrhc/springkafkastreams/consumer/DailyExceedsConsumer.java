@@ -12,7 +12,8 @@ public class DailyExceedsConsumer {
 
 	public DailyExceedsConsumer(PhoneMessageSender sender) {this.sender = sender;}
 
-	@KafkaListener(id = "dailyExceedsNotifier", topics = "${topic.daily-exceeds}")
+	@KafkaListener(id = "dailyExceedsNotifier", topics = "${topic.daily-exceeds}",
+			clientIdPrefix = "dailyExceedsConsumer")
 	public void consume(DailyExceeded de) {
 		sender.send(de);
 	}
