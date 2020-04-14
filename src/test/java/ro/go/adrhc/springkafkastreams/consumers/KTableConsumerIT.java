@@ -1,6 +1,5 @@
 package ro.go.adrhc.springkafkastreams.consumers;
 
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -22,7 +21,7 @@ import java.util.Map;
 import static ro.go.adrhc.springkafkastreams.util.KConsumerUtils.consumerOf;
 
 @ActiveProfiles({"v2", "test"})
-@SpringBootTest
+@SpringBootTest(properties = {"spring.kafka.consumer.auto-offset-reset=earliest"})
 @Import(KTableConsumerIT.Config.class)
 @Slf4j
 class KTableConsumerIT {
