@@ -35,4 +35,9 @@ public class TopicsConfig {
 	public NewTopic periodTotalSpentTopic() {
 		return TopicBuilder.name(properties.getPeriodTotalSpent()).compact().build();
 	}
+
+	@Bean
+	public NewTopic periodExceededTopic() {
+		return TopicBuilder.name(properties.getPeriodExceeds()).compact().build();
+	}
 }

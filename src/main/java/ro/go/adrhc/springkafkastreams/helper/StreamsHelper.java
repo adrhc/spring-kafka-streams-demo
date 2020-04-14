@@ -48,7 +48,7 @@ public class StreamsHelper {
 	}
 
 	public Produced<String, PeriodExceeded> producePeriodExceeded() {
-		return Produced.with(Serdes.String(), periodExceededSerde).withName(properties.getPeriodExceededs());
+		return Produced.with(Serdes.String(), periodExceededSerde).withName(properties.getPeriodExceeds());
 	}
 
 	private Consumed<String, Transaction> consumeTransaction() {
