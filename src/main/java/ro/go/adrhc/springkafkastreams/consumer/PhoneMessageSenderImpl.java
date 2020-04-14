@@ -13,7 +13,8 @@ public class PhoneMessageSenderImpl implements PhoneMessageSender {
 	@Override
 	public void send(DailyExceeded de) {
 		DailyTotalSpent dts = de.getDailyTotalSpent();
-		log.debug("\n\tPhone message: {} spent {} GBP on {} (alert set for over {})",
-				dts.getClientId(), dts.getAmount(), format(dts.getTime()), de.getDailyMaxAmount());
+		log.debug("\n\tNotification:\t{} spent {} GBP on {}\n\tOverdue:\t\t{} GBP\n\tLimit:\t\t\t{} GBP",
+				dts.getClientId(), dts.getAmount(), format(dts.getTime()),
+				dts.getAmount() - de.getDailyMaxAmount(), de.getDailyMaxAmount());
 	}
 }
