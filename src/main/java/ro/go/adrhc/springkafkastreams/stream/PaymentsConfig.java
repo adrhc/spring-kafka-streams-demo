@@ -90,11 +90,4 @@ public class PaymentsConfig {
 
 		return transactions;
 	}
-
-/*
-	@Bean
-	public StreamsBuilderFactoryBean defaultKafkaStreamsBuilder(KafkaStreamsConfiguration configuration) {
-		return new StreamsBuilderFactoryBean(configuration, new CleanupConfig(true, true));
-	}
-*/
 }
