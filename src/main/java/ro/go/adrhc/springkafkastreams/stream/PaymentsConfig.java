@@ -74,14 +74,16 @@ public class PaymentsConfig {
 				// clientIdDay:amount -> clientId:DailyTotalSpent
 				.map(PaymentsUtils::clientIdDailyTotalSpentOf);
 
+		// calculating total expenses per day
 		dailyTotalSpent
 				// clientId:DailyTotalSpent join clientId:ClientProfile
 				.join(clientProfileTable, PaymentsUtils::joinDailyTotalSpentWithClientProfileOnClientId,
 						helper.dailyTotalSpentJoinClientProfile())
-				// skip under dailyMaxAmount
+				// skip for less than dailyMaxAmount
 				.filter((clientId, dailyExceeded) -> dailyExceeded != null)
 				.to(properties.getDailyExceeds(), helper.produceDailyExceeded());
 
+		// calculating total expenses for period
 		dailyTotalSpent
 				.flatTransform(new PeriodTotalExpensesAggregator(totalPeriod, properties),
 						properties.getPeriodTotalExpenses())
