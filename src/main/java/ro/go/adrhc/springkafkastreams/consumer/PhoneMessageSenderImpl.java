@@ -20,7 +20,7 @@ public class PhoneMessageSenderImpl implements PhoneMessageSender {
 	@Override
 	public void send(DailyExceeded de) {
 		DailyTotalSpent dts = de.getDailyTotalSpent();
-		log.debug("\n\tNotification:\t{} spent a total of {} GBP on {}\n\tOverdue:\t\t{} GBP\n\tLimit:\t\t\t{} GBP",
+		log.debug("\n\tNotification:\t{} spent a total of {} GBP on {}\n\tOverdue:\t{} GBP\n\tLimit:\t\t{} GBP",
 				dts.getClientId(), dts.getAmount(), format(dts.getTime()),
 				dts.getAmount() - de.getDailyMaxAmount(), de.getDailyMaxAmount());
 	}
@@ -28,7 +28,7 @@ public class PhoneMessageSenderImpl implements PhoneMessageSender {
 	@Override
 	public void send(PeriodExceeded de) {
 		PeriodTotalSpent dts = de.getPeriodTotalSpent();
-		log.debug("\n\tNotification:\t{} spent a total of {} GBP for last {} days until {} (including)\n\tOverdue:\t\t{} GBP\n\tLimit:\t\t\t{} GBP",
+		log.debug("\n\tNotification:\t{} spent a total of {} GBP for last {} days until {} (including)\n\tOverdue:\t{} GBP\n\tLimit:\t\t{} GBP",
 				dts.getClientId(), dts.getAmount(), totalPeriod, format(dts.getTime()),
 				dts.getAmount() - de.getPeriodMaxAmount(), de.getPeriodMaxAmount());
 	}
