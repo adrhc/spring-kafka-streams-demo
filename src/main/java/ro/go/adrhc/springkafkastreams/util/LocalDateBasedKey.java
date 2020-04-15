@@ -30,7 +30,7 @@ public class LocalDateBasedKey<T> {
 
 	public static <T> String keyOf(Windowed<T> windowed) {
 		return LocalDateBasedKey.keyOf(windowed.key().toString(),
-				localDateOf(windowed.window().start()));
+				localDateOf(windowed.window().end()).minusDays(1));
 	}
 
 	public static Optional<LocalDateBasedKey<String>> parseWithStringData(String key) {

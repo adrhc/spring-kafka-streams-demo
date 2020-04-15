@@ -59,7 +59,7 @@ public class PaymentsUtils {
 		Optional<LocalDateBasedKey<String>> winBasedKeyOptional = parseWithStringData(clientIdPeriod);
 		winBasedKeyOptional.ifPresent(it -> {
 			String clientId = it.getData();
-			log.debug("\n\t{} spent a total of {} GBP for a period of {} days till {} (including)",
+			log.debug("\n\t{} spent a total of {} GBP for a period of {} days until {} (including)",
 					clientId, amount, totalPeriod, format(it.getTime()));
 		});
 	}

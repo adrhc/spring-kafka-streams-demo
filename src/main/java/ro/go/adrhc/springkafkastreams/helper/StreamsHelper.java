@@ -59,12 +59,12 @@ public class StreamsHelper {
 		return Consumed.with(Serdes.String(), dailyTotalSpentSerde).withName(properties.getDailyTotalSpent());
 	}
 
-	public Materialized<String, Integer, WindowStore<Bytes, byte[]>> dailyTotalSpentByClientId() {
+	public Materialized<String, Integer, WindowStore<Bytes, byte[]>> dailyTotalSpentByClientId(int retentionDays) {
 		return Materialized.<String, Integer, WindowStore<Bytes, byte[]>>
 				as("dailyTotalSpentByClientId")
 				.withKeySerde(Serdes.String())
 				.withValueSerde(Serdes.Integer())
-				.withRetention(Duration.ofDays(DELAY + 1));
+				.withRetention(Duration.ofDays(retentionDays));
 	}
 
 	public KStream<String, ClientProfile> clientProfileStream(StreamsBuilder streamsBuilder) {
