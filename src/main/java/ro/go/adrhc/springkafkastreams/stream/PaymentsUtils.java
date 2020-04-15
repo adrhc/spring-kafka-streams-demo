@@ -49,7 +49,7 @@ public class PaymentsUtils {
 		return winBasedKeyOptional
 				.map(it -> {
 					String clientId = it.getData();
-					log.debug("\n\t{} spent a total of {} GBP on {}", clientId, amount, format(it.getTime()));
+					log.trace("\n\t{} spent a total of {} GBP on {}", clientId, amount, format(it.getTime()));
 					return KeyValue.pair(clientId, new DailyTotalSpent(clientId, it.getTime(), amount));
 				})
 				.orElse(null);
@@ -59,8 +59,8 @@ public class PaymentsUtils {
 		Optional<LocalDateBasedKey<String>> winBasedKeyOptional = parseWithStringData(clientIdPeriod);
 		winBasedKeyOptional.ifPresent(it -> {
 			String clientId = it.getData();
-			log.debug("\n\t{} spent a total of {} GBP for a period of {} days until {} (including)",
-					clientId, amount, totalPeriod, format(it.getTime()));
+			log.debug("\n\t{} spent a total of {} GBP for the period {} - {}",
+					clientId, amount, format(it.getTime().minusDays(totalPeriod - 1)), format(it.getTime()));
 		});
 	}
 }

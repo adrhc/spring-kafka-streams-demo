@@ -28,8 +28,8 @@ public class PhoneMessageSenderImpl implements PhoneMessageSender {
 	@Override
 	public void send(PeriodExceeded de) {
 		PeriodTotalSpent dts = de.getPeriodTotalSpent();
-		log.debug("\n\tNotification:\t{} spent a total of {} GBP for last {} days until {} (including)\n\tOverdue:\t{} GBP\n\tLimit:\t\t{} GBP",
-				dts.getClientId(), dts.getAmount(), totalPeriod, format(dts.getTime()),
-				dts.getAmount() - de.getPeriodMaxAmount(), de.getPeriodMaxAmount());
+		log.debug("\n\tNotification:\t{} spent a total of {} GBP for the period {} - {}\n\tOverdue:\t{} GBP\n\tLimit:\t\t{} GBP",
+				dts.getClientId(), dts.getAmount(), format(dts.getTime().minusDays(totalPeriod - 1)),
+				format(dts.getTime()), dts.getAmount() - de.getPeriodMaxAmount(), de.getPeriodMaxAmount());
 	}
 }
