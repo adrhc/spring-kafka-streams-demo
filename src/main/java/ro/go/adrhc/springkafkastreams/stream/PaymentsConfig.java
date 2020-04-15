@@ -133,6 +133,7 @@ public class PaymentsConfig {
 
 	/**
 	 * calculating total expenses for a period
+	 * equivalent to windowedBy + aggregate
 	 */
 	private void periodExceedsWithTransformer(KStream<String, Transaction> transactions,
 			KTable<String, ClientProfile> clientProfileTable, StreamsBuilder streamsBuilder) {
