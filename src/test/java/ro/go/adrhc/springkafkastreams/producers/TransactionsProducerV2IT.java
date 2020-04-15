@@ -2,6 +2,9 @@ package ro.go.adrhc.springkafkastreams.producers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,6 +14,9 @@ import org.springframework.test.context.ActiveProfiles;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
 import ro.go.adrhc.springkafkastreams.model.Transaction;
 
+import java.util.stream.IntStream;
+
+import static java.lang.Integer.parseInt;
 import static ro.go.adrhc.springkafkastreams.util.AbstractTestDTOFactory.randomTransaction;
 
 @ActiveProfiles({"v2", "test"})
@@ -26,11 +32,29 @@ public class TransactionsProducerV2IT {
 	private Environment env;
 
 	@RepeatedTest(1)
+	@DisabledIfSystemProperty(named = "transactionsCount", matches = "\\d+")
 	void send() {
-		log.debug("profiles: {}", String.join(", ", env.getActiveProfiles()));
-		log.debug("transactions topic: {}", properties.getTransactions());
+		log.debug("\n\tprofiles: {}", String.join(" + ", env.getActiveProfiles()));
+		log.debug("\n\ttransactions topic: {}", properties.getTransactions());
 		Transaction transaction = randomTransaction();
-		log.debug("transaction:\n{}", transaction);
+		log.debug("transaction:\n\t{}", transaction);
 		jsonTemplate.send(properties.getTransactions(), transaction.getClientId(), transaction);
+	}
+
+	@Test
+	@EnabledIfSystemProperty(named = "transactionsCount", matches = "\\d+")
+	void sendMany() {
+		int transactionsCount = transactionsCount();
+		log.debug("\n\ttransactionsCount = {}", transactionsCount);
+		IntStream.range(0, transactionsCount).forEach(i -> send());
+	}
+
+
+	private int transactionsCount() {
+		String transactionsCount = System.getProperty("transactionsCount");
+		if (transactionsCount == null) {
+			return 1;
+		}
+		return parseInt(transactionsCount);
 	}
 }
