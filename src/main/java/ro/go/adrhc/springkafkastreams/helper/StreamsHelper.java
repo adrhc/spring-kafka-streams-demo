@@ -59,9 +59,10 @@ public class StreamsHelper {
 		return Consumed.with(Serdes.String(), dailyTotalSpentSerde).withName(properties.getDailyTotalSpent());
 	}
 
-	public Materialized<String, Integer, WindowStore<Bytes, byte[]>> dailyTotalSpentByClientId(int retentionDays) {
+	public Materialized<String, Integer, WindowStore<Bytes, byte[]>> dailyTotalSpentByClientId(
+			int retentionDays, String nameSuffix) {
 		return Materialized.<String, Integer, WindowStore<Bytes, byte[]>>
-				as("dailyTotalSpentByClientId")
+				as("dailyTotalSpentByClientId-" + nameSuffix)
 				.withKeySerde(Serdes.String())
 				.withValueSerde(Serdes.Integer())
 				.withRetention(Duration.ofDays(retentionDays));

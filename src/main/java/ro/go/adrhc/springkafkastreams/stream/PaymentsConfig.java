@@ -57,7 +57,7 @@ public class PaymentsConfig {
 		KStream<String, Transaction> transactions = helper.transactionsStream(streamsBuilder);
 
 		KGroupedStream<String, Transaction> grouped = transactionsGroupedByClientId(transactions);
-//		dailyExceeds(grouped, clientProfileTable);
+		dailyExceeds(grouped, clientProfileTable);
 		periodExceeds(grouped, clientProfileTable);
 
 		return transactions;
@@ -86,7 +86,7 @@ public class PaymentsConfig {
 				.windowedBy(TimeWindows.of(Duration.ofDays(1)).grace(Duration.ofDays(DELAY)))
 				// aggregate amount per clientId-day
 				.aggregate(() -> 0, (k, v, sum) -> sum + v.getAmount(),
-						helper.dailyTotalSpentByClientId(DELAY + 1))
+						helper.dailyTotalSpentByClientId(DELAY + 1, "1day"))
 				// clientId-yyyy.MM.dd:amount
 				.toStream((win, amount) -> keyOf(win))
 				// save clientIdDay:amount into a compact stream (aka table)
@@ -115,7 +115,7 @@ public class PaymentsConfig {
 						.advanceBy(Duration.ofDays(1)).grace(Duration.ofDays(DELAY)))
 				// aggregate amount per clientId-30-days
 				.aggregate(() -> 0, (k, v, sum) -> sum + v.getAmount(),
-						helper.dailyTotalSpentByClientId(DELAY + totalPeriod))
+						helper.dailyTotalSpentByClientId(DELAY + totalPeriod, "30days"))
 				// clientId-yyyy.MM.dd:amount
 				.toStream((win, amount) -> keyOf(win))
 				.peek((clientIdPeriod, amount) -> printPeriodTotalExpenses(clientIdPeriod, amount, totalPeriod))
