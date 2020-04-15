@@ -54,7 +54,17 @@ public class PaymentsConfig {
 		KTable<String, ClientProfile> clientProfileTable = helper.clientProfileTable(streamsBuilder);
 		KStream<String, Transaction> transactions = helper.transactionsStream(streamsBuilder);
 
-		// calculating total expenses per day
+		dailyExceeds(transactions, clientProfileTable);
+		periodExceeds(transactions, clientProfileTable, streamsBuilder);
+
+		return transactions;
+	}
+
+	/**
+	 * calculating total expenses per day
+	 */
+	private void dailyExceeds(KStream<String, Transaction> transactions,
+			KTable<String, ClientProfile> clientProfileTable) {
 		transactions
 				.peek((clientId, transaction) -> log.debug("\n\t{} spent {} GBP on {}", clientId,
 						transaction.getAmount(), format(transaction.getTime())))
@@ -81,14 +91,19 @@ public class PaymentsConfig {
 				.filter((clientId, dailyExceeded) -> dailyExceeded != null)
 				// clientId:DailyExceeded stream
 				.to(properties.getDailyExceeds(), helper.produceDailyExceeded());
+	}
 
+	/**
+	 * calculating total expenses for a period
+	 */
+	private void periodExceeds(KStream<String, Transaction> transactions,
+			KTable<String, ClientProfile> clientProfileTable, StreamsBuilder streamsBuilder) {
 		StoreBuilder<KeyValueStore<String, Integer>> periodTotalSpentStore =
 				Stores.keyValueStoreBuilder(
 						Stores.persistentKeyValueStore("periodTotalSpentStore"),
 						Serdes.String(), Serdes.Integer());
 		streamsBuilder.addStateStore(periodTotalSpentStore);
 
-		// calculating total expenses for a period
 		transactions
 				.flatTransform(new PeriodTotalExpensesAggregator(totalPeriod,
 						periodTotalSpentStore.name()), periodTotalSpentStore.name())
@@ -100,7 +115,5 @@ public class PaymentsConfig {
 				// skip for less than periodMaxAmount
 				.filter((clientId, periodExceeded) -> periodExceeded != null)
 				.to(properties.getPeriodExceeds(), helper.producePeriodExceeded());
-
-		return transactions;
 	}
 }
