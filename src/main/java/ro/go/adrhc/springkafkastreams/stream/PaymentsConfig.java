@@ -24,6 +24,7 @@ import ro.go.adrhc.springkafkastreams.transformers.debug.PeriodTotalExpensesAggr
 
 import java.time.Duration;
 
+import static java.time.temporal.ChronoUnit.MONTHS;
 import static ro.go.adrhc.springkafkastreams.helper.StreamsHelper.DELAY;
 import static ro.go.adrhc.springkafkastreams.stream.PaymentsUtils.joinPeriodTotalSpentWithClientProfileOnClientId;
 import static ro.go.adrhc.springkafkastreams.stream.PaymentsUtils.printPeriodTotalExpenses;
@@ -112,6 +113,12 @@ public class PaymentsConfig {
 	private void periodExceeds(KGroupedStream<String, Transaction> groupedTransactions,
 			KTable<String, ClientProfile> clientProfileTable) {
 		groupedTransactions
+				// group by month
+				// UnsupportedTemporalTypeException: Unit must not have an estimated duration
+/*
+				.windowedBy(TimeWindows.of(Duration.of(1, MONTHS))
+						.advanceBy(Duration.ofDays(1)).grace(Duration.ofDays(DELAY)))
+*/
 				// group by 3 days
 				.windowedBy(TimeWindows.of(Duration.ofDays(totalPeriod))
 						.advanceBy(Duration.ofDays(1)).grace(Duration.ofDays(DELAY)))
