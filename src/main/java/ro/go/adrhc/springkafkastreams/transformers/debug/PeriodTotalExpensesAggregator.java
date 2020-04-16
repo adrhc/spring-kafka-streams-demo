@@ -36,7 +36,6 @@ public class PeriodTotalExpensesAggregator implements TransformerSupplier<String
 			@Override
 			public Iterable<KeyValue<String, Integer>> transform(
 					String clientId, Transaction transaction) {
-				assert totalPeriod > 0;
 				return IntStream.range(1 - totalPeriod, totalPeriod)
 						.mapToObj(it -> {
 							String key = keyOf(clientId, transaction.getTime().plusDays(it));
