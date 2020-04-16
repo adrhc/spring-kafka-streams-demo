@@ -31,7 +31,7 @@ public class TransactionsProducerV2IT {
 	@Autowired
 	private Environment env;
 
-	@RepeatedTest(1)
+	@RepeatedTest(11)
 	@DisabledIfSystemProperty(named = "transactionsCount", matches = "\\d+")
 	void send() {
 		log.debug("\n\tprofiles: {}", String.join(" + ", env.getActiveProfiles()));
