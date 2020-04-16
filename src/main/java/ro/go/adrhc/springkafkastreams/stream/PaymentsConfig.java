@@ -101,6 +101,8 @@ public class PaymentsConfig {
 				// skip for less than dailyMaxAmount
 				.filter((clientId, dailyExceeded) -> dailyExceeded != null)
 				// clientId:DailyExceeded stream
+//				.foreach((clientId, dailyExceeded) ->
+//						log.debug("\n\tclientId: {}\n\t{}", clientId, dailyExceeded));
 				.to(properties.getDailyExceeds(), helper.produceDailyExceeded());
 	}
 
@@ -128,6 +130,8 @@ public class PaymentsConfig {
 				// skip for less than periodMaxAmount
 				.filter((clientId, periodExceeded) -> periodExceeded != null)
 				// clientId:PeriodExceeded stream
+//				.foreach((clientId, periodExceeded) ->
+//						log.debug("\n\tclientId: {}\n\t{}", clientId, periodExceeded));
 				.to(properties.getPeriodExceeds(), helper.producePeriodExceeded());
 	}
 
