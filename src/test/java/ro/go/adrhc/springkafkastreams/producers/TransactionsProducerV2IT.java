@@ -49,7 +49,6 @@ public class TransactionsProducerV2IT {
 		IntStream.range(0, transactionsCount).forEach(i -> send());
 	}
 
-
 	private int transactionsCount() {
 		String transactionsCount = System.getProperty("transactionsCount");
 		if (transactionsCount == null) {
