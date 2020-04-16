@@ -22,11 +22,6 @@ public class SerdeConfig {
 	}
 
 	@Bean
-	public JsonSerde<ClientProfile> clientProfileSerde() {
-		return jsonSerdeImpl(ClientProfile.class);
-	}
-
-	@Bean
 	public JsonSerde<DailyTotalSpent> dailyTotalSpentSerde() {
 		return jsonSerdeImpl(DailyTotalSpent.class);
 	}

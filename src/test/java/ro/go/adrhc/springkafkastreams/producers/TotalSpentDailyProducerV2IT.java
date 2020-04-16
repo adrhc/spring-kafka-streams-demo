@@ -19,8 +19,8 @@ import static ro.go.adrhc.springkafkastreams.util.LocalDateBasedKey.keyOf;
 @Slf4j
 public class TotalSpentDailyProducerV2IT {
 	@Autowired
-	@Qualifier("intTemplate")
-	private KafkaTemplate<Object, Integer> intTemplate;
+	@Qualifier("intKTemplate")
+	private KafkaTemplate<Object, Integer> intKTemplate;
 	@Autowired
 	private TopicsProperties properties;
 	@Autowired
@@ -32,7 +32,7 @@ public class TotalSpentDailyProducerV2IT {
 		log.debug("totalSpentDaily topic: {}", properties.getDailyTotalSpent());
 		DailyTotalSpent dailyTotalSpent = randomDailyTotalSpent();
 		log.debug("totalSpentDaily:\n\t{}", dailyTotalSpent);
-		intTemplate.send(properties.getDailyTotalSpent(),
+		intKTemplate.send(properties.getDailyTotalSpent(),
 				keyOf(dailyTotalSpent.getClientId(), dailyTotalSpent.getTime()),
 				dailyTotalSpent.getAmount());
 	}

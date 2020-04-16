@@ -1,10 +1,13 @@
 package ro.go.adrhc.springkafkastreams.config;
 
+import io.confluent.kafka.serializers.KafkaAvroSerializer;
+import io.confluent.kafka.streams.serdes.avro.SpecificAvroDeserializer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.IntegerSerializer;
 import org.apache.kafka.common.serialization.Serializer;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,15 +23,18 @@ import java.util.Map;
 public class KafkaTemplateConfig {
 	private final KafkaProperties properties;
 	private final JsonSerde<Object> jsonSerde;
+	private final String schemaRegistryUrl;
 
 	public KafkaTemplateConfig(KafkaProperties properties,
-			@Qualifier("jsonSerde") JsonSerde<Object> jsonSerde) {
+			@Qualifier("jsonSerde") JsonSerde<Object> jsonSerde,
+			@Value("${schema.registry.url}") String schemaRegistryUrl) {
 		this.properties = properties;
 		this.jsonSerde = jsonSerde;
+		this.schemaRegistryUrl = schemaRegistryUrl;
 	}
 
 	@Bean
-	public KafkaTemplate<Object, Integer> intTemplate(
+	public KafkaTemplate<Object, Integer> intKTemplate(
 			ObjectProvider<ProducerListener<Object, Integer>> kafkaProducerListener,
 			ObjectProvider<RecordMessageConverter> messageConverter) {
 		return kafkaTemplateImpl(properties.getClientId() + "-int",
@@ -36,11 +42,21 @@ public class KafkaTemplateConfig {
 	}
 
 	@Bean
-	public KafkaTemplate<Object, Object> jsonTemplate(
+	public KafkaTemplate<Object, Object> jsonKTemplate(
 			ObjectProvider<ProducerListener<Object, Object>> kafkaProducerListener,
 			ObjectProvider<RecordMessageConverter> messageConverter) {
 		return kafkaTemplateImpl(properties.getClientId() + "-json",
 				jsonSerde.serializer(), kafkaProducerListener, messageConverter);
+	}
+
+	@Bean
+	public KafkaTemplate<Object, Object> avroKTemplate(
+			ObjectProvider<ProducerListener<Object, Object>> kafkaProducerListener,
+			ObjectProvider<RecordMessageConverter> messageConverter) {
+		KafkaAvroSerializer valueSerializer = new KafkaAvroSerializer();
+		valueSerializer.configure(Map.of("schema.registry.url", schemaRegistryUrl), false);
+		return kafkaTemplateImpl(properties.getClientId() + "-avro",
+				valueSerializer, kafkaProducerListener, messageConverter);
 	}
 
 	private <V> KafkaTemplate<Object, V> kafkaTemplateImpl(

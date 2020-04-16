@@ -24,7 +24,6 @@ import ro.go.adrhc.springkafkastreams.transformers.debug.PeriodTotalExpensesAggr
 
 import java.time.Duration;
 
-import static java.time.temporal.ChronoUnit.MONTHS;
 import static ro.go.adrhc.springkafkastreams.helper.StreamsHelper.DELAY;
 import static ro.go.adrhc.springkafkastreams.stream.PaymentsUtils.joinPeriodTotalSpentWithClientProfileOnClientId;
 import static ro.go.adrhc.springkafkastreams.stream.PaymentsUtils.printPeriodTotalExpenses;

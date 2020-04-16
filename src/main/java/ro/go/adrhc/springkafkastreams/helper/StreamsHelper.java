@@ -19,16 +19,14 @@ public class StreamsHelper {
 	public static final int DELAY = 5;
 	private final TopicsProperties properties;
 	private final JsonSerde<Transaction> transactionSerde;
-	private final JsonSerde<ClientProfile> clientProfileSerde;
 	private final JsonSerde<DailyTotalSpent> dailyTotalSpentSerde;
 	private final JsonSerde<PeriodTotalSpent> periodTotalSpentSerde;
 	private final JsonSerde<DailyExceeded> dailyExceededSerde;
 	private final JsonSerde<PeriodExceeded> periodExceededSerde;
 
-	public StreamsHelper(TopicsProperties properties, @Qualifier("transactionSerde") JsonSerde<Transaction> transactionSerde, @Qualifier("clientProfileSerde") JsonSerde<ClientProfile> clientProfileSerde, @Qualifier("dailyTotalSpentSerde") JsonSerde<DailyTotalSpent> dailyTotalSpentSerde, @Qualifier("periodTotalSpentSerde") JsonSerde<PeriodTotalSpent> periodTotalSpentSerde, @Qualifier("dailyExceededSerde") JsonSerde<DailyExceeded> dailyExceededSerde, @Qualifier("periodExceededSerde") JsonSerde<PeriodExceeded> periodExceededSerde) {
+	public StreamsHelper(TopicsProperties properties, @Qualifier("transactionSerde") JsonSerde<Transaction> transactionSerde, @Qualifier("dailyTotalSpentSerde") JsonSerde<DailyTotalSpent> dailyTotalSpentSerde, @Qualifier("periodTotalSpentSerde") JsonSerde<PeriodTotalSpent> periodTotalSpentSerde, @Qualifier("dailyExceededSerde") JsonSerde<DailyExceeded> dailyExceededSerde, @Qualifier("periodExceededSerde") JsonSerde<PeriodExceeded> periodExceededSerde) {
 		this.properties = properties;
 		this.transactionSerde = transactionSerde;
-		this.clientProfileSerde = clientProfileSerde;
 		this.dailyTotalSpentSerde = dailyTotalSpentSerde;
 		this.periodTotalSpentSerde = periodTotalSpentSerde;
 		this.dailyExceededSerde = dailyExceededSerde;
@@ -72,20 +70,17 @@ public class StreamsHelper {
 		return streamsBuilder.stream(properties.getClientProfiles(),
 				Consumed.<String, ClientProfile>
 						as(properties.getClientProfiles())
-						.withKeySerde(Serdes.String())
-						.withValueSerde(clientProfileSerde));
+						.withKeySerde(Serdes.String()));
 	}
 
 	public KTable<String, ClientProfile> clientProfileTable(StreamsBuilder streamsBuilder) {
 		return streamsBuilder.table(properties.getClientProfiles(),
 				Consumed.<String, ClientProfile>
 						as(properties.getClientProfiles())
-						.withKeySerde(Serdes.String())
-						.withValueSerde(clientProfileSerde),
+						.withKeySerde(Serdes.String()),
 				Materialized.<String, ClientProfile, KeyValueStore<Bytes, byte[]>>
 						as(properties.getClientProfiles())
-						.withKeySerde(Serdes.String())
-						.withValueSerde(clientProfileSerde));
+						.withKeySerde(Serdes.String()));
 	}
 
 	public KTable<String, Integer> periodTotalSpentTable(StreamsBuilder streamsBuilder) {
@@ -101,13 +96,17 @@ public class StreamsHelper {
 	}
 
 	public Joined<String, DailyTotalSpent, ClientProfile> dailyTotalSpentJoinClientProfile() {
-		return Joined.with(Serdes.String(), dailyTotalSpentSerde,
-				clientProfileSerde, "dailyTotalSpentJoinClientProfile");
+		return Joined.<String, DailyTotalSpent, ClientProfile>
+				as("dailyTotalSpentJoinClientProfile")
+				.withKeySerde(Serdes.String())
+				.withValueSerde(dailyTotalSpentSerde);
 	}
 
 	public Joined<String, PeriodTotalSpent, ClientProfile> periodTotalSpentJoinClientProfile() {
-		return Joined.with(Serdes.String(), periodTotalSpentSerde,
-				clientProfileSerde, "periodTotalSpentJoinClientProfile");
+		return Joined.<String, PeriodTotalSpent, ClientProfile>
+				as("periodTotalSpentJoinClientProfile")
+				.withKeySerde(Serdes.String())
+				.withValueSerde(periodTotalSpentSerde);
 	}
 
 	public KStream<String, DailyTotalSpent> dailyExceedsStream(StreamsBuilder streamsBuilder) {

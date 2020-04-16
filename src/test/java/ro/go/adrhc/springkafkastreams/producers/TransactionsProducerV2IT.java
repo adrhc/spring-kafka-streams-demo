@@ -24,8 +24,8 @@ import static ro.go.adrhc.springkafkastreams.util.AbstractTestDTOFactory.randomT
 @Slf4j
 public class TransactionsProducerV2IT {
 	@Autowired
-	@Qualifier("jsonTemplate")
-	private KafkaTemplate<Object, Object> jsonTemplate;
+	@Qualifier("jsonKTemplate")
+	private KafkaTemplate<Object, Object> jsonKTemplate;
 	@Autowired
 	private TopicsProperties properties;
 	@Autowired
@@ -38,7 +38,7 @@ public class TransactionsProducerV2IT {
 		log.debug("\n\ttransactions topic: {}", properties.getTransactions());
 		Transaction transaction = randomTransaction();
 		log.debug("transaction:\n\t{}", transaction);
-		jsonTemplate.send(properties.getTransactions(), transaction.getClientId(), transaction);
+		jsonKTemplate.send(properties.getTransactions(), transaction.getClientId(), transaction);
 	}
 
 	@Test
