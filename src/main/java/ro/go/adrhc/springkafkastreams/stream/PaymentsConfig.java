@@ -28,6 +28,7 @@ import static ro.go.adrhc.springkafkastreams.helper.StreamsHelper.DELAY;
 import static ro.go.adrhc.springkafkastreams.stream.PaymentsUtils.joinPeriodTotalSpentWithClientProfileOnClientId;
 import static ro.go.adrhc.springkafkastreams.stream.PaymentsUtils.printPeriodTotalExpenses;
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.format;
+import static ro.go.adrhc.springkafkastreams.util.DateUtils.localDateOf;
 import static ro.go.adrhc.springkafkastreams.util.LocalDateBasedKey.keyOf;
 
 /**
@@ -70,7 +71,7 @@ public class PaymentsConfig {
 			KStream<String, Transaction> transactions) {
 		return transactions
 				.peek((clientId, transaction) -> log.debug("\n\t{} spent {} GBP on {}", clientId,
-						transaction.getAmount(), format(transaction.getTime())))
+						transaction.getAmount(), format(localDateOf(transaction.getTime()))))
 //				.transform(new TransformerDebugger<>())
 //				.transformValues(new ValueTransformerWithKeyDebugger<>())
 				.groupByKey(helper.transactionsGroupedByClientId());

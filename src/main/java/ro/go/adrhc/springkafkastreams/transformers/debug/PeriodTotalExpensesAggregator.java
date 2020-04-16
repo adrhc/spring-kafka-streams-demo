@@ -8,9 +8,11 @@ import org.apache.kafka.streams.processor.ProcessorContext;
 import org.apache.kafka.streams.state.KeyValueStore;
 import ro.go.adrhc.springkafkastreams.model.Transaction;
 
+import java.time.LocalDate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static ro.go.adrhc.springkafkastreams.util.DateUtils.localDateOf;
 import static ro.go.adrhc.springkafkastreams.util.LocalDateBasedKey.keyOf;
 
 @Slf4j
@@ -36,9 +38,10 @@ public class PeriodTotalExpensesAggregator implements TransformerSupplier<String
 			@Override
 			public Iterable<KeyValue<String, Integer>> transform(
 					String clientId, Transaction transaction) {
+				LocalDate transactionTime = localDateOf(transaction.getTime());
 				return IntStream.range(1 - totalPeriod, totalPeriod)
 						.mapToObj(it -> {
-							String key = keyOf(clientId, transaction.getTime().plusDays(it));
+							String key = keyOf(clientId, transactionTime.plusDays(it));
 							Integer previousPeriodAmount = this.kvStore.get(key);
 							if (previousPeriodAmount == null) {
 								this.kvStore.put(key, transaction.getAmount());

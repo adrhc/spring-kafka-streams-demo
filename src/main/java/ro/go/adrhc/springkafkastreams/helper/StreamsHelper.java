@@ -18,15 +18,13 @@ import java.time.Duration;
 public class StreamsHelper {
 	public static final int DELAY = 5;
 	private final TopicsProperties properties;
-	private final JsonSerde<Transaction> transactionSerde;
 	private final JsonSerde<DailyTotalSpent> dailyTotalSpentSerde;
 	private final JsonSerde<PeriodTotalSpent> periodTotalSpentSerde;
 	private final JsonSerde<DailyExceeded> dailyExceededSerde;
 	private final JsonSerde<PeriodExceeded> periodExceededSerde;
 
-	public StreamsHelper(TopicsProperties properties, @Qualifier("transactionSerde") JsonSerde<Transaction> transactionSerde, @Qualifier("dailyTotalSpentSerde") JsonSerde<DailyTotalSpent> dailyTotalSpentSerde, @Qualifier("periodTotalSpentSerde") JsonSerde<PeriodTotalSpent> periodTotalSpentSerde, @Qualifier("dailyExceededSerde") JsonSerde<DailyExceeded> dailyExceededSerde, @Qualifier("periodExceededSerde") JsonSerde<PeriodExceeded> periodExceededSerde) {
+	public StreamsHelper(TopicsProperties properties, @Qualifier("dailyTotalSpentSerde") JsonSerde<DailyTotalSpent> dailyTotalSpentSerde, @Qualifier("periodTotalSpentSerde") JsonSerde<PeriodTotalSpent> periodTotalSpentSerde, @Qualifier("dailyExceededSerde") JsonSerde<DailyExceeded> dailyExceededSerde, @Qualifier("periodExceededSerde") JsonSerde<PeriodExceeded> periodExceededSerde) {
 		this.properties = properties;
-		this.transactionSerde = transactionSerde;
 		this.dailyTotalSpentSerde = dailyTotalSpentSerde;
 		this.periodTotalSpentSerde = periodTotalSpentSerde;
 		this.dailyExceededSerde = dailyExceededSerde;
@@ -50,7 +48,9 @@ public class StreamsHelper {
 	}
 
 	private Consumed<String, Transaction> consumeTransaction() {
-		return Consumed.with(Serdes.String(), transactionSerde).withName(properties.getTransactions());
+		return Consumed.<String, Transaction>
+				as(properties.getTransactions())
+				.withKeySerde(Serdes.String());
 	}
 
 	private Consumed<String, DailyTotalSpent> consumeDailyTotalSpent() {
@@ -118,6 +118,8 @@ public class StreamsHelper {
 	}
 
 	public Grouped<String, Transaction> transactionsGroupedByClientId() {
-		return Grouped.with("transactionsGroupedByClientId", Serdes.String(), transactionSerde);
+		return Grouped.<String, Transaction>
+				as("transactionsGroupedByClientId")
+				.withKeySerde(Serdes.String());
 	}
 }
