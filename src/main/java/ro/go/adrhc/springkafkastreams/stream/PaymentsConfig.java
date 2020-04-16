@@ -112,10 +112,10 @@ public class PaymentsConfig {
 	private void periodExceeds(KGroupedStream<String, Transaction> groupedTransactions,
 			KTable<String, ClientProfile> clientProfileTable) {
 		groupedTransactions
-				// group by 30 days
+				// group by 3 days
 				.windowedBy(TimeWindows.of(Duration.ofDays(totalPeriod))
 						.advanceBy(Duration.ofDays(1)).grace(Duration.ofDays(DELAY)))
-				// aggregate amount per clientId-30-days
+				// aggregate amount per clientId-3-days
 				.aggregate(() -> 0, (k, v, sum) -> sum + v.getAmount(),
 						helper.dailyTotalSpentByClientId(DELAY + totalPeriod, "3days"))
 				// clientId-yyyy.MM.dd:amount
