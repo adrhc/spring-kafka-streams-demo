@@ -24,4 +24,4 @@ fi
 # these does not require <forkCount> usage:
 # ./clean.install.sh -P staging-only
 # ./clean.install.sh -P production-only
-$MVN -e -Dmaven.javadoc.skip=true -Dmaven.test.skip=true clean install "$@"
+$MVN -e -Dmaven.javadoc.skip=true -Dmaven.test.skip=true clean package "$@"
