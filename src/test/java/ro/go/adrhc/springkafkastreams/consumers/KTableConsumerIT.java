@@ -41,7 +41,7 @@ class KTableConsumerIT {
 
 		@Bean
 		public Consumer<String, Integer> consumer() {
-			return consumerOf(kafkaConsumerFactory(), "kstreams1-transactions.v2-changelog");
+			return consumerOf(kafkaConsumerFactory(), "adrks1-transactions.v2-changelog");
 		}
 
 		@Bean
