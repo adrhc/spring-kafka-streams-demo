@@ -8,6 +8,8 @@ import ro.go.adrhc.springkafkastreams.messages.*;
 import ro.go.adrhc.springkafkastreams.util.LocalDateBasedKey;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.Optional;
 
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.format;
@@ -25,13 +27,13 @@ public class PaymentsUtils {
 	}
 
 	public static ValueJoiner<PeriodTotalSpent, ClientProfile, PeriodExceeded>
-	joinPeriodTotalSpentWithClientProfileOnClientId(int totalPeriod) {
+	joinPeriodTotalSpentWithClientProfileOnClientId(int windowSize, ChronoUnit windowUnit) {
 		return (PeriodTotalSpent pts, ClientProfile cp) -> {
 			if (cp.getPeriodMaxAmount() < pts.getAmount()) {
 				return new PeriodExceeded(cp.getPeriodMaxAmount(), pts);
 			}
-			log.trace("\n\tskipping total spent for {} days under {} GBP\n\t{}\n\t{}",
-					totalPeriod, cp.getPeriodMaxAmount(), pts, cp);
+			log.trace("\n\tskipping total spent for {} {} under {} GBP\n\t{}\n\t{}",
+					windowSize, windowUnit.toString().toLowerCase(), cp.getPeriodMaxAmount(), pts, cp);
 			return null;
 		};
 	}
@@ -65,18 +67,20 @@ public class PaymentsUtils {
 				.orElse(null);
 	}
 
-	public static void printPeriodTotalExpenses(String clientIdPeriod, Integer amount, int totalPeriod) {
+	public static void printPeriodTotalExpenses(String clientIdPeriod,
+			Integer amount, int windowSize, TemporalUnit unit) {
 		Optional<LocalDateBasedKey<String>> winBasedKeyOptional = parseWithStringData(clientIdPeriod);
 		winBasedKeyOptional.ifPresent(it -> {
 			String clientId = it.getData();
 			log.debug("\n\t{} spent a total of {} GBP for the period {} - {}",
-					clientId, amount, format(it.getTime().minusDays(totalPeriod - 1)), format(it.getTime()));
+					clientId, amount, format(it.getTime().minus(windowSize, unit).plusDays(1)), format(it.getTime()));
 		});
 	}
 
-	public static void printPeriodTotalExpenses(Windowed<String> clientIdWindow, Integer amount, int totalPeriod) {
+	public static void printPeriodTotalExpenses(Windowed<String> clientIdWindow,
+			Integer amount, int windowSize, TemporalUnit unit) {
 		LocalDate time = localDateOf(clientIdWindow.window().end()).minusDays(1);
 		log.debug("\n\t{} spent a total of {} GBP for the period {} - {}",
-				clientIdWindow.key(), amount, format(time.minusDays(totalPeriod - 1)), format(time));
+				clientIdWindow.key(), amount, format(time.minus(windowSize, unit).plusDays(1)), format(time));
 	}
 }

@@ -23,6 +23,7 @@ import ro.go.adrhc.springkafkastreams.messages.Transaction;
 import ro.go.adrhc.springkafkastreams.transformers.aggregators.DaysPeriodExpensesAggregator;
 
 import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.MONTHS;
@@ -45,11 +46,14 @@ import static ro.go.adrhc.springkafkastreams.util.LocalDateBasedKey.keyOf;
 @Slf4j
 public class PaymentsConfig {
 	private final int windowSize;
+	private final ChronoUnit windowUnit;
 	private final TopicsProperties properties;
 	private final StreamsHelper helper;
 
-	public PaymentsConfig(@Value("${window.size}") int windowSize, TopicsProperties properties, StreamsHelper helper) {
+	public PaymentsConfig(@Value("${window.size}") int windowSize,
+			@Value("${window.unit}") ChronoUnit windowUnit, TopicsProperties properties, StreamsHelper helper) {
 		this.windowSize = windowSize;
+		this.windowUnit = windowUnit;
 		this.properties = properties;
 		this.helper = helper;
 	}
@@ -130,12 +134,12 @@ public class PaymentsConfig {
 						helper.dailyTotalSpentByClientId(DELAY + windowSize, "3days"))
 				// clientId-yyyy.MM.dd:amount
 				.toStream((win, amount) -> keyOf(win))
-				.peek((clientIdPeriod, amount) -> printPeriodTotalExpenses(clientIdPeriod, amount, windowSize))
+				.peek((clientIdPeriod, amount) -> printPeriodTotalExpenses(clientIdPeriod, amount, windowSize, DAYS))
 				// clientIdDay:amount -> clientIdDay:PeriodTotalSpent
 				.map(PaymentsUtils::clientIdPeriodTotalSpentOf)
 				// clientId:PeriodTotalSpent join clientId:ClientProfile
 				.join(clientProfileTable,
-						joinPeriodTotalSpentWithClientProfileOnClientId(windowSize),
+						joinPeriodTotalSpentWithClientProfileOnClientId(windowSize, DAYS),
 						helper.periodTotalSpentJoinClientProfile())
 				// skip for less than periodMaxAmount
 				.filter((clientId, periodExceeded) -> periodExceeded != null)
@@ -153,16 +157,16 @@ public class PaymentsConfig {
 			KTable<String, ClientProfile> clientProfileTable, StreamsBuilder streamsBuilder) {
 		enhance(streamsBuilder)
 				.stream(transactions)
-				.windowedBy(windowSize, MONTHS)
+				.windowedBy(windowSize, windowUnit)
 				.aggregate(() -> 0, (clientId, transaction, sum) -> sum + transaction.getAmount(),
 						helper.periodTotalSpentByClientId())
 				// clientIdPeriod:amount (i.e. clientIdDay:amount)
-				.peek((clientIdPeriod, amount) -> printPeriodTotalExpenses(clientIdPeriod, amount, windowSize))
+				.peek((clientIdPeriod, amount) -> printPeriodTotalExpenses(clientIdPeriod, amount, windowSize, windowUnit))
 				// clientIdPeriod:amount -> clientIdPeriod:PeriodTotalSpent
 				.map(PaymentsUtils::clientIdPeriodTotalSpentOf)
 				// clientId:PeriodTotalSpent join clientId:ClientProfile -> clientId:PeriodExceeded
 				.join(clientProfileTable,
-						joinPeriodTotalSpentWithClientProfileOnClientId(windowSize),
+						joinPeriodTotalSpentWithClientProfileOnClientId(windowSize, windowUnit),
 						helper.periodTotalSpentJoinClientProfile())
 				// skip for less than periodMaxAmount
 				.filter((clientId, periodExceeded) -> periodExceeded != null)
@@ -186,12 +190,12 @@ public class PaymentsConfig {
 				.flatTransform(new DaysPeriodExpensesAggregator(windowSize,
 						periodTotalSpentStore.name()), periodTotalSpentStore.name())
 				// clientIdWindow:amount
-				.peek((clientIdWindow, amount) -> printPeriodTotalExpenses(clientIdWindow, amount, windowSize))
+				.peek((clientIdWindow, amount) -> printPeriodTotalExpenses(clientIdWindow, amount, windowSize, DAYS))
 				// clientIdWindow:amount -> clientIdPeriod:PeriodTotalSpent
 				.map(PaymentsUtils::clientIdPeriodTotalSpentOf)
 				// clientId:PeriodTotalSpent join clientId:ClientProfile -> clientId:PeriodExceeded
 				.join(clientProfileTable,
-						joinPeriodTotalSpentWithClientProfileOnClientId(windowSize),
+						joinPeriodTotalSpentWithClientProfileOnClientId(windowSize, DAYS),
 						helper.periodTotalSpentJoinClientProfile())
 				// skip for less than periodMaxAmount
 				.filter((clientId, periodExceeded) -> periodExceeded != null)

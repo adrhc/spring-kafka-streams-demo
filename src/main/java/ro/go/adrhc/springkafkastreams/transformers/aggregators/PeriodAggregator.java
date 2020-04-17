@@ -8,7 +8,6 @@ import org.apache.kafka.streams.processor.ProcessorContext;
 import org.apache.kafka.streams.state.KeyValueStore;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,23 +47,23 @@ public class PeriodAggregator<K, V, R> implements TransformerSupplier<K, V, Iter
 
 			@Override
 			public Iterable<KeyValue<Windowed<K>, R>> transform(K key, V value) {
-				LocalDate recTime = localDateOf(context.timestamp());
-				Period diff = Period.between(recTime, recTime.plus(windowSize, unit));
+				LocalDate windowEnd = localDateOf(context.timestamp());
+				// lastWindowEnd is considered here as inclusive
+				LocalDate lastWindowEnd = windowEnd.plus(windowSize, unit).minusDays(1);
 				List<KeyValue<Windowed<K>, R>> records = new ArrayList<>();
-				while (!diff.isZero()) {
-					String windowKey = keyOf(key, recTime);
+				while (!windowEnd.isAfter(lastWindowEnd)) {
+					String windowKey = keyOf(key, windowEnd);
 					R existingAggregate = this.kvStore.get(windowKey);
 					if (existingAggregate == null) {
 						existingAggregate = initializer.apply();
 					}
 					R newAggregate = aggregator.apply(key, value, existingAggregate);
 					this.kvStore.put(windowKey, newAggregate);
-					LocalDate start = recTime;
-					LocalDate end = recTime.plusDays(1);
-					Window window = new TimeWindow(millisecondsOf(start), millisecondsOf(end));
+					LocalDate windowStart = windowEnd.minus(windowSize, unit).plusDays(1);
+					// window end is exclusive
+					Window window = new TimeWindow(millisecondsOf(windowStart), millisecondsOf(windowEnd.plusDays(1)));
 					records.add(KeyValue.pair(new Windowed<>(key, window), newAggregate));
-					diff = diff.minusDays(1);
-					recTime = end;
+					windowEnd = windowEnd.plusDays(1);
 				}
 				return records;
 			}
