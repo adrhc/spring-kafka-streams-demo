@@ -158,7 +158,7 @@ public class PaymentsConfig {
 				.stream(transactions)
 				.windowedBy(windowSize, windowUnit)
 				.aggregate(() -> 0, (clientId, transaction, sum) -> sum + transaction.getAmount(),
-						helper.periodTotalSpentByClientId())
+						helper.periodTotalSpentByClientId(windowSize + windowUnit.toString()))
 				// clientIdPeriod:amount (i.e. clientIdDay:amount)
 				.peek((clientIdPeriod, amount) -> printPeriodTotalExpenses(clientIdPeriod, amount, windowSize, windowUnit))
 				// clientIdPeriod:amount -> clientIdPeriod:PeriodTotalSpent

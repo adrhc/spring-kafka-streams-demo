@@ -50,9 +50,10 @@ public class StreamsHelper {
 				.withRetention(Duration.ofDays(retentionDays));
 	}
 
-	public Materialized<String, Integer, KeyValueStore<String, Integer>> periodTotalSpentByClientId() {
+	public Materialized<String, Integer, KeyValueStore<String, Integer>>
+	periodTotalSpentByClientId(String suffix) {
 		return Materialized.<String, Integer, KeyValueStore<String, Integer>>
-				as("periodTotalSpentByClientId")
+				as("periodTotalSpentByClientId-" + suffix)
 				.withValueSerde(Serdes.Integer());
 	}
 
