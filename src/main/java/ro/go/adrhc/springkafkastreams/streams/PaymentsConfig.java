@@ -97,8 +97,9 @@ public class PaymentsConfig {
 				.foreach((k, list) -> {
 					list.sort(Comparator.comparing(PeriodTotalSpent::getTime));
 					log.debug("\n\t{} {} totals:\n\t{}", windowSize, windowUnit,
-							list.stream().map(it ->
-									it.getClientId() + ", " + format(it.getTime()) + ": " + it.getAmount())
+							list.stream().map(it -> it.getClientId() + ", " +
+									format(it.getTime().minus(windowSize, windowUnit).plusDays(1))
+									+ " - " + format(it.getTime()) + ": " + it.getAmount())
 									.collect(Collectors.joining("\n\t")));
 				});
 	}
