@@ -25,6 +25,7 @@ import ro.go.adrhc.springkafkastreams.transformers.aggregators.TotalExpensesAggr
 import java.time.Duration;
 
 import static java.time.temporal.ChronoUnit.DAYS;
+import static ro.go.adrhc.springkafkastreams.enhancer.KafkaEnhancer.enhance;
 import static ro.go.adrhc.springkafkastreams.helper.StreamsHelper.DELAY;
 import static ro.go.adrhc.springkafkastreams.streams.PaymentsUtils.joinPeriodTotalSpentWithClientProfileOnClientId;
 import static ro.go.adrhc.springkafkastreams.streams.PaymentsUtils.printPeriodTotalExpenses;
@@ -60,7 +61,8 @@ public class PaymentsConfig {
 		KGroupedStream<String, Transaction> grouped = transactionsGroupedByClientId(transactions);
 		dailyExceeds(grouped, clientProfileTable); // total expenses per day
 //		periodExceeds(grouped, clientProfileTable); // total expenses for a period
-		periodExceedsWithTransformer(transactions, clientProfileTable, streamsBuilder);
+//		periodExceedsWithTransformer(transactions, clientProfileTable, streamsBuilder);
+		periodExceedsWithEnhancer(transactions, clientProfileTable, streamsBuilder);
 
 		return transactions;
 	}
@@ -147,6 +149,35 @@ public class PaymentsConfig {
 	 * calculating total expenses for a period
 	 * equivalent to windowedBy + aggregate
 	 */
+	private void periodExceedsWithEnhancer(KStream<String, Transaction> transactions,
+			KTable<String, ClientProfile> clientProfileTable, StreamsBuilder streamsBuilder) {
+		StoreBuilder<KeyValueStore<String, Integer>> periodTotalSpentStore =
+				Stores.keyValueStoreBuilder(
+						Stores.persistentKeyValueStore("periodTotalSpentStore"),
+						Serdes.String(), Serdes.Integer());
+		streamsBuilder.addStateStore(periodTotalSpentStore);
+
+		enhance(transactions)
+				.flatTransform(new TotalExpensesAggregator(totalPeriod, DAYS,
+						periodTotalSpentStore.name()), periodTotalSpentStore.name())
+				// clientIdPeriod:amount (i.e. clientIdDay:amount)
+				.peek((clientIdPeriod, amount) -> printPeriodTotalExpenses(clientIdPeriod, amount, totalPeriod))
+				// clientIdPeriod:amount -> clientIdPeriod:PeriodTotalSpent
+				.map(PaymentsUtils::clientIdPeriodTotalSpentOf)
+				// clientId:PeriodTotalSpent join clientId:ClientProfile -> clientId:PeriodExceeded
+				.join(clientProfileTable,
+						joinPeriodTotalSpentWithClientProfileOnClientId(totalPeriod),
+						helper.periodTotalSpentJoinClientProfile())
+				// skip for less than periodMaxAmount
+				.filter((clientId, periodExceeded) -> periodExceeded != null)
+				// clientId:PeriodExceeded stream
+				.to(properties.getPeriodExceeds(), helper.producePeriodExceeded());
+	}
+
+	/**
+	 * calculating total expenses for a period
+	 * equivalent to windowedBy + aggregate
+	 */
 	private void periodExceedsWithTransformer(KStream<String, Transaction> transactions,
 			KTable<String, ClientProfile> clientProfileTable, StreamsBuilder streamsBuilder) {
 		StoreBuilder<KeyValueStore<String, Integer>> periodTotalSpentStore =
@@ -158,8 +189,9 @@ public class PaymentsConfig {
 		transactions
 				.flatTransform(new TotalExpensesAggregator(totalPeriod, DAYS,
 						periodTotalSpentStore.name()), periodTotalSpentStore.name())
+				// clientIdPeriod:amount (i.e. clientIdDay:amount)
 				.peek((clientIdPeriod, amount) -> printPeriodTotalExpenses(clientIdPeriod, amount, totalPeriod))
-				// clientIdDay:amount -> clientIdDay:PeriodTotalSpent
+				// clientIdPeriod:amount -> clientIdPeriod:PeriodTotalSpent
 				.map(PaymentsUtils::clientIdPeriodTotalSpentOf)
 				// clientId:PeriodTotalSpent join clientId:ClientProfile -> clientId:PeriodExceeded
 				.join(clientProfileTable,
