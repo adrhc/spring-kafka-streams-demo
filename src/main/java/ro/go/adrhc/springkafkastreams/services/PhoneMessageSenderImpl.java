@@ -15,7 +15,7 @@ import static ro.go.adrhc.springkafkastreams.util.DateUtils.format;
 public class PhoneMessageSenderImpl implements PhoneMessageSender {
 	private final int totalPeriod;
 
-	public PhoneMessageSenderImpl(@Value("${period.size}") int totalPeriod) {this.totalPeriod = totalPeriod;}
+	public PhoneMessageSenderImpl(@Value("${window.size}") int totalPeriod) {this.totalPeriod = totalPeriod;}
 
 	@Override
 	public void send(DailyExceeded de) {

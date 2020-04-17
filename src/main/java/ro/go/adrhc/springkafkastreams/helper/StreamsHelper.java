@@ -53,7 +53,6 @@ public class StreamsHelper {
 	public Materialized<String, Integer, KeyValueStore<String, Integer>> periodTotalSpentByClientId() {
 		return Materialized.<String, Integer, KeyValueStore<String, Integer>>
 				as("periodTotalSpentByClientId")
-				.withKeySerde(Serdes.String())
 				.withValueSerde(Serdes.Integer());
 	}
 

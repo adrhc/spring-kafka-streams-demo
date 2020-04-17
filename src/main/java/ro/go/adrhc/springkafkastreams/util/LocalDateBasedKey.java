@@ -40,6 +40,10 @@ public class LocalDateBasedKey<T> {
 				localDateOf(windowed.window().end()).minusDays(1));
 	}
 
+	public static <T> LocalDateBasedKey<T> convert(Windowed<T> clientIdWindow) {
+		return new LocalDateBasedKey<T>(clientIdWindow.key(), localDateOf(clientIdWindow.window().end()).minusDays(1));
+	}
+
 	public static Optional<LocalDateBasedKey<String>> parseWithStringData(String key) {
 		Object[] parts;
 		try {

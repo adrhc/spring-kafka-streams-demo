@@ -7,13 +7,15 @@ import org.apache.kafka.streams.kstream.*;
 import org.apache.kafka.streams.processor.ProcessorSupplier;
 import org.apache.kafka.streams.processor.TopicNameExtractor;
 
+import java.time.temporal.TemporalUnit;
+
 @AllArgsConstructor
 public class KStreamEnhancer<K, V> implements KStream<K, V> {
 	private final KStream<K, V> delegate;
 	private final StreamsBuilder streamsBuilder;
 
-	public GroupByEnhancer<KStreamEnhancer<K, V>, K, V> groupBy(KeyValueOffsetMapper<K, V> keySelector) {
-		return new GroupByEnhancer<>(keySelector, delegate, streamsBuilder);
+	public WindowByEnhancer<K, V> windowedBy(int windowSize, TemporalUnit unit) {
+		return new WindowByEnhancer<>(windowSize, unit, delegate, streamsBuilder);
 	}
 
 	@Override

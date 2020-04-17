@@ -4,14 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import ro.go.adrhc.springkafkastreams.messages.Transaction;
 
 import static java.time.temporal.ChronoUnit.MONTHS;
-import static ro.go.adrhc.springkafkastreams.util.LocalDateBasedKey.keyOf;
 
 @Slf4j
 public class MonthsPeriodExpensesAggregator extends PeriodAggregator<String, Transaction, Integer> {
-	public MonthsPeriodExpensesAggregator(int period, String storeName) {
-		super(period, (clientId, transaction, offset) ->
-						keyOf(clientId, transaction.getTime().plus(offset, MONTHS)),
-				() -> 0,
+	public MonthsPeriodExpensesAggregator(int windowSize, String storeName) {
+		super(windowSize, MONTHS, () -> 0,
 				(clientId, transaction, amount) -> amount + transaction.getAmount(),
 				storeName);
 	}

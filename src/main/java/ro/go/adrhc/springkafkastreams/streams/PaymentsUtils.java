@@ -3,12 +3,15 @@ package ro.go.adrhc.springkafkastreams.streams;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.ValueJoiner;
+import org.apache.kafka.streams.kstream.Windowed;
 import ro.go.adrhc.springkafkastreams.messages.*;
 import ro.go.adrhc.springkafkastreams.util.LocalDateBasedKey;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.format;
+import static ro.go.adrhc.springkafkastreams.util.DateUtils.localDateOf;
 import static ro.go.adrhc.springkafkastreams.util.LocalDateBasedKey.parseWithStringData;
 
 @Slf4j
@@ -44,6 +47,13 @@ public class PaymentsUtils {
 				.orElse(null);
 	}
 
+	public static KeyValue<String, PeriodTotalSpent> clientIdPeriodTotalSpentOf(Windowed<String> clientIdWindow, Integer amount) {
+		String clientId = clientIdWindow.key();
+		LocalDate time = localDateOf(clientIdWindow.window().end()).minusDays(1);
+		log.trace("\n\t{} spent a total of {} GBP until {} (including)", clientId, amount, format(time));
+		return KeyValue.pair(clientId, new PeriodTotalSpent(clientId, time, amount));
+	}
+
 	public static KeyValue<String, DailyTotalSpent> clientIdDailyTotalSpentOf(String clientIdDay, Integer amount) {
 		Optional<LocalDateBasedKey<String>> winBasedKeyOptional = parseWithStringData(clientIdDay);
 		return winBasedKeyOptional
@@ -62,5 +72,11 @@ public class PaymentsUtils {
 			log.debug("\n\t{} spent a total of {} GBP for the period {} - {}",
 					clientId, amount, format(it.getTime().minusDays(totalPeriod - 1)), format(it.getTime()));
 		});
+	}
+
+	public static void printPeriodTotalExpenses(Windowed<String> clientIdWindow, Integer amount, int totalPeriod) {
+		LocalDate time = localDateOf(clientIdWindow.window().end()).minusDays(1);
+		log.debug("\n\t{} spent a total of {} GBP for the period {} - {}",
+				clientIdWindow.key(), amount, format(time.minusDays(totalPeriod - 1)), format(time));
 	}
 }
