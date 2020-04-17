@@ -129,7 +129,7 @@ public class PaymentsConfig {
 				.windowedBy(TimeWindows.of(Duration.of(windowSize, windowUnit))
 						.advanceBy(Duration.ofDays(1)).grace(Duration.ofDays(DELAY)))
 				// aggregate amount per clientId-3-days
-				.aggregate(() -> 0, (k, v, sum) -> sum + v.getAmount(),
+				.aggregate(() -> 0, (clientId, transaction, sum) -> sum + transaction.getAmount(),
 						helper.dailyTotalSpentByClientId(DELAY + windowSize, "3days"))
 				// clientId-yyyy.MM.dd:amount
 				.toStream((win, amount) -> keyOf(win))
