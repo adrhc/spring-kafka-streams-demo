@@ -6,6 +6,7 @@ source ~/.bash_aliases
 cd /home/adr/tools/kafka/kafka_2.12-2.4.0
 
 kdelete ksd1.client-profiles.v2
+kdelete ksd1.command.v2
 kdelete ksd1.daily-exceeds.v2
 kdelete ksd1.daily-total-spent.v2
 kdelete ksd1-dailyTotalSpentByClientId-1day-changelog
