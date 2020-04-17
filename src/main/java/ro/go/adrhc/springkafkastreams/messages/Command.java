@@ -14,8 +14,8 @@ import org.apache.avro.message.SchemaStore;
 
 @org.apache.avro.specific.AvroGenerated
 public class Command extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = 4220822217554899665L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Command\",\"namespace\":\"ro.go.adrhc.springkafkastreams.messages\",\"fields\":[{\"name\":\"name\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"parameters\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"string\",\"avro.java.string\":\"String\"}}}]}");
+  private static final long serialVersionUID = 2262803381114711228L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Command\",\"namespace\":\"ro.go.adrhc.springkafkastreams.messages\",\"fields\":[{\"name\":\"name\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"parameters\",\"type\":[\"null\",{\"type\":\"array\",\"items\":{\"type\":\"string\",\"avro.java.string\":\"String\"}}]}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
@@ -348,18 +348,24 @@ public class Command extends org.apache.avro.specific.SpecificRecordBase impleme
   {
     out.writeString(this.name);
 
-    long size0 = this.parameters.size();
-    out.writeArrayStart();
-    out.setItemCount(size0);
-    long actualSize0 = 0;
-    for (java.lang.String e0: this.parameters) {
-      actualSize0++;
-      out.startItem();
-      out.writeString(e0);
+    if (this.parameters == null) {
+      out.writeIndex(0);
+      out.writeNull();
+    } else {
+      out.writeIndex(1);
+      long size0 = this.parameters.size();
+      out.writeArrayStart();
+      out.setItemCount(size0);
+      long actualSize0 = 0;
+      for (java.lang.String e0: this.parameters) {
+        actualSize0++;
+        out.startItem();
+        out.writeString(e0);
+      }
+      out.writeArrayEnd();
+      if (actualSize0 != size0)
+        throw new java.util.ConcurrentModificationException("Array-size written was " + size0 + ", but element count was " + actualSize0 + ".");
     }
-    out.writeArrayEnd();
-    if (actualSize0 != size0)
-      throw new java.util.ConcurrentModificationException("Array-size written was " + size0 + ", but element count was " + actualSize0 + ".");
 
   }
 
@@ -370,18 +376,23 @@ public class Command extends org.apache.avro.specific.SpecificRecordBase impleme
     if (fieldOrder == null) {
       this.name = in.readString();
 
-      long size0 = in.readArrayStart();
-      java.util.List<java.lang.String> a0 = this.parameters;
-      if (a0 == null) {
-        a0 = new SpecificData.Array<java.lang.String>((int)size0, SCHEMA$.getField("parameters").schema());
-        this.parameters = a0;
-      } else a0.clear();
-      SpecificData.Array<java.lang.String> ga0 = (a0 instanceof SpecificData.Array ? (SpecificData.Array<java.lang.String>)a0 : null);
-      for ( ; 0 < size0; size0 = in.arrayNext()) {
-        for ( ; size0 != 0; size0--) {
-          java.lang.String e0 = (ga0 != null ? ga0.peek() : null);
-          e0 = in.readString();
-          a0.add(e0);
+      if (in.readIndex() != 1) {
+        in.readNull();
+        this.parameters = null;
+      } else {
+        long size0 = in.readArrayStart();
+        java.util.List<java.lang.String> a0 = this.parameters;
+        if (a0 == null) {
+          a0 = new SpecificData.Array<java.lang.String>((int)size0, SCHEMA$.getField("parameters").schema().getTypes().get(1));
+          this.parameters = a0;
+        } else a0.clear();
+        SpecificData.Array<java.lang.String> ga0 = (a0 instanceof SpecificData.Array ? (SpecificData.Array<java.lang.String>)a0 : null);
+        for ( ; 0 < size0; size0 = in.arrayNext()) {
+          for ( ; size0 != 0; size0--) {
+            java.lang.String e0 = (ga0 != null ? ga0.peek() : null);
+            e0 = in.readString();
+            a0.add(e0);
+          }
         }
       }
 
@@ -393,18 +404,23 @@ public class Command extends org.apache.avro.specific.SpecificRecordBase impleme
           break;
 
         case 1:
-          long size0 = in.readArrayStart();
-          java.util.List<java.lang.String> a0 = this.parameters;
-          if (a0 == null) {
-            a0 = new SpecificData.Array<java.lang.String>((int)size0, SCHEMA$.getField("parameters").schema());
-            this.parameters = a0;
-          } else a0.clear();
-          SpecificData.Array<java.lang.String> ga0 = (a0 instanceof SpecificData.Array ? (SpecificData.Array<java.lang.String>)a0 : null);
-          for ( ; 0 < size0; size0 = in.arrayNext()) {
-            for ( ; size0 != 0; size0--) {
-              java.lang.String e0 = (ga0 != null ? ga0.peek() : null);
-              e0 = in.readString();
-              a0.add(e0);
+          if (in.readIndex() != 1) {
+            in.readNull();
+            this.parameters = null;
+          } else {
+            long size0 = in.readArrayStart();
+            java.util.List<java.lang.String> a0 = this.parameters;
+            if (a0 == null) {
+              a0 = new SpecificData.Array<java.lang.String>((int)size0, SCHEMA$.getField("parameters").schema().getTypes().get(1));
+              this.parameters = a0;
+            } else a0.clear();
+            SpecificData.Array<java.lang.String> ga0 = (a0 instanceof SpecificData.Array ? (SpecificData.Array<java.lang.String>)a0 : null);
+            for ( ; 0 < size0; size0 = in.arrayNext()) {
+              for ( ; size0 != 0; size0--) {
+                java.lang.String e0 = (ga0 != null ? ga0.peek() : null);
+                e0 = in.readString();
+                a0.add(e0);
+              }
             }
           }
           break;

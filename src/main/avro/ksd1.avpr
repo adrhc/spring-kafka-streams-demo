@@ -126,10 +126,13 @@
 		},
 		{
 		  "name": "parameters",
-		  "type": {
-			"type": ["null", "array"],
-			"items": "string"
-		  }
+		  "type": [
+			"null",
+			{
+			  "type": "array",
+			  "items": "string"
+			}
+		  ]
 		}
 	  ]
 	}

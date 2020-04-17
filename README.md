@@ -19,4 +19,5 @@ tailf app.log | egrep -i "client1|Notification:|Overdue:|Limit:|ERROR|WARN"
 ./create-client-profile.sh | egrep 'ClientProfile\(|client1' | tee -a profile.log
 ./create-transactions.sh | egrep 'Transaction\(|client1' | tee -a transactions.log
 ./create-transactions.sh 2 | egrep 'Transaction\(|client1' | tee -a transactions.log
+./create-report-command.sh | egrep "parameters"
 ```

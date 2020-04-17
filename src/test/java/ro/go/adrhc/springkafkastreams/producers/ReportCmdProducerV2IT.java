@@ -11,6 +11,8 @@ import org.springframework.test.context.ActiveProfiles;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
 import ro.go.adrhc.springkafkastreams.messages.Command;
 
+import java.util.List;
+
 @ActiveProfiles({"v2", "test"})
 @SpringBootTest
 @Slf4j
@@ -27,7 +29,9 @@ public class ReportCmdProducerV2IT {
 	void upsert() {
 		log.debug("profiles: {}", String.join(", ", env.getActiveProfiles()));
 		log.debug("Command topic: {}", properties.getCommand());
-		Command report = new Command("report", null);
+		String reportType = System.getProperty("reportType");
+		Command report = new Command("report",
+				reportType == null ? List.of("daily") : List.of(reportType));
 		log.debug("report command:\n\t{}", report);
 		avroKTemplate.send(properties.getCommand(), report.getName(), report);
 	}

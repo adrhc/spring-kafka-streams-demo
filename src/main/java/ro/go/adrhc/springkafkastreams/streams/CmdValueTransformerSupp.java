@@ -1,35 +1,47 @@
 package ro.go.adrhc.springkafkastreams.streams;
 
+import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.ValueTransformer;
 import org.apache.kafka.streams.kstream.ValueTransformerSupplier;
 import org.apache.kafka.streams.processor.ProcessorContext;
+import org.apache.kafka.streams.state.KeyValueIterator;
 import org.apache.kafka.streams.state.KeyValueStore;
 import org.apache.kafka.streams.state.ValueAndTimestamp;
-import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
 import ro.go.adrhc.springkafkastreams.messages.Command;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
-public class CmdValueTransformerSupp implements ValueTransformerSupplier<Command, List<String>> {
-	private final TopicsProperties properties;
+import static ro.go.adrhc.springkafkastreams.util.LocalDateBasedKey.parseWithStringData;
 
-	public CmdValueTransformerSupp(TopicsProperties properties) {this.properties = properties;}
+public abstract class CmdValueTransformerSupp<T> implements ValueTransformerSupplier<Command, List<T>> {
+	private final String storeName;
+
+	public CmdValueTransformerSupp(String storeName) {this.storeName = storeName;}
+
+	protected abstract T newT(String clientId, LocalDate time, Integer amount);
 
 	@Override
-	public ValueTransformer<Command, List<String>> get() {
+	public ValueTransformer<Command, List<T>> get() {
 		return new ValueTransformer<>() {
-			private KeyValueStore<String, ValueAndTimestamp<Integer>> dailyTotalSpent;
-			private KeyValueStore<String, ValueAndTimestamp<Integer>> periodTotalSpent;
+			private KeyValueStore<String, ValueAndTimestamp<Integer>> store;
 
 			@Override
 			public void init(ProcessorContext context) {
-				dailyTotalSpent = (KeyValueStore) context.getStateStore(properties.getDailyTotalSpent());
-				periodTotalSpent = (KeyValueStore) context.getStateStore(properties.getPeriodTotalSpent());
+				store = (KeyValueStore) context.getStateStore(storeName);
 			}
 
 			@Override
-			public List<String> transform(Command value) {
-				return null;
+			public List<T> transform(Command value) {
+				KeyValueIterator<String, ValueAndTimestamp<Integer>> iterator = store.all();
+				List<T> records = new ArrayList<>();
+				while (iterator.hasNext()) {
+					KeyValue<String, ValueAndTimestamp<Integer>> kv = iterator.next();
+					parseWithStringData(kv.key).ifPresent(it ->
+							records.add(newT(it.getData(), it.getTime(), kv.value.value())));
+				}
+				return records;
 			}
 
 			@Override

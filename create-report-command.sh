@@ -2,4 +2,4 @@
 shopt -s expand_aliases
 source ~/.bash_aliases
 
-./mvnw -Dtest=ReportCmdProducerV2IT test
+./mvnw -DtransactionsCount=${1:-daily} -Dtest=ReportCmdProducerV2IT test

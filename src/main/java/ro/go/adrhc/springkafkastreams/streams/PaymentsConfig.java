@@ -18,13 +18,13 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.EnableKafkaStreams;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
 import ro.go.adrhc.springkafkastreams.helper.StreamsHelper;
-import ro.go.adrhc.springkafkastreams.messages.ClientProfile;
-import ro.go.adrhc.springkafkastreams.messages.Command;
-import ro.go.adrhc.springkafkastreams.messages.Transaction;
+import ro.go.adrhc.springkafkastreams.messages.*;
 import ro.go.adrhc.springkafkastreams.transformers.aggregators.DaysPeriodExpensesAggregator;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
+import java.util.Comparator;
+import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 import static ro.go.adrhc.springkafkastreams.enhancer.KafkaEnhancer.enhance;
@@ -80,8 +80,27 @@ public class PaymentsConfig {
 	 */
 	public void reports(StreamsBuilder streamsBuilder) {
 		KStream<String, Command> stream = streamsBuilder.stream(properties.getCommand());
-		stream.transformValues(new CmdValueTransformerSupp(properties),
-				properties.getDailyTotalSpent(), properties.getPeriodTotalSpent());
+		stream
+				.filter((k, v) -> v.getParameters().contains("daily"))
+				.transformValues(new DailyValueTransformerSupp(properties.getDailyTotalSpent()),
+						properties.getDailyTotalSpent(), properties.getPeriodTotalSpent())
+				.foreach((k, list) -> {
+					list.sort(Comparator.comparing(DailyTotalSpent::getTime));
+					log.debug("\n\tDaily totals:\n\t{}", list.stream().map(it ->
+							it.getClientId() + ", " + format(it.getTime()) + ": " + it.getAmount())
+							.collect(Collectors.joining("\n\t")));
+				});
+		stream
+				.filter((k, v) -> v.getParameters().contains("period"))
+				.transformValues(new PeriodValueTransformerSupp(properties.getPeriodTotalSpent()),
+						properties.getDailyTotalSpent(), properties.getPeriodTotalSpent())
+				.foreach((k, list) -> {
+					list.sort(Comparator.comparing(PeriodTotalSpent::getTime));
+					log.debug("\n\t{} {} totals:\n\t{}", windowSize, windowUnit,
+							list.stream().map(it ->
+									it.getClientId() + ", " + format(it.getTime()) + ": " + it.getAmount())
+									.collect(Collectors.joining("\n\t")));
+				});
 	}
 
 	/**
