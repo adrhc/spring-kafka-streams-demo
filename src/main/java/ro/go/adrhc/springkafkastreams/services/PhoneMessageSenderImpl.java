@@ -8,14 +8,21 @@ import ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent;
 import ro.go.adrhc.springkafkastreams.messages.PeriodExceeded;
 import ro.go.adrhc.springkafkastreams.messages.PeriodTotalSpent;
 
+import java.time.temporal.ChronoUnit;
+
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.format;
 
 @Service
 @Slf4j
 public class PhoneMessageSenderImpl implements PhoneMessageSender {
-	private final int totalPeriod;
+	private final int windowSize;
+	private final ChronoUnit windowUnit;
 
-	public PhoneMessageSenderImpl(@Value("${window.size}") int totalPeriod) {this.totalPeriod = totalPeriod;}
+	public PhoneMessageSenderImpl(@Value("${window.size}") int windowSize,
+			@Value("${window.unit}") ChronoUnit windowUnit) {
+		this.windowSize = windowSize;
+		this.windowUnit = windowUnit;
+	}
 
 	@Override
 	public void send(DailyExceeded de) {
@@ -29,7 +36,7 @@ public class PhoneMessageSenderImpl implements PhoneMessageSender {
 	public void send(PeriodExceeded de) {
 		PeriodTotalSpent dts = de.getPeriodTotalSpent();
 		log.debug("\n\tNotification:\t{} spent a total of {} GBP for the period {} - {}\n\tOverdue:\t{} GBP\n\tLimit:\t\t{} GBP",
-				dts.getClientId(), dts.getAmount(), format(dts.getTime().minusDays(totalPeriod - 1)),
+				dts.getClientId(), dts.getAmount(), format(dts.getTime().minus(windowSize, windowUnit).plusDays(1)),
 				format(dts.getTime()), dts.getAmount() - de.getPeriodMaxAmount(), de.getPeriodMaxAmount());
 	}
 }
