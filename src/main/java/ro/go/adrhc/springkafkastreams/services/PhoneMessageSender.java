@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.consumer;
+package ro.go.adrhc.springkafkastreams.services;
 
 import ro.go.adrhc.springkafkastreams.messages.DailyExceeded;
 import ro.go.adrhc.springkafkastreams.messages.PeriodExceeded;
