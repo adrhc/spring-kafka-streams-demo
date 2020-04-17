@@ -2,13 +2,19 @@ package ro.go.adrhc.springkafkastreams.enhancer;
 
 import lombok.AllArgsConstructor;
 import org.apache.kafka.streams.KeyValue;
+import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.*;
 import org.apache.kafka.streams.processor.ProcessorSupplier;
 import org.apache.kafka.streams.processor.TopicNameExtractor;
 
 @AllArgsConstructor
-public class KStreamEx<K, V> implements KStream<K, V> {
-	private KStream<K, V> delegate;
+public class KStreamEnhancer<K, V> implements KStream<K, V> {
+	private final KStream<K, V> delegate;
+	private final StreamsBuilder streamsBuilder;
+
+	public GroupByEnhancer<KStreamEnhancer<K, V>, K, V> groupBy(KeyValueOffsetMapper<K, V> keySelector) {
+		return new GroupByEnhancer<>(keySelector, delegate, streamsBuilder);
+	}
 
 	@Override
 	public KStream<K, V> filter(Predicate<? super K, ? super V> predicate) {return delegate.filter(predicate);}

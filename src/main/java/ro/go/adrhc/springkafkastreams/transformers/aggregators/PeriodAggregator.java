@@ -8,8 +8,8 @@ import org.apache.kafka.streams.kstream.Transformer;
 import org.apache.kafka.streams.kstream.TransformerSupplier;
 import org.apache.kafka.streams.processor.ProcessorContext;
 import org.apache.kafka.streams.state.KeyValueStore;
+import ro.go.adrhc.springkafkastreams.enhancer.KeyValueOffsetMapper;
 
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -17,16 +17,15 @@ import java.util.stream.IntStream;
 public class PeriodAggregator<K, V, R> implements TransformerSupplier<K, V, Iterable<KeyValue<K, R>>> {
 	protected final int period;
 	private final String storeName;
-	private final Function<KeyValueIteration<K, V>, K> keyMapper;
+	private final KeyValueOffsetMapper<K, V> keyMapper;
 	private final Initializer<R> initializer;
 	private final Aggregator<K, V, R> aggregator;
 
-	public PeriodAggregator(int period, String storeName,
-			Function<KeyValueIteration<K, V>, K> keyMapper,
-			Initializer<R> initializer,	Aggregator<K, V, R> aggregator) {
+	public PeriodAggregator(int period, KeyValueOffsetMapper<K, V> keySelector,
+			Initializer<R> initializer, Aggregator<K, V, R> aggregator, String storeName) {
 		this.period = period;
 		this.storeName = storeName;
-		this.keyMapper = keyMapper;
+		this.keyMapper = keySelector;
 		this.initializer = initializer;
 		this.aggregator = aggregator;
 	}
@@ -45,7 +44,7 @@ public class PeriodAggregator<K, V, R> implements TransformerSupplier<K, V, Iter
 			public Iterable<KeyValue<K, R>> transform(K key, V value) {
 				return IntStream.range(0, period)
 						.mapToObj(it -> {
-							K newKey = keyMapper.apply(new KeyValueIteration<>(key, value, it));
+							K newKey = keyMapper.apply(key, value, it);
 							R existingAggregate = this.kvStore.get(newKey);
 							if (existingAggregate == null) {
 								existingAggregate = initializer.apply();

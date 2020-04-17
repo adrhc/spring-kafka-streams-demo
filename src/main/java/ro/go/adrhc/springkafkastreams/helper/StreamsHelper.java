@@ -50,6 +50,13 @@ public class StreamsHelper {
 				.withRetention(Duration.ofDays(retentionDays));
 	}
 
+	public Materialized<String, Integer, KeyValueStore<String, Integer>> periodTotalSpentByClientId() {
+		return Materialized.<String, Integer, KeyValueStore<String, Integer>>
+				as("periodTotalSpentByClientId")
+				.withKeySerde(Serdes.String())
+				.withValueSerde(Serdes.Integer());
+	}
+
 	public KTable<String, ClientProfile> clientProfileTable(StreamsBuilder streamsBuilder) {
 		return streamsBuilder.table(properties.getClientProfiles(),
 				Consumed.as(properties.getClientProfiles()),

@@ -1,9 +1,9 @@
 package ro.go.adrhc.springkafkastreams.enhancer;
 
-import org.apache.kafka.streams.kstream.KStream;
+import org.apache.kafka.streams.StreamsBuilder;
 
 public class KafkaEnhancer {
-	public static <K, V> KStreamEx<K, V> enhance(KStream<K, V> stream) {
-		return new KStreamEx<>(stream);
+	public static StreamsBuilderEnhancer enhance(StreamsBuilder streamsBuilder) {
+		return new StreamsBuilderEnhancer(streamsBuilder);
 	}
 }

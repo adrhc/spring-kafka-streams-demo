@@ -9,9 +9,10 @@ import static ro.go.adrhc.springkafkastreams.util.LocalDateBasedKey.keyOf;
 @Slf4j
 public class MonthsPeriodExpensesAggregator extends PeriodAggregator<String, Transaction, Integer> {
 	public MonthsPeriodExpensesAggregator(int period, String storeName) {
-		super(period, storeName, kvi -> keyOf(kvi.getKey(),
-				kvi.getValue().getTime().plus(kvi.getIteration(), MONTHS)),
+		super(period, (clientId, transaction, offset) ->
+						keyOf(clientId, transaction.getTime().plus(offset, MONTHS)),
 				() -> 0,
-				(clientId, transaction, amount) -> amount + transaction.getAmount());
+				(clientId, transaction, amount) -> amount + transaction.getAmount(),
+				storeName);
 	}
 }
