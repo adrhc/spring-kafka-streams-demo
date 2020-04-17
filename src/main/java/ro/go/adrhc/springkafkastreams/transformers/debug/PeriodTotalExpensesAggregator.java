@@ -6,7 +6,7 @@ import org.apache.kafka.streams.kstream.Transformer;
 import org.apache.kafka.streams.kstream.TransformerSupplier;
 import org.apache.kafka.streams.processor.ProcessorContext;
 import org.apache.kafka.streams.state.KeyValueStore;
-import ro.go.adrhc.springkafkastreams.model.Transaction;
+import ro.go.adrhc.springkafkastreams.messages.Transaction;
 
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;

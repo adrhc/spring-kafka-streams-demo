@@ -4,10 +4,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.support.serializer.JsonSerde;
-import ro.go.adrhc.springkafkastreams.model.DailyExceeded;
-import ro.go.adrhc.springkafkastreams.model.DailyTotalSpent;
-import ro.go.adrhc.springkafkastreams.model.PeriodExceeded;
-import ro.go.adrhc.springkafkastreams.model.PeriodTotalSpent;
+import ro.go.adrhc.springkafkastreams.messages.DailyExceeded;
+import ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent;
+import ro.go.adrhc.springkafkastreams.messages.PeriodExceeded;
+import ro.go.adrhc.springkafkastreams.messages.PeriodTotalSpent;
 
 import java.util.Map;
 

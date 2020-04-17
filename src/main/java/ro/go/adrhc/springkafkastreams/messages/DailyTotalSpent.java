@@ -3,7 +3,7 @@
  *
  * DO NOT EDIT DIRECTLY
  */
-package ro.go.adrhc.springkafkastreams.model;
+package ro.go.adrhc.springkafkastreams.messages;
 
 import org.apache.avro.generic.GenericArray;
 import org.apache.avro.specific.SpecificData;
@@ -14,8 +14,8 @@ import org.apache.avro.message.SchemaStore;
 
 @org.apache.avro.specific.AvroGenerated
 public class DailyTotalSpent extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = 1390276074290820455L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"DailyTotalSpent\",\"namespace\":\"ro.go.adrhc.springkafkastreams.model\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"time\",\"type\":{\"type\":\"int\",\"logicalType\":\"date\"}},{\"name\":\"amount\",\"type\":\"int\"}]}");
+  private static final long serialVersionUID = 4444735334833855111L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"DailyTotalSpent\",\"namespace\":\"ro.go.adrhc.springkafkastreams.messages\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"time\",\"type\":{\"type\":\"int\",\"logicalType\":\"date\"}},{\"name\":\"amount\",\"type\":\"int\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
@@ -188,8 +188,8 @@ static {
    * Creates a new DailyTotalSpent RecordBuilder.
    * @return A new DailyTotalSpent RecordBuilder
    */
-  public static ro.go.adrhc.springkafkastreams.model.DailyTotalSpent.Builder newBuilder() {
-    return new ro.go.adrhc.springkafkastreams.model.DailyTotalSpent.Builder();
+  public static ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent.Builder newBuilder() {
+    return new ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent.Builder();
   }
 
   /**
@@ -197,11 +197,11 @@ static {
    * @param other The existing builder to copy.
    * @return A new DailyTotalSpent RecordBuilder
    */
-  public static ro.go.adrhc.springkafkastreams.model.DailyTotalSpent.Builder newBuilder(ro.go.adrhc.springkafkastreams.model.DailyTotalSpent.Builder other) {
+  public static ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent.Builder newBuilder(ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent.Builder other) {
     if (other == null) {
-      return new ro.go.adrhc.springkafkastreams.model.DailyTotalSpent.Builder();
+      return new ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent.Builder();
     } else {
-      return new ro.go.adrhc.springkafkastreams.model.DailyTotalSpent.Builder(other);
+      return new ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent.Builder(other);
     }
   }
 
@@ -210,11 +210,11 @@ static {
    * @param other The existing instance to copy.
    * @return A new DailyTotalSpent RecordBuilder
    */
-  public static ro.go.adrhc.springkafkastreams.model.DailyTotalSpent.Builder newBuilder(ro.go.adrhc.springkafkastreams.model.DailyTotalSpent other) {
+  public static ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent.Builder newBuilder(ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent other) {
     if (other == null) {
-      return new ro.go.adrhc.springkafkastreams.model.DailyTotalSpent.Builder();
+      return new ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent.Builder();
     } else {
-      return new ro.go.adrhc.springkafkastreams.model.DailyTotalSpent.Builder(other);
+      return new ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent.Builder(other);
     }
   }
 
@@ -238,7 +238,7 @@ static {
      * Creates a Builder by copying an existing Builder.
      * @param other The existing Builder to copy.
      */
-    private Builder(ro.go.adrhc.springkafkastreams.model.DailyTotalSpent.Builder other) {
+    private Builder(ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent.Builder other) {
       super(other);
       if (isValidValue(fields()[0], other.clientId)) {
         this.clientId = data().deepCopy(fields()[0].schema(), other.clientId);
@@ -258,7 +258,7 @@ static {
      * Creates a Builder by copying an existing DailyTotalSpent instance
      * @param other The existing instance to copy.
      */
-    private Builder(ro.go.adrhc.springkafkastreams.model.DailyTotalSpent other) {
+    private Builder(ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent other) {
       super(SCHEMA$);
       if (isValidValue(fields()[0], other.clientId)) {
         this.clientId = data().deepCopy(fields()[0].schema(), other.clientId);
@@ -288,7 +288,7 @@ static {
       * @param value The value of 'clientId'.
       * @return This builder.
       */
-    public ro.go.adrhc.springkafkastreams.model.DailyTotalSpent.Builder setClientId(java.lang.String value) {
+    public ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent.Builder setClientId(java.lang.String value) {
       validate(fields()[0], value);
       this.clientId = value;
       fieldSetFlags()[0] = true;
@@ -308,7 +308,7 @@ static {
       * Clears the value of the 'clientId' field.
       * @return This builder.
       */
-    public ro.go.adrhc.springkafkastreams.model.DailyTotalSpent.Builder clearClientId() {
+    public ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent.Builder clearClientId() {
       clientId = null;
       fieldSetFlags()[0] = false;
       return this;
@@ -328,7 +328,7 @@ static {
       * @param value The value of 'time'.
       * @return This builder.
       */
-    public ro.go.adrhc.springkafkastreams.model.DailyTotalSpent.Builder setTime(java.time.LocalDate value) {
+    public ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent.Builder setTime(java.time.LocalDate value) {
       validate(fields()[1], value);
       this.time = value;
       fieldSetFlags()[1] = true;
@@ -348,7 +348,7 @@ static {
       * Clears the value of the 'time' field.
       * @return This builder.
       */
-    public ro.go.adrhc.springkafkastreams.model.DailyTotalSpent.Builder clearTime() {
+    public ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent.Builder clearTime() {
       fieldSetFlags()[1] = false;
       return this;
     }
@@ -367,7 +367,7 @@ static {
       * @param value The value of 'amount'.
       * @return This builder.
       */
-    public ro.go.adrhc.springkafkastreams.model.DailyTotalSpent.Builder setAmount(int value) {
+    public ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent.Builder setAmount(int value) {
       validate(fields()[2], value);
       this.amount = value;
       fieldSetFlags()[2] = true;
@@ -387,7 +387,7 @@ static {
       * Clears the value of the 'amount' field.
       * @return This builder.
       */
-    public ro.go.adrhc.springkafkastreams.model.DailyTotalSpent.Builder clearAmount() {
+    public ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent.Builder clearAmount() {
       fieldSetFlags()[2] = false;
       return this;
     }

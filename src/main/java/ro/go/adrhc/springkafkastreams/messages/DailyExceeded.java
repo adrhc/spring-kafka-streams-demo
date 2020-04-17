@@ -3,7 +3,7 @@
  *
  * DO NOT EDIT DIRECTLY
  */
-package ro.go.adrhc.springkafkastreams.model;
+package ro.go.adrhc.springkafkastreams.messages;
 
 import org.apache.avro.generic.GenericArray;
 import org.apache.avro.specific.SpecificData;
@@ -14,8 +14,8 @@ import org.apache.avro.message.SchemaStore;
 
 @org.apache.avro.specific.AvroGenerated
 public class DailyExceeded extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = -3759117058201029897L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"DailyExceeded\",\"namespace\":\"ro.go.adrhc.springkafkastreams.model\",\"fields\":[{\"name\":\"dailyMaxAmount\",\"type\":\"int\"},{\"name\":\"dailyTotalSpent\",\"type\":{\"type\":\"record\",\"name\":\"DailyTotalSpent\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"time\",\"type\":{\"type\":\"int\",\"logicalType\":\"date\"}},{\"name\":\"amount\",\"type\":\"int\"}]}}]}");
+  private static final long serialVersionUID = -6517363556725442538L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"DailyExceeded\",\"namespace\":\"ro.go.adrhc.springkafkastreams.messages\",\"fields\":[{\"name\":\"dailyMaxAmount\",\"type\":\"int\"},{\"name\":\"dailyTotalSpent\",\"type\":{\"type\":\"record\",\"name\":\"DailyTotalSpent\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"time\",\"type\":{\"type\":\"int\",\"logicalType\":\"date\"}},{\"name\":\"amount\",\"type\":\"int\"}]}}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
@@ -75,7 +75,7 @@ static {
   }
 
    private int dailyMaxAmount;
-   private ro.go.adrhc.springkafkastreams.model.DailyTotalSpent dailyTotalSpent;
+   private ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent dailyTotalSpent;
 
   /**
    * Default constructor.  Note that this does not initialize fields
@@ -89,7 +89,7 @@ static {
    * @param dailyMaxAmount The new value for dailyMaxAmount
    * @param dailyTotalSpent The new value for dailyTotalSpent
    */
-  public DailyExceeded(java.lang.Integer dailyMaxAmount, ro.go.adrhc.springkafkastreams.model.DailyTotalSpent dailyTotalSpent) {
+  public DailyExceeded(java.lang.Integer dailyMaxAmount, ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent dailyTotalSpent) {
     this.dailyMaxAmount = dailyMaxAmount;
     this.dailyTotalSpent = dailyTotalSpent;
   }
@@ -110,7 +110,7 @@ static {
   public void put(int field$, java.lang.Object value$) {
     switch (field$) {
     case 0: dailyMaxAmount = (java.lang.Integer)value$; break;
-    case 1: dailyTotalSpent = (ro.go.adrhc.springkafkastreams.model.DailyTotalSpent)value$; break;
+    case 1: dailyTotalSpent = (ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent)value$; break;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -136,7 +136,7 @@ static {
    * Gets the value of the 'dailyTotalSpent' field.
    * @return The value of the 'dailyTotalSpent' field.
    */
-  public ro.go.adrhc.springkafkastreams.model.DailyTotalSpent getDailyTotalSpent() {
+  public ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent getDailyTotalSpent() {
     return dailyTotalSpent;
   }
 
@@ -145,7 +145,7 @@ static {
    * Sets the value of the 'dailyTotalSpent' field.
    * @param value the value to set.
    */
-  public void setDailyTotalSpent(ro.go.adrhc.springkafkastreams.model.DailyTotalSpent value) {
+  public void setDailyTotalSpent(ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent value) {
     this.dailyTotalSpent = value;
   }
 
@@ -153,8 +153,8 @@ static {
    * Creates a new DailyExceeded RecordBuilder.
    * @return A new DailyExceeded RecordBuilder
    */
-  public static ro.go.adrhc.springkafkastreams.model.DailyExceeded.Builder newBuilder() {
-    return new ro.go.adrhc.springkafkastreams.model.DailyExceeded.Builder();
+  public static ro.go.adrhc.springkafkastreams.messages.DailyExceeded.Builder newBuilder() {
+    return new ro.go.adrhc.springkafkastreams.messages.DailyExceeded.Builder();
   }
 
   /**
@@ -162,11 +162,11 @@ static {
    * @param other The existing builder to copy.
    * @return A new DailyExceeded RecordBuilder
    */
-  public static ro.go.adrhc.springkafkastreams.model.DailyExceeded.Builder newBuilder(ro.go.adrhc.springkafkastreams.model.DailyExceeded.Builder other) {
+  public static ro.go.adrhc.springkafkastreams.messages.DailyExceeded.Builder newBuilder(ro.go.adrhc.springkafkastreams.messages.DailyExceeded.Builder other) {
     if (other == null) {
-      return new ro.go.adrhc.springkafkastreams.model.DailyExceeded.Builder();
+      return new ro.go.adrhc.springkafkastreams.messages.DailyExceeded.Builder();
     } else {
-      return new ro.go.adrhc.springkafkastreams.model.DailyExceeded.Builder(other);
+      return new ro.go.adrhc.springkafkastreams.messages.DailyExceeded.Builder(other);
     }
   }
 
@@ -175,11 +175,11 @@ static {
    * @param other The existing instance to copy.
    * @return A new DailyExceeded RecordBuilder
    */
-  public static ro.go.adrhc.springkafkastreams.model.DailyExceeded.Builder newBuilder(ro.go.adrhc.springkafkastreams.model.DailyExceeded other) {
+  public static ro.go.adrhc.springkafkastreams.messages.DailyExceeded.Builder newBuilder(ro.go.adrhc.springkafkastreams.messages.DailyExceeded other) {
     if (other == null) {
-      return new ro.go.adrhc.springkafkastreams.model.DailyExceeded.Builder();
+      return new ro.go.adrhc.springkafkastreams.messages.DailyExceeded.Builder();
     } else {
-      return new ro.go.adrhc.springkafkastreams.model.DailyExceeded.Builder(other);
+      return new ro.go.adrhc.springkafkastreams.messages.DailyExceeded.Builder(other);
     }
   }
 
@@ -191,8 +191,8 @@ static {
     implements org.apache.avro.data.RecordBuilder<DailyExceeded> {
 
     private int dailyMaxAmount;
-    private ro.go.adrhc.springkafkastreams.model.DailyTotalSpent dailyTotalSpent;
-    private ro.go.adrhc.springkafkastreams.model.DailyTotalSpent.Builder dailyTotalSpentBuilder;
+    private ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent dailyTotalSpent;
+    private ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent.Builder dailyTotalSpentBuilder;
 
     /** Creates a new Builder */
     private Builder() {
@@ -203,7 +203,7 @@ static {
      * Creates a Builder by copying an existing Builder.
      * @param other The existing Builder to copy.
      */
-    private Builder(ro.go.adrhc.springkafkastreams.model.DailyExceeded.Builder other) {
+    private Builder(ro.go.adrhc.springkafkastreams.messages.DailyExceeded.Builder other) {
       super(other);
       if (isValidValue(fields()[0], other.dailyMaxAmount)) {
         this.dailyMaxAmount = data().deepCopy(fields()[0].schema(), other.dailyMaxAmount);
@@ -214,7 +214,7 @@ static {
         fieldSetFlags()[1] = other.fieldSetFlags()[1];
       }
       if (other.hasDailyTotalSpentBuilder()) {
-        this.dailyTotalSpentBuilder = ro.go.adrhc.springkafkastreams.model.DailyTotalSpent.newBuilder(other.getDailyTotalSpentBuilder());
+        this.dailyTotalSpentBuilder = ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent.newBuilder(other.getDailyTotalSpentBuilder());
       }
     }
 
@@ -222,7 +222,7 @@ static {
      * Creates a Builder by copying an existing DailyExceeded instance
      * @param other The existing instance to copy.
      */
-    private Builder(ro.go.adrhc.springkafkastreams.model.DailyExceeded other) {
+    private Builder(ro.go.adrhc.springkafkastreams.messages.DailyExceeded other) {
       super(SCHEMA$);
       if (isValidValue(fields()[0], other.dailyMaxAmount)) {
         this.dailyMaxAmount = data().deepCopy(fields()[0].schema(), other.dailyMaxAmount);
@@ -249,7 +249,7 @@ static {
       * @param value The value of 'dailyMaxAmount'.
       * @return This builder.
       */
-    public ro.go.adrhc.springkafkastreams.model.DailyExceeded.Builder setDailyMaxAmount(int value) {
+    public ro.go.adrhc.springkafkastreams.messages.DailyExceeded.Builder setDailyMaxAmount(int value) {
       validate(fields()[0], value);
       this.dailyMaxAmount = value;
       fieldSetFlags()[0] = true;
@@ -269,7 +269,7 @@ static {
       * Clears the value of the 'dailyMaxAmount' field.
       * @return This builder.
       */
-    public ro.go.adrhc.springkafkastreams.model.DailyExceeded.Builder clearDailyMaxAmount() {
+    public ro.go.adrhc.springkafkastreams.messages.DailyExceeded.Builder clearDailyMaxAmount() {
       fieldSetFlags()[0] = false;
       return this;
     }
@@ -278,7 +278,7 @@ static {
       * Gets the value of the 'dailyTotalSpent' field.
       * @return The value.
       */
-    public ro.go.adrhc.springkafkastreams.model.DailyTotalSpent getDailyTotalSpent() {
+    public ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent getDailyTotalSpent() {
       return dailyTotalSpent;
     }
 
@@ -288,7 +288,7 @@ static {
       * @param value The value of 'dailyTotalSpent'.
       * @return This builder.
       */
-    public ro.go.adrhc.springkafkastreams.model.DailyExceeded.Builder setDailyTotalSpent(ro.go.adrhc.springkafkastreams.model.DailyTotalSpent value) {
+    public ro.go.adrhc.springkafkastreams.messages.DailyExceeded.Builder setDailyTotalSpent(ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent value) {
       validate(fields()[1], value);
       this.dailyTotalSpentBuilder = null;
       this.dailyTotalSpent = value;
@@ -308,12 +308,12 @@ static {
      * Gets the Builder instance for the 'dailyTotalSpent' field and creates one if it doesn't exist yet.
      * @return This builder.
      */
-    public ro.go.adrhc.springkafkastreams.model.DailyTotalSpent.Builder getDailyTotalSpentBuilder() {
+    public ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent.Builder getDailyTotalSpentBuilder() {
       if (dailyTotalSpentBuilder == null) {
         if (hasDailyTotalSpent()) {
-          setDailyTotalSpentBuilder(ro.go.adrhc.springkafkastreams.model.DailyTotalSpent.newBuilder(dailyTotalSpent));
+          setDailyTotalSpentBuilder(ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent.newBuilder(dailyTotalSpent));
         } else {
-          setDailyTotalSpentBuilder(ro.go.adrhc.springkafkastreams.model.DailyTotalSpent.newBuilder());
+          setDailyTotalSpentBuilder(ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent.newBuilder());
         }
       }
       return dailyTotalSpentBuilder;
@@ -324,7 +324,7 @@ static {
      * @param value The builder instance that must be set.
      * @return This builder.
      */
-    public ro.go.adrhc.springkafkastreams.model.DailyExceeded.Builder setDailyTotalSpentBuilder(ro.go.adrhc.springkafkastreams.model.DailyTotalSpent.Builder value) {
+    public ro.go.adrhc.springkafkastreams.messages.DailyExceeded.Builder setDailyTotalSpentBuilder(ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent.Builder value) {
       clearDailyTotalSpent();
       dailyTotalSpentBuilder = value;
       return this;
@@ -342,7 +342,7 @@ static {
       * Clears the value of the 'dailyTotalSpent' field.
       * @return This builder.
       */
-    public ro.go.adrhc.springkafkastreams.model.DailyExceeded.Builder clearDailyTotalSpent() {
+    public ro.go.adrhc.springkafkastreams.messages.DailyExceeded.Builder clearDailyTotalSpent() {
       dailyTotalSpent = null;
       dailyTotalSpentBuilder = null;
       fieldSetFlags()[1] = false;
@@ -363,7 +363,7 @@ static {
             throw e;
           }
         } else {
-          record.dailyTotalSpent = fieldSetFlags()[1] ? this.dailyTotalSpent : (ro.go.adrhc.springkafkastreams.model.DailyTotalSpent) defaultValue(fields()[1]);
+          record.dailyTotalSpent = fieldSetFlags()[1] ? this.dailyTotalSpent : (ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent) defaultValue(fields()[1]);
         }
         return record;
       } catch (org.apache.avro.AvroMissingFieldException e) {

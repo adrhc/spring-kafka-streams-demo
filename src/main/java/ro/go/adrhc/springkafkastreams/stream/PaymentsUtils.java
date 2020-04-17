@@ -3,7 +3,7 @@ package ro.go.adrhc.springkafkastreams.stream;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.ValueJoiner;
-import ro.go.adrhc.springkafkastreams.model.*;
+import ro.go.adrhc.springkafkastreams.messages.*;
 import ro.go.adrhc.springkafkastreams.util.LocalDateBasedKey;
 
 import java.util.Optional;

@@ -1,5 +1,5 @@
 {
-  "namespace": "ro.go.adrhc.springkafkastreams.model",
+  "namespace": "ro.go.adrhc.springkafkastreams.messages",
   "protocol": "ksd1",
   "doc": "kafka streams demo 1",
   "types": [
