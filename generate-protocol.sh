@@ -7,4 +7,5 @@ elif [ -e "../env.sh" ]; then
 fi
 
 # mvn avro:schema --help
-$MVN -e avro:protocol
+#$MVN -e avro:protocol
+$MVN -Dmaven.javadoc.skip=true -Dmaven.test.skip=true compile "$@"

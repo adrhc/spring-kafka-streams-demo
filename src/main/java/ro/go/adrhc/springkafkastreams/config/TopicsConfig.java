@@ -40,4 +40,9 @@ public class TopicsConfig {
 	public NewTopic periodExceededTopic() {
 		return TopicBuilder.name(properties.getPeriodExceeds()).compact().build();
 	}
+
+	@Bean
+	public NewTopic commandTopic() {
+		return TopicBuilder.name(properties.getCommand()).build();
+	}
 }

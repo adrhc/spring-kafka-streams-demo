@@ -115,6 +115,23 @@
 		  "type": "PeriodTotalSpent"
 		}
 	  ]
+	},
+	{
+	  "name": "Command",
+	  "type": "record",
+	  "fields": [
+		{
+		  "name": "name",
+		  "type": "string"
+		},
+		{
+		  "name": "parameters",
+		  "type": {
+			"type": "array",
+			"items": "string"
+		  }
+		}
+	  ]
 	}
   ]
 }
