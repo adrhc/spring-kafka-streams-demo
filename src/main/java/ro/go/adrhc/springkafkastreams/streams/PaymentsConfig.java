@@ -59,6 +59,7 @@ public class PaymentsConfig {
 		KGroupedStream<String, Transaction> grouped = transactionsGroupedByClientId(transactions);
 		dailyExceeds(grouped, clientProfileTable); // total expenses per day
 		periodExceeds(grouped, clientProfileTable); // total expenses for a period
+//		periodExceedsWithTransformer(transactions, clientProfileTable, streamsBuilder);
 
 		return transactions;
 	}
@@ -159,7 +160,7 @@ public class PaymentsConfig {
 				.peek((clientIdPeriod, amount) -> printPeriodTotalExpenses(clientIdPeriod, amount, totalPeriod))
 				// clientIdDay:amount -> clientIdDay:PeriodTotalSpent
 				.map(PaymentsUtils::clientIdPeriodTotalSpentOf)
-				// clientId:PeriodTotalSpent join clientId:ClientProfile
+				// clientId:PeriodTotalSpent join clientId:ClientProfile -> clientId:PeriodExceeded
 				.join(clientProfileTable,
 						joinPeriodTotalSpentWithClientProfileOnClientId(totalPeriod),
 						helper.periodTotalSpentJoinClientProfile())

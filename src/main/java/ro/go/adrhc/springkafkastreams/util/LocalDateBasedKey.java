@@ -24,10 +24,17 @@ public class LocalDateBasedKey<T> {
 	private final T data;
 	private final LocalDate time;
 
-	public static <T> String keyOf(T data, LocalDate time) {
-		return data.toString() + '-' + time.format(keyLocalDateFormat);
+	/**
+	 * includingEndDate means that is the included end date of a time period
+	 */
+	public static <T> String keyOf(T data, LocalDate includingEndDate) {
+		return data.toString() + '-' + includingEndDate.format(keyLocalDateFormat);
 	}
 
+	/**
+	 * key = clientId-windowEndingDateMinus1
+	 * windowEndingDateMinus1 is an "including" date
+	 */
 	public static <T> String keyOf(Windowed<T> windowed) {
 		return LocalDateBasedKey.keyOf(windowed.key().toString(),
 				localDateOf(windowed.window().end()).minusDays(1));

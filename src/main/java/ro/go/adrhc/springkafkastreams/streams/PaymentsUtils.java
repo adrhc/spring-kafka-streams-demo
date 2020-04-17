@@ -38,7 +38,7 @@ public class PaymentsUtils {
 		return winBasedKeyOptional
 				.map(it -> {
 					String clientId = it.getData();
-					log.trace("\n\t{} spent a total of {} GBP untill {}", clientId, amount, format(it.getTime()));
+					log.trace("\n\t{} spent a total of {} GBP until {} (including)", clientId, amount, format(it.getTime()));
 					return KeyValue.pair(clientId, new PeriodTotalSpent(clientId, it.getTime(), amount));
 				})
 				.orElse(null);
