@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.stream;
+package ro.go.adrhc.springkafkastreams.streams;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Serdes;
@@ -25,8 +25,8 @@ import ro.go.adrhc.springkafkastreams.transformers.debug.PeriodTotalExpensesAggr
 import java.time.Duration;
 
 import static ro.go.adrhc.springkafkastreams.helper.StreamsHelper.DELAY;
-import static ro.go.adrhc.springkafkastreams.stream.PaymentsUtils.joinPeriodTotalSpentWithClientProfileOnClientId;
-import static ro.go.adrhc.springkafkastreams.stream.PaymentsUtils.printPeriodTotalExpenses;
+import static ro.go.adrhc.springkafkastreams.streams.PaymentsUtils.joinPeriodTotalSpentWithClientProfileOnClientId;
+import static ro.go.adrhc.springkafkastreams.streams.PaymentsUtils.printPeriodTotalExpenses;
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.format;
 import static ro.go.adrhc.springkafkastreams.util.LocalDateBasedKey.keyOf;
 
@@ -100,7 +100,7 @@ public class PaymentsConfig {
 						helper.dailyTotalSpentJoinClientProfile())
 				// skip for less than dailyMaxAmount
 				.filter((clientId, dailyExceeded) -> dailyExceeded != null)
-				// clientId:DailyExceeded stream
+				// clientId:DailyExceeded streams
 //				.foreach((clientId, dailyExceeded) ->
 //						log.debug("\n\tclientId: {}\n\t{}", clientId, dailyExceeded));
 				.to(properties.getDailyExceeds(), helper.produceDailyExceeded());

@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.stream;
+package ro.go.adrhc.springkafkastreams.streams;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.streams.KeyValue;
