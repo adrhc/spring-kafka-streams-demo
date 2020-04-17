@@ -42,7 +42,8 @@ public class PeriodExceeded extends org.apache.avro.specific.SpecificRecordBase 
 
 	/**
 	 * All-args constructor.
-	 * @param periodMaxAmount The new value for periodMaxAmount
+	 *
+	 * @param periodMaxAmount  The new value for periodMaxAmount
 	 * @param periodTotalSpent The new value for periodTotalSpent
 	 */
 	public PeriodExceeded(java.lang.Integer periodMaxAmount, ro.go.adrhc.springkafkastreams.messages.PeriodTotalSpent periodTotalSpent) {
@@ -54,6 +55,7 @@ public class PeriodExceeded extends org.apache.avro.specific.SpecificRecordBase 
 
 	/**
 	 * Return the BinaryMessageEncoder instance used by this class.
+	 *
 	 * @return the message encoder used by this class
 	 */
 	public static BinaryMessageEncoder<PeriodExceeded> getEncoder() {
@@ -62,6 +64,7 @@ public class PeriodExceeded extends org.apache.avro.specific.SpecificRecordBase 
 
 	/**
 	 * Return the BinaryMessageDecoder instance used by this class.
+	 *
 	 * @return the message decoder used by this class
 	 */
 	public static BinaryMessageDecoder<PeriodExceeded> getDecoder() {
@@ -70,6 +73,7 @@ public class PeriodExceeded extends org.apache.avro.specific.SpecificRecordBase 
 
 	/**
 	 * Create a new BinaryMessageDecoder instance for this class that uses the specified {@link SchemaStore}.
+	 *
 	 * @param resolver a {@link SchemaStore} used to find schemas by fingerprint
 	 * @return a BinaryMessageDecoder instance for this class backed by the given SchemaStore
 	 */
@@ -79,6 +83,7 @@ public class PeriodExceeded extends org.apache.avro.specific.SpecificRecordBase 
 
 	/**
 	 * Deserializes a PeriodExceeded from a ByteBuffer.
+	 *
 	 * @param b a byte buffer holding serialized data for an instance of this class
 	 * @return a PeriodExceeded instance decoded from the given buffer
 	 * @throws java.io.IOException if the given bytes could not be deserialized into an instance of this class
@@ -90,6 +95,7 @@ public class PeriodExceeded extends org.apache.avro.specific.SpecificRecordBase 
 
 	/**
 	 * Creates a new PeriodExceeded RecordBuilder.
+	 *
 	 * @return A new PeriodExceeded RecordBuilder
 	 */
 	public static ro.go.adrhc.springkafkastreams.messages.PeriodExceeded.Builder newBuilder() {
@@ -98,6 +104,7 @@ public class PeriodExceeded extends org.apache.avro.specific.SpecificRecordBase 
 
 	/**
 	 * Creates a new PeriodExceeded RecordBuilder by copying an existing Builder.
+	 *
 	 * @param other The existing builder to copy.
 	 * @return A new PeriodExceeded RecordBuilder
 	 */
@@ -111,6 +118,7 @@ public class PeriodExceeded extends org.apache.avro.specific.SpecificRecordBase 
 
 	/**
 	 * Creates a new PeriodExceeded RecordBuilder by copying an existing PeriodExceeded instance.
+	 *
 	 * @param other The existing instance to copy.
 	 * @return A new PeriodExceeded RecordBuilder
 	 */
@@ -124,6 +132,7 @@ public class PeriodExceeded extends org.apache.avro.specific.SpecificRecordBase 
 
 	/**
 	 * Serializes this PeriodExceeded to a ByteBuffer.
+	 *
 	 * @return a buffer holding the serialized data for this instance
 	 * @throws java.io.IOException if this instance could not be serialized
 	 */
@@ -164,6 +173,7 @@ public class PeriodExceeded extends org.apache.avro.specific.SpecificRecordBase 
 
 	/**
 	 * Gets the value of the 'periodMaxAmount' field.
+	 *
 	 * @return The value of the 'periodMaxAmount' field.
 	 */
 	public int getPeriodMaxAmount() {
@@ -172,6 +182,7 @@ public class PeriodExceeded extends org.apache.avro.specific.SpecificRecordBase 
 
 	/**
 	 * Sets the value of the 'periodMaxAmount' field.
+	 *
 	 * @param value the value to set.
 	 */
 	public void setPeriodMaxAmount(int value) {
@@ -180,6 +191,7 @@ public class PeriodExceeded extends org.apache.avro.specific.SpecificRecordBase 
 
 	/**
 	 * Gets the value of the 'periodTotalSpent' field.
+	 *
 	 * @return The value of the 'periodTotalSpent' field.
 	 */
 	public ro.go.adrhc.springkafkastreams.messages.PeriodTotalSpent getPeriodTotalSpent() {
@@ -188,6 +200,7 @@ public class PeriodExceeded extends org.apache.avro.specific.SpecificRecordBase 
 
 	/**
 	 * Sets the value of the 'periodTotalSpent' field.
+	 *
 	 * @param value the value to set.
 	 */
 	public void setPeriodTotalSpent(ro.go.adrhc.springkafkastreams.messages.PeriodTotalSpent value) {
@@ -217,13 +230,16 @@ public class PeriodExceeded extends org.apache.avro.specific.SpecificRecordBase 
 		private ro.go.adrhc.springkafkastreams.messages.PeriodTotalSpent periodTotalSpent;
 		private ro.go.adrhc.springkafkastreams.messages.PeriodTotalSpent.Builder periodTotalSpentBuilder;
 
-		/** Creates a new Builder */
+		/**
+		 * Creates a new Builder
+		 */
 		private Builder() {
 			super(SCHEMA$);
 		}
 
 		/**
 		 * Creates a Builder by copying an existing Builder.
+		 *
 		 * @param other The existing Builder to copy.
 		 */
 		private Builder(ro.go.adrhc.springkafkastreams.messages.PeriodExceeded.Builder other) {
@@ -243,6 +259,7 @@ public class PeriodExceeded extends org.apache.avro.specific.SpecificRecordBase 
 
 		/**
 		 * Creates a Builder by copying an existing PeriodExceeded instance
+		 *
 		 * @param other The existing instance to copy.
 		 */
 		private Builder(ro.go.adrhc.springkafkastreams.messages.PeriodExceeded other) {
@@ -260,6 +277,7 @@ public class PeriodExceeded extends org.apache.avro.specific.SpecificRecordBase 
 
 		/**
 		 * Gets the value of the 'periodMaxAmount' field.
+		 *
 		 * @return The value.
 		 */
 		public int getPeriodMaxAmount() {
@@ -269,6 +287,7 @@ public class PeriodExceeded extends org.apache.avro.specific.SpecificRecordBase 
 
 		/**
 		 * Sets the value of the 'periodMaxAmount' field.
+		 *
 		 * @param value The value of 'periodMaxAmount'.
 		 * @return This builder.
 		 */
@@ -281,6 +300,7 @@ public class PeriodExceeded extends org.apache.avro.specific.SpecificRecordBase 
 
 		/**
 		 * Checks whether the 'periodMaxAmount' field has been set.
+		 *
 		 * @return True if the 'periodMaxAmount' field has been set, false otherwise.
 		 */
 		public boolean hasPeriodMaxAmount() {
@@ -290,6 +310,7 @@ public class PeriodExceeded extends org.apache.avro.specific.SpecificRecordBase 
 
 		/**
 		 * Clears the value of the 'periodMaxAmount' field.
+		 *
 		 * @return This builder.
 		 */
 		public ro.go.adrhc.springkafkastreams.messages.PeriodExceeded.Builder clearPeriodMaxAmount() {
@@ -299,6 +320,7 @@ public class PeriodExceeded extends org.apache.avro.specific.SpecificRecordBase 
 
 		/**
 		 * Gets the value of the 'periodTotalSpent' field.
+		 *
 		 * @return The value.
 		 */
 		public ro.go.adrhc.springkafkastreams.messages.PeriodTotalSpent getPeriodTotalSpent() {
@@ -308,6 +330,7 @@ public class PeriodExceeded extends org.apache.avro.specific.SpecificRecordBase 
 
 		/**
 		 * Sets the value of the 'periodTotalSpent' field.
+		 *
 		 * @param value The value of 'periodTotalSpent'.
 		 * @return This builder.
 		 */
@@ -321,6 +344,7 @@ public class PeriodExceeded extends org.apache.avro.specific.SpecificRecordBase 
 
 		/**
 		 * Checks whether the 'periodTotalSpent' field has been set.
+		 *
 		 * @return True if the 'periodTotalSpent' field has been set, false otherwise.
 		 */
 		public boolean hasPeriodTotalSpent() {
@@ -329,6 +353,7 @@ public class PeriodExceeded extends org.apache.avro.specific.SpecificRecordBase 
 
 		/**
 		 * Gets the Builder instance for the 'periodTotalSpent' field and creates one if it doesn't exist yet.
+		 *
 		 * @return This builder.
 		 */
 		public ro.go.adrhc.springkafkastreams.messages.PeriodTotalSpent.Builder getPeriodTotalSpentBuilder() {
@@ -344,6 +369,7 @@ public class PeriodExceeded extends org.apache.avro.specific.SpecificRecordBase 
 
 		/**
 		 * Sets the Builder instance for the 'periodTotalSpent' field
+		 *
 		 * @param value The builder instance that must be set.
 		 * @return This builder.
 		 */
@@ -355,6 +381,7 @@ public class PeriodExceeded extends org.apache.avro.specific.SpecificRecordBase 
 
 		/**
 		 * Checks whether the 'periodTotalSpent' field has an active Builder instance
+		 *
 		 * @return True if the 'periodTotalSpent' field has an active Builder instance
 		 */
 		public boolean hasPeriodTotalSpentBuilder() {
@@ -363,6 +390,7 @@ public class PeriodExceeded extends org.apache.avro.specific.SpecificRecordBase 
 
 		/**
 		 * Clears the value of the 'periodTotalSpent' field.
+		 *
 		 * @return This builder.
 		 */
 		public ro.go.adrhc.springkafkastreams.messages.PeriodExceeded.Builder clearPeriodTotalSpent() {

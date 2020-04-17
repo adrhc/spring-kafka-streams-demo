@@ -42,7 +42,8 @@ public class DailyExceeded extends org.apache.avro.specific.SpecificRecordBase i
 
 	/**
 	 * All-args constructor.
-	 * @param dailyMaxAmount The new value for dailyMaxAmount
+	 *
+	 * @param dailyMaxAmount  The new value for dailyMaxAmount
 	 * @param dailyTotalSpent The new value for dailyTotalSpent
 	 */
 	public DailyExceeded(java.lang.Integer dailyMaxAmount, ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent dailyTotalSpent) {
@@ -54,6 +55,7 @@ public class DailyExceeded extends org.apache.avro.specific.SpecificRecordBase i
 
 	/**
 	 * Return the BinaryMessageEncoder instance used by this class.
+	 *
 	 * @return the message encoder used by this class
 	 */
 	public static BinaryMessageEncoder<DailyExceeded> getEncoder() {
@@ -62,6 +64,7 @@ public class DailyExceeded extends org.apache.avro.specific.SpecificRecordBase i
 
 	/**
 	 * Return the BinaryMessageDecoder instance used by this class.
+	 *
 	 * @return the message decoder used by this class
 	 */
 	public static BinaryMessageDecoder<DailyExceeded> getDecoder() {
@@ -70,6 +73,7 @@ public class DailyExceeded extends org.apache.avro.specific.SpecificRecordBase i
 
 	/**
 	 * Create a new BinaryMessageDecoder instance for this class that uses the specified {@link SchemaStore}.
+	 *
 	 * @param resolver a {@link SchemaStore} used to find schemas by fingerprint
 	 * @return a BinaryMessageDecoder instance for this class backed by the given SchemaStore
 	 */
@@ -79,6 +83,7 @@ public class DailyExceeded extends org.apache.avro.specific.SpecificRecordBase i
 
 	/**
 	 * Deserializes a DailyExceeded from a ByteBuffer.
+	 *
 	 * @param b a byte buffer holding serialized data for an instance of this class
 	 * @return a DailyExceeded instance decoded from the given buffer
 	 * @throws java.io.IOException if the given bytes could not be deserialized into an instance of this class
@@ -90,6 +95,7 @@ public class DailyExceeded extends org.apache.avro.specific.SpecificRecordBase i
 
 	/**
 	 * Creates a new DailyExceeded RecordBuilder.
+	 *
 	 * @return A new DailyExceeded RecordBuilder
 	 */
 	public static ro.go.adrhc.springkafkastreams.messages.DailyExceeded.Builder newBuilder() {
@@ -98,6 +104,7 @@ public class DailyExceeded extends org.apache.avro.specific.SpecificRecordBase i
 
 	/**
 	 * Creates a new DailyExceeded RecordBuilder by copying an existing Builder.
+	 *
 	 * @param other The existing builder to copy.
 	 * @return A new DailyExceeded RecordBuilder
 	 */
@@ -111,6 +118,7 @@ public class DailyExceeded extends org.apache.avro.specific.SpecificRecordBase i
 
 	/**
 	 * Creates a new DailyExceeded RecordBuilder by copying an existing DailyExceeded instance.
+	 *
 	 * @param other The existing instance to copy.
 	 * @return A new DailyExceeded RecordBuilder
 	 */
@@ -124,6 +132,7 @@ public class DailyExceeded extends org.apache.avro.specific.SpecificRecordBase i
 
 	/**
 	 * Serializes this DailyExceeded to a ByteBuffer.
+	 *
 	 * @return a buffer holding the serialized data for this instance
 	 * @throws java.io.IOException if this instance could not be serialized
 	 */
@@ -164,6 +173,7 @@ public class DailyExceeded extends org.apache.avro.specific.SpecificRecordBase i
 
 	/**
 	 * Gets the value of the 'dailyMaxAmount' field.
+	 *
 	 * @return The value of the 'dailyMaxAmount' field.
 	 */
 	public int getDailyMaxAmount() {
@@ -172,6 +182,7 @@ public class DailyExceeded extends org.apache.avro.specific.SpecificRecordBase i
 
 	/**
 	 * Sets the value of the 'dailyMaxAmount' field.
+	 *
 	 * @param value the value to set.
 	 */
 	public void setDailyMaxAmount(int value) {
@@ -180,6 +191,7 @@ public class DailyExceeded extends org.apache.avro.specific.SpecificRecordBase i
 
 	/**
 	 * Gets the value of the 'dailyTotalSpent' field.
+	 *
 	 * @return The value of the 'dailyTotalSpent' field.
 	 */
 	public ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent getDailyTotalSpent() {
@@ -188,6 +200,7 @@ public class DailyExceeded extends org.apache.avro.specific.SpecificRecordBase i
 
 	/**
 	 * Sets the value of the 'dailyTotalSpent' field.
+	 *
 	 * @param value the value to set.
 	 */
 	public void setDailyTotalSpent(ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent value) {
@@ -217,13 +230,16 @@ public class DailyExceeded extends org.apache.avro.specific.SpecificRecordBase i
 		private ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent dailyTotalSpent;
 		private ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent.Builder dailyTotalSpentBuilder;
 
-		/** Creates a new Builder */
+		/**
+		 * Creates a new Builder
+		 */
 		private Builder() {
 			super(SCHEMA$);
 		}
 
 		/**
 		 * Creates a Builder by copying an existing Builder.
+		 *
 		 * @param other The existing Builder to copy.
 		 */
 		private Builder(ro.go.adrhc.springkafkastreams.messages.DailyExceeded.Builder other) {
@@ -243,6 +259,7 @@ public class DailyExceeded extends org.apache.avro.specific.SpecificRecordBase i
 
 		/**
 		 * Creates a Builder by copying an existing DailyExceeded instance
+		 *
 		 * @param other The existing instance to copy.
 		 */
 		private Builder(ro.go.adrhc.springkafkastreams.messages.DailyExceeded other) {
@@ -260,6 +277,7 @@ public class DailyExceeded extends org.apache.avro.specific.SpecificRecordBase i
 
 		/**
 		 * Gets the value of the 'dailyMaxAmount' field.
+		 *
 		 * @return The value.
 		 */
 		public int getDailyMaxAmount() {
@@ -269,6 +287,7 @@ public class DailyExceeded extends org.apache.avro.specific.SpecificRecordBase i
 
 		/**
 		 * Sets the value of the 'dailyMaxAmount' field.
+		 *
 		 * @param value The value of 'dailyMaxAmount'.
 		 * @return This builder.
 		 */
@@ -281,6 +300,7 @@ public class DailyExceeded extends org.apache.avro.specific.SpecificRecordBase i
 
 		/**
 		 * Checks whether the 'dailyMaxAmount' field has been set.
+		 *
 		 * @return True if the 'dailyMaxAmount' field has been set, false otherwise.
 		 */
 		public boolean hasDailyMaxAmount() {
@@ -290,6 +310,7 @@ public class DailyExceeded extends org.apache.avro.specific.SpecificRecordBase i
 
 		/**
 		 * Clears the value of the 'dailyMaxAmount' field.
+		 *
 		 * @return This builder.
 		 */
 		public ro.go.adrhc.springkafkastreams.messages.DailyExceeded.Builder clearDailyMaxAmount() {
@@ -299,6 +320,7 @@ public class DailyExceeded extends org.apache.avro.specific.SpecificRecordBase i
 
 		/**
 		 * Gets the value of the 'dailyTotalSpent' field.
+		 *
 		 * @return The value.
 		 */
 		public ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent getDailyTotalSpent() {
@@ -308,6 +330,7 @@ public class DailyExceeded extends org.apache.avro.specific.SpecificRecordBase i
 
 		/**
 		 * Sets the value of the 'dailyTotalSpent' field.
+		 *
 		 * @param value The value of 'dailyTotalSpent'.
 		 * @return This builder.
 		 */
@@ -321,6 +344,7 @@ public class DailyExceeded extends org.apache.avro.specific.SpecificRecordBase i
 
 		/**
 		 * Checks whether the 'dailyTotalSpent' field has been set.
+		 *
 		 * @return True if the 'dailyTotalSpent' field has been set, false otherwise.
 		 */
 		public boolean hasDailyTotalSpent() {
@@ -329,6 +353,7 @@ public class DailyExceeded extends org.apache.avro.specific.SpecificRecordBase i
 
 		/**
 		 * Gets the Builder instance for the 'dailyTotalSpent' field and creates one if it doesn't exist yet.
+		 *
 		 * @return This builder.
 		 */
 		public ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent.Builder getDailyTotalSpentBuilder() {
@@ -344,6 +369,7 @@ public class DailyExceeded extends org.apache.avro.specific.SpecificRecordBase i
 
 		/**
 		 * Sets the Builder instance for the 'dailyTotalSpent' field
+		 *
 		 * @param value The builder instance that must be set.
 		 * @return This builder.
 		 */
@@ -355,6 +381,7 @@ public class DailyExceeded extends org.apache.avro.specific.SpecificRecordBase i
 
 		/**
 		 * Checks whether the 'dailyTotalSpent' field has an active Builder instance
+		 *
 		 * @return True if the 'dailyTotalSpent' field has an active Builder instance
 		 */
 		public boolean hasDailyTotalSpentBuilder() {
@@ -363,6 +390,7 @@ public class DailyExceeded extends org.apache.avro.specific.SpecificRecordBase i
 
 		/**
 		 * Clears the value of the 'dailyTotalSpent' field.
+		 *
 		 * @return This builder.
 		 */
 		public ro.go.adrhc.springkafkastreams.messages.DailyExceeded.Builder clearDailyTotalSpent() {

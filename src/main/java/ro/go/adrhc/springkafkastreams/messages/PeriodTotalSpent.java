@@ -47,11 +47,13 @@ public class PeriodTotalSpent extends org.apache.avro.specific.SpecificRecordBas
 	 * one should use <code>newBuilder()</code>.
 	 */
 	public PeriodTotalSpent() {}
+
 	/**
 	 * All-args constructor.
+	 *
 	 * @param clientId The new value for clientId
-	 * @param time The new value for time
-	 * @param amount The new value for amount
+	 * @param time     The new value for time
+	 * @param amount   The new value for amount
 	 */
 	public PeriodTotalSpent(java.lang.String clientId, java.time.LocalDate time, java.lang.Integer amount) {
 		this.clientId = clientId;
@@ -63,6 +65,7 @@ public class PeriodTotalSpent extends org.apache.avro.specific.SpecificRecordBas
 
 	/**
 	 * Return the BinaryMessageEncoder instance used by this class.
+	 *
 	 * @return the message encoder used by this class
 	 */
 	public static BinaryMessageEncoder<PeriodTotalSpent> getEncoder() {
@@ -71,6 +74,7 @@ public class PeriodTotalSpent extends org.apache.avro.specific.SpecificRecordBas
 
 	/**
 	 * Return the BinaryMessageDecoder instance used by this class.
+	 *
 	 * @return the message decoder used by this class
 	 */
 	public static BinaryMessageDecoder<PeriodTotalSpent> getDecoder() {
@@ -79,6 +83,7 @@ public class PeriodTotalSpent extends org.apache.avro.specific.SpecificRecordBas
 
 	/**
 	 * Create a new BinaryMessageDecoder instance for this class that uses the specified {@link SchemaStore}.
+	 *
 	 * @param resolver a {@link SchemaStore} used to find schemas by fingerprint
 	 * @return a BinaryMessageDecoder instance for this class backed by the given SchemaStore
 	 */
@@ -88,6 +93,7 @@ public class PeriodTotalSpent extends org.apache.avro.specific.SpecificRecordBas
 
 	/**
 	 * Deserializes a PeriodTotalSpent from a ByteBuffer.
+	 *
 	 * @param b a byte buffer holding serialized data for an instance of this class
 	 * @return a PeriodTotalSpent instance decoded from the given buffer
 	 * @throws java.io.IOException if the given bytes could not be deserialized into an instance of this class
@@ -99,6 +105,7 @@ public class PeriodTotalSpent extends org.apache.avro.specific.SpecificRecordBas
 
 	/**
 	 * Creates a new PeriodTotalSpent RecordBuilder.
+	 *
 	 * @return A new PeriodTotalSpent RecordBuilder
 	 */
 	public static ro.go.adrhc.springkafkastreams.messages.PeriodTotalSpent.Builder newBuilder() {
@@ -107,6 +114,7 @@ public class PeriodTotalSpent extends org.apache.avro.specific.SpecificRecordBas
 
 	/**
 	 * Creates a new PeriodTotalSpent RecordBuilder by copying an existing Builder.
+	 *
 	 * @param other The existing builder to copy.
 	 * @return A new PeriodTotalSpent RecordBuilder
 	 */
@@ -120,6 +128,7 @@ public class PeriodTotalSpent extends org.apache.avro.specific.SpecificRecordBas
 
 	/**
 	 * Creates a new PeriodTotalSpent RecordBuilder by copying an existing PeriodTotalSpent instance.
+	 *
 	 * @param other The existing instance to copy.
 	 * @return A new PeriodTotalSpent RecordBuilder
 	 */
@@ -133,6 +142,7 @@ public class PeriodTotalSpent extends org.apache.avro.specific.SpecificRecordBas
 
 	/**
 	 * Serializes this PeriodTotalSpent to a ByteBuffer.
+	 *
 	 * @return a buffer holding the serialized data for this instance
 	 * @throws java.io.IOException if this instance could not be serialized
 	 */
@@ -183,6 +193,7 @@ public class PeriodTotalSpent extends org.apache.avro.specific.SpecificRecordBas
 
 	/**
 	 * Gets the value of the 'clientId' field.
+	 *
 	 * @return The value of the 'clientId' field.
 	 */
 	public java.lang.String getClientId() {
@@ -191,6 +202,7 @@ public class PeriodTotalSpent extends org.apache.avro.specific.SpecificRecordBas
 
 	/**
 	 * Sets the value of the 'clientId' field.
+	 *
 	 * @param value the value to set.
 	 */
 	public void setClientId(java.lang.String value) {
@@ -199,6 +211,7 @@ public class PeriodTotalSpent extends org.apache.avro.specific.SpecificRecordBas
 
 	/**
 	 * Gets the value of the 'time' field.
+	 *
 	 * @return The value of the 'time' field.
 	 */
 	public java.time.LocalDate getTime() {
@@ -207,6 +220,7 @@ public class PeriodTotalSpent extends org.apache.avro.specific.SpecificRecordBas
 
 	/**
 	 * Sets the value of the 'time' field.
+	 *
 	 * @param value the value to set.
 	 */
 	public void setTime(java.time.LocalDate value) {
@@ -215,6 +229,7 @@ public class PeriodTotalSpent extends org.apache.avro.specific.SpecificRecordBas
 
 	/**
 	 * Gets the value of the 'amount' field.
+	 *
 	 * @return The value of the 'amount' field.
 	 */
 	public int getAmount() {
@@ -223,6 +238,7 @@ public class PeriodTotalSpent extends org.apache.avro.specific.SpecificRecordBas
 
 	/**
 	 * Sets the value of the 'amount' field.
+	 *
 	 * @param value the value to set.
 	 */
 	public void setAmount(int value) {
@@ -252,13 +268,16 @@ public class PeriodTotalSpent extends org.apache.avro.specific.SpecificRecordBas
 		private java.time.LocalDate time;
 		private int amount;
 
-		/** Creates a new Builder */
+		/**
+		 * Creates a new Builder
+		 */
 		private Builder() {
 			super(SCHEMA$);
 		}
 
 		/**
 		 * Creates a Builder by copying an existing Builder.
+		 *
 		 * @param other The existing Builder to copy.
 		 */
 		private Builder(ro.go.adrhc.springkafkastreams.messages.PeriodTotalSpent.Builder other) {
@@ -279,6 +298,7 @@ public class PeriodTotalSpent extends org.apache.avro.specific.SpecificRecordBas
 
 		/**
 		 * Creates a Builder by copying an existing PeriodTotalSpent instance
+		 *
 		 * @param other The existing instance to copy.
 		 */
 		private Builder(ro.go.adrhc.springkafkastreams.messages.PeriodTotalSpent other) {
@@ -299,6 +319,7 @@ public class PeriodTotalSpent extends org.apache.avro.specific.SpecificRecordBas
 
 		/**
 		 * Gets the value of the 'clientId' field.
+		 *
 		 * @return The value.
 		 */
 		public java.lang.String getClientId() {
@@ -308,6 +329,7 @@ public class PeriodTotalSpent extends org.apache.avro.specific.SpecificRecordBas
 
 		/**
 		 * Sets the value of the 'clientId' field.
+		 *
 		 * @param value The value of 'clientId'.
 		 * @return This builder.
 		 */
@@ -320,6 +342,7 @@ public class PeriodTotalSpent extends org.apache.avro.specific.SpecificRecordBas
 
 		/**
 		 * Checks whether the 'clientId' field has been set.
+		 *
 		 * @return True if the 'clientId' field has been set, false otherwise.
 		 */
 		public boolean hasClientId() {
@@ -329,6 +352,7 @@ public class PeriodTotalSpent extends org.apache.avro.specific.SpecificRecordBas
 
 		/**
 		 * Clears the value of the 'clientId' field.
+		 *
 		 * @return This builder.
 		 */
 		public ro.go.adrhc.springkafkastreams.messages.PeriodTotalSpent.Builder clearClientId() {
@@ -339,6 +363,7 @@ public class PeriodTotalSpent extends org.apache.avro.specific.SpecificRecordBas
 
 		/**
 		 * Gets the value of the 'time' field.
+		 *
 		 * @return The value.
 		 */
 		public java.time.LocalDate getTime() {
@@ -348,6 +373,7 @@ public class PeriodTotalSpent extends org.apache.avro.specific.SpecificRecordBas
 
 		/**
 		 * Sets the value of the 'time' field.
+		 *
 		 * @param value The value of 'time'.
 		 * @return This builder.
 		 */
@@ -360,6 +386,7 @@ public class PeriodTotalSpent extends org.apache.avro.specific.SpecificRecordBas
 
 		/**
 		 * Checks whether the 'time' field has been set.
+		 *
 		 * @return True if the 'time' field has been set, false otherwise.
 		 */
 		public boolean hasTime() {
@@ -369,6 +396,7 @@ public class PeriodTotalSpent extends org.apache.avro.specific.SpecificRecordBas
 
 		/**
 		 * Clears the value of the 'time' field.
+		 *
 		 * @return This builder.
 		 */
 		public ro.go.adrhc.springkafkastreams.messages.PeriodTotalSpent.Builder clearTime() {
@@ -378,6 +406,7 @@ public class PeriodTotalSpent extends org.apache.avro.specific.SpecificRecordBas
 
 		/**
 		 * Gets the value of the 'amount' field.
+		 *
 		 * @return The value.
 		 */
 		public int getAmount() {
@@ -387,6 +416,7 @@ public class PeriodTotalSpent extends org.apache.avro.specific.SpecificRecordBas
 
 		/**
 		 * Sets the value of the 'amount' field.
+		 *
 		 * @param value The value of 'amount'.
 		 * @return This builder.
 		 */
@@ -399,6 +429,7 @@ public class PeriodTotalSpent extends org.apache.avro.specific.SpecificRecordBas
 
 		/**
 		 * Checks whether the 'amount' field has been set.
+		 *
 		 * @return True if the 'amount' field has been set, false otherwise.
 		 */
 		public boolean hasAmount() {
@@ -408,6 +439,7 @@ public class PeriodTotalSpent extends org.apache.avro.specific.SpecificRecordBas
 
 		/**
 		 * Clears the value of the 'amount' field.
+		 *
 		 * @return This builder.
 		 */
 		public ro.go.adrhc.springkafkastreams.messages.PeriodTotalSpent.Builder clearAmount() {
