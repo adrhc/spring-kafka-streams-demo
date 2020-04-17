@@ -15,7 +15,6 @@ public class DailyExceedsConsumer {
 	public DailyExceedsConsumer(PhoneMessageSender sender) {this.sender = sender;}
 
 	@KafkaListener(id = "dailyExceedsNotifier", topics = "${topic.daily-exceeds}",
-			properties = "value.deserializer=org.springframework.kafka.support.serializer.JsonDeserializer",
 			clientIdPrefix = "dailyExceedsConsumer")
 	public void consume(DailyExceeded de) {
 		sender.send(de);

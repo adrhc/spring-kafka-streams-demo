@@ -15,7 +15,6 @@ public class PeriodExceedsConsumer {
 	public PeriodExceedsConsumer(PhoneMessageSender sender) {this.sender = sender;}
 
 	@KafkaListener(id = "periodExceedsNotifier", topics = "${topic.period-exceeds}",
-			properties = "value.deserializer=org.springframework.kafka.support.serializer.JsonDeserializer",
 			clientIdPrefix = "periodExceedsConsumer")
 	public void consume(PeriodExceeded pe) {
 		sender.send(pe);

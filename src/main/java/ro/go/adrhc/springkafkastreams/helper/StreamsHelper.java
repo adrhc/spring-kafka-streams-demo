@@ -6,8 +6,6 @@ import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.*;
 import org.apache.kafka.streams.state.KeyValueStore;
 import org.apache.kafka.streams.state.WindowStore;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.kafka.support.serializer.JsonSerde;
 import org.springframework.stereotype.Component;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
 import ro.go.adrhc.springkafkastreams.messages.*;
@@ -18,21 +16,9 @@ import java.time.Duration;
 public class StreamsHelper {
 	public static final int DELAY = 5;
 	private final TopicsProperties properties;
-	private final JsonSerde<DailyTotalSpent> dailyTotalSpentSerde;
-	private final JsonSerde<PeriodTotalSpent> periodTotalSpentSerde;
-	private final JsonSerde<DailyExceeded> dailyExceededSerde;
-	private final JsonSerde<PeriodExceeded> periodExceededSerde;
 
-	public StreamsHelper(TopicsProperties properties, @Qualifier("dailyTotalSpentSerde") JsonSerde<DailyTotalSpent> dailyTotalSpentSerde, @Qualifier("periodTotalSpentSerde") JsonSerde<PeriodTotalSpent> periodTotalSpentSerde, @Qualifier("dailyExceededSerde") JsonSerde<DailyExceeded> dailyExceededSerde, @Qualifier("periodExceededSerde") JsonSerde<PeriodExceeded> periodExceededSerde) {
+	public StreamsHelper(TopicsProperties properties) {
 		this.properties = properties;
-		this.dailyTotalSpentSerde = dailyTotalSpentSerde;
-		this.periodTotalSpentSerde = periodTotalSpentSerde;
-		this.dailyExceededSerde = dailyExceededSerde;
-		this.periodExceededSerde = periodExceededSerde;
-	}
-
-	private Consumed<String, Integer> consumeInteger(String processorName) {
-		return Consumed.with(Serdes.String(), Serdes.Integer()).withName(processorName);
 	}
 
 	public Produced<String, Integer> produceInteger(String processorName) {
@@ -40,21 +26,19 @@ public class StreamsHelper {
 	}
 
 	public Produced<String, DailyExceeded> produceDailyExceeded() {
-		return Produced.with(Serdes.String(), dailyExceededSerde).withName(properties.getDailyExceeds());
+		return Produced.as(properties.getDailyExceeds());
 	}
 
 	public Produced<String, PeriodExceeded> producePeriodExceeded() {
-		return Produced.with(Serdes.String(), periodExceededSerde).withName(properties.getPeriodExceeds());
+		return Produced.as(properties.getPeriodExceeds());
 	}
 
 	private Consumed<String, Transaction> consumeTransaction() {
-		return Consumed.<String, Transaction>
-				as(properties.getTransactions())
-				.withKeySerde(Serdes.String());
+		return Consumed.as(properties.getTransactions());
 	}
 
 	private Consumed<String, DailyTotalSpent> consumeDailyTotalSpent() {
-		return Consumed.with(Serdes.String(), dailyTotalSpentSerde).withName(properties.getDailyTotalSpent());
+		return Consumed.as(properties.getDailyTotalSpent());
 	}
 
 	public Materialized<String, Integer, WindowStore<Bytes, byte[]>> dailyTotalSpentByClientId(
@@ -66,21 +50,10 @@ public class StreamsHelper {
 				.withRetention(Duration.ofDays(retentionDays));
 	}
 
-	public KStream<String, ClientProfile> clientProfileStream(StreamsBuilder streamsBuilder) {
-		return streamsBuilder.stream(properties.getClientProfiles(),
-				Consumed.<String, ClientProfile>
-						as(properties.getClientProfiles())
-						.withKeySerde(Serdes.String()));
-	}
-
 	public KTable<String, ClientProfile> clientProfileTable(StreamsBuilder streamsBuilder) {
 		return streamsBuilder.table(properties.getClientProfiles(),
-				Consumed.<String, ClientProfile>
-						as(properties.getClientProfiles())
-						.withKeySerde(Serdes.String()),
-				Materialized.<String, ClientProfile, KeyValueStore<Bytes, byte[]>>
-						as(properties.getClientProfiles())
-						.withKeySerde(Serdes.String()));
+				Consumed.as(properties.getClientProfiles()),
+				Materialized.as(properties.getClientProfiles()));
 	}
 
 	public KTable<String, Integer> periodTotalSpentTable(StreamsBuilder streamsBuilder) {
@@ -96,17 +69,11 @@ public class StreamsHelper {
 	}
 
 	public Joined<String, DailyTotalSpent, ClientProfile> dailyTotalSpentJoinClientProfile() {
-		return Joined.<String, DailyTotalSpent, ClientProfile>
-				as("dailyTotalSpentJoinClientProfile")
-				.withKeySerde(Serdes.String())
-				.withValueSerde(dailyTotalSpentSerde);
+		return Joined.as("dailyTotalSpentJoinClientProfile");
 	}
 
 	public Joined<String, PeriodTotalSpent, ClientProfile> periodTotalSpentJoinClientProfile() {
-		return Joined.<String, PeriodTotalSpent, ClientProfile>
-				as("periodTotalSpentJoinClientProfile")
-				.withKeySerde(Serdes.String())
-				.withValueSerde(periodTotalSpentSerde);
+		return Joined.as("periodTotalSpentJoinClientProfile");
 	}
 
 	public KStream<String, DailyTotalSpent> dailyExceedsStream(StreamsBuilder streamsBuilder) {
@@ -118,8 +85,6 @@ public class StreamsHelper {
 	}
 
 	public Grouped<String, Transaction> transactionsGroupedByClientId() {
-		return Grouped.<String, Transaction>
-				as("transactionsGroupedByClientId")
-				.withKeySerde(Serdes.String());
+		return Grouped.as("transactionsGroupedByClientId");
 	}
 }

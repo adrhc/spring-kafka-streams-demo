@@ -5,7 +5,6 @@ import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.IntegerSerializer;
 import org.apache.kafka.common.serialization.Serializer;
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
@@ -14,21 +13,17 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.ProducerListener;
 import org.springframework.kafka.support.converter.RecordMessageConverter;
-import org.springframework.kafka.support.serializer.JsonSerde;
 
 import java.util.Map;
 
 @Configuration
 public class KafkaTemplateConfig {
 	private final KafkaProperties properties;
-	private final JsonSerde<Object> jsonSerde;
 	private final String schemaRegistryUrl;
 
 	public KafkaTemplateConfig(KafkaProperties properties,
-			@Qualifier("jsonSerde") JsonSerde<Object> jsonSerde,
 			@Value("${schema.registry.url}") String schemaRegistryUrl) {
 		this.properties = properties;
-		this.jsonSerde = jsonSerde;
 		this.schemaRegistryUrl = schemaRegistryUrl;
 	}
 
@@ -38,14 +33,6 @@ public class KafkaTemplateConfig {
 			ObjectProvider<RecordMessageConverter> messageConverter) {
 		return kafkaTemplateImpl(properties.getClientId() + "-int",
 				new IntegerSerializer(), kafkaProducerListener, messageConverter);
-	}
-
-	@Bean
-	public KafkaTemplate<Object, Object> jsonKTemplate(
-			ObjectProvider<ProducerListener<Object, Object>> kafkaProducerListener,
-			ObjectProvider<RecordMessageConverter> messageConverter) {
-		return kafkaTemplateImpl(properties.getClientId() + "-json",
-				jsonSerde.serializer(), kafkaProducerListener, messageConverter);
 	}
 
 	@Bean

@@ -18,8 +18,8 @@ import static ro.go.adrhc.springkafkastreams.util.AbstractTestDTOFactory.randomD
 @Slf4j
 public class DailyTotalSpentDetailsProducerV2IT {
 	@Autowired
-	@Qualifier("jsonKTemplate")
-	private KafkaTemplate<Object, Object> jsonKTemplate;
+	@Qualifier("avroKTemplate")
+	private KafkaTemplate<Object, Object> avroKTemplate;
 	@Autowired
 	private TopicsProperties properties;
 	@Autowired
@@ -31,6 +31,6 @@ public class DailyTotalSpentDetailsProducerV2IT {
 		log.debug("DailyTotalSpent topic: {}", properties.getDailyTotalSpent());
 		DailyTotalSpent dailyTotalSpent = randomDailyTotalSpent();
 		log.debug("dailyTotalSpent:\n\t{}", dailyTotalSpent);
-		jsonKTemplate.send(properties.getDailyExceeds(), dailyTotalSpent.getClientId(), dailyTotalSpent);
+		avroKTemplate.send(properties.getDailyExceeds(), dailyTotalSpent.getClientId(), dailyTotalSpent);
 	}
 }
