@@ -20,11 +20,10 @@ import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
 import ro.go.adrhc.springkafkastreams.helper.StreamsHelper;
 import ro.go.adrhc.springkafkastreams.messages.ClientProfile;
 import ro.go.adrhc.springkafkastreams.messages.Transaction;
-import ro.go.adrhc.springkafkastreams.transformers.aggregators.TotalExpensesAggregator;
+import ro.go.adrhc.springkafkastreams.transformers.aggregators.DaysPeriodExpensesAggregator;
 
 import java.time.Duration;
 
-import static java.time.temporal.ChronoUnit.DAYS;
 import static ro.go.adrhc.springkafkastreams.enhancer.KafkaEnhancer.enhance;
 import static ro.go.adrhc.springkafkastreams.helper.StreamsHelper.DELAY;
 import static ro.go.adrhc.springkafkastreams.streams.PaymentsUtils.joinPeriodTotalSpentWithClientProfileOnClientId;
@@ -158,7 +157,7 @@ public class PaymentsConfig {
 		streamsBuilder.addStateStore(periodTotalSpentStore);
 
 		enhance(transactions)
-				.flatTransform(new TotalExpensesAggregator(totalPeriod, DAYS,
+				.flatTransform(new DaysPeriodExpensesAggregator(totalPeriod,
 						periodTotalSpentStore.name()), periodTotalSpentStore.name())
 				// clientIdPeriod:amount (i.e. clientIdDay:amount)
 				.peek((clientIdPeriod, amount) -> printPeriodTotalExpenses(clientIdPeriod, amount, totalPeriod))
@@ -187,7 +186,7 @@ public class PaymentsConfig {
 		streamsBuilder.addStateStore(periodTotalSpentStore);
 
 		transactions
-				.flatTransform(new TotalExpensesAggregator(totalPeriod, DAYS,
+				.flatTransform(new DaysPeriodExpensesAggregator(totalPeriod,
 						periodTotalSpentStore.name()), periodTotalSpentStore.name())
 				// clientIdPeriod:amount (i.e. clientIdDay:amount)
 				.peek((clientIdPeriod, amount) -> printPeriodTotalExpenses(clientIdPeriod, amount, totalPeriod))
