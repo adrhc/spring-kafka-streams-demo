@@ -71,7 +71,7 @@ public class PaymentsConfig {
 			KStream<String, Transaction> transactions) {
 		return transactions
 				.peek((clientId, transaction) -> log.debug("\n\t{} spent {} GBP on {}", clientId,
-						transaction.getAmount(), format(localDateOf(transaction.getTime()))))
+						transaction.getAmount(), format(transaction.getTime())))
 //				.transform(new TransformerDebugger<>())
 //				.transformValues(new ValueTransformerWithKeyDebugger<>())
 				.groupByKey(helper.transactionsGroupedByClientId());

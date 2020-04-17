@@ -13,7 +13,6 @@ import java.util.function.Supplier;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 import static ro.go.adrhc.springkafkastreams.helper.StreamsHelper.DELAY;
-import static ro.go.adrhc.springkafkastreams.util.DateUtils.integersOf;
 
 public class AbstractTestDTOFactory {
 	private static final Supplier<String> CLIENT_ID_SUPP =
@@ -43,7 +42,7 @@ public class AbstractTestDTOFactory {
 	public static Transaction randomTransaction() {
 		Instant randomInstant = Instant.now().minus(randomInt(1, DELAY), DAYS);
 		LocalDate ldt = LocalDate.ofInstant(randomInstant, ZoneOffset.UTC);
-		return new Transaction(integersOf(ldt),
+		return new Transaction(ldt,
 				MERCHANT_ID_SUPP.get(),
 				CLIENT_ID_SUPP.get(),
 				AMOUNT_SUPP.getAsInt());

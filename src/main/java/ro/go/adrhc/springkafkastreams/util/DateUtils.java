@@ -3,7 +3,6 @@ package ro.go.adrhc.springkafkastreams.util;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.List;
 
 public class DateUtils {
 	private static final DateTimeFormatter LocalDate_FORMATTER =
@@ -21,14 +20,6 @@ public class DateUtils {
 
 	public static LocalDate localDateOf(long milliseconds) {
 		return LocalDate.ofInstant(Instant.ofEpochMilli(milliseconds), ZoneOffset.UTC);
-	}
-
-	public static LocalDate localDateOf(List<Integer> integers) {
-		return LocalDate.of(integers.get(0), integers.get(1), integers.get(2));
-	}
-
-	public static List<Integer> integersOf(LocalDate localDate) {
-		return List.of(localDate.getYear(), localDate.getMonthValue(), localDate.getDayOfMonth());
 	}
 
 	public static LocalDateTime localDateTimeOf(long milliseconds) {

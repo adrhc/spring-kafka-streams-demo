@@ -1,0 +1,120 @@
+{
+  "namespace": "ro.go.adrhc.springkafkastreams.model",
+  "protocol": "ksd1",
+  "doc": "kafka streams demo 1",
+  "types": [
+	{
+	  "name": "ClientProfile",
+	  "type": "record",
+	  "fields": [
+		{
+		  "name": "clientId",
+		  "type": "string"
+		},
+		{
+		  "name": "dailyMaxAmount",
+		  "type": "int"
+		},
+		{
+		  "name": "periodMaxAmount",
+		  "type": "int"
+		}
+	  ]
+	},
+	{
+	  "name": "Transaction",
+	  "type": "record",
+	  "fields": [
+		{
+		  "name": "time",
+		  "type": {
+			"type": "int",
+			"logicalType": "date"
+		  }
+		},
+		{
+		  "name": "merchantId",
+		  "type": "string"
+		},
+		{
+		  "name": "clientId",
+		  "type": "string"
+		},
+		{
+		  "name": "amount",
+		  "type": "int"
+		}
+	  ]
+	},
+	{
+	  "name": "DailyTotalSpent",
+	  "type": "record",
+	  "fields": [
+		{
+		  "name": "clientId",
+		  "type": "string"
+		},
+		{
+		  "name": "time",
+		  "type": {
+			"type": "int",
+			"logicalType": "date"
+		  }
+		},
+		{
+		  "name": "amount",
+		  "type": "int"
+		}
+	  ]
+	},
+	{
+	  "name": "PeriodTotalSpent",
+	  "type": "record",
+	  "fields": [
+		{
+		  "name": "clientId",
+		  "type": "string"
+		},
+		{
+		  "name": "time",
+		  "type": {
+			"type": "int",
+			"logicalType": "date"
+		  }
+		},
+		{
+		  "name": "amount",
+		  "type": "int"
+		}
+	  ]
+	},
+	{
+	  "name": "DailyExceeded",
+	  "type": "record",
+	  "fields": [
+		{
+		  "name": "dailyMaxAmount",
+		  "type": "int"
+		},
+		{
+		  "name": "dailyTotalSpent",
+		  "type": "DailyTotalSpent"
+		}
+	  ]
+	},
+	{
+	  "name": "PeriodExceeded",
+	  "type": "record",
+	  "fields": [
+		{
+		  "name": "periodMaxAmount",
+		  "type": "int"
+		},
+		{
+		  "name": "periodTotalSpent",
+		  "type": "PeriodTotalSpent"
+		}
+	  ]
+	}
+  ]
+}

@@ -9,13 +9,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-import static ro.go.adrhc.springkafkastreams.util.DateUtils.localDateOf;
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.millisecondsOf;
 
 public class TransactionTimestampExtractor implements TimestampExtractor {
 	private static final Map<Class<?>, Function<Object, Long>> map = Map.of(
 			JsonNode.class, value -> ((JsonNode) value).get("timestamp").longValue(),
-			Transaction.class, value -> millisecondsOf(localDateOf(((Transaction) value).getTime())));
+			Transaction.class, value -> millisecondsOf(((Transaction) value).getTime()));
 
 	@Override
 	public long extract(ConsumerRecord<Object, Object> record, long partitionTime) {

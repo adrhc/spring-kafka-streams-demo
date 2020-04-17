@@ -6,11 +6,9 @@ import org.apache.kafka.streams.kstream.ValueJoiner;
 import ro.go.adrhc.springkafkastreams.model.*;
 import ro.go.adrhc.springkafkastreams.util.LocalDateBasedKey;
 
-import java.util.List;
 import java.util.Optional;
 
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.format;
-import static ro.go.adrhc.springkafkastreams.util.DateUtils.integersOf;
 import static ro.go.adrhc.springkafkastreams.util.LocalDateBasedKey.parseWithStringData;
 
 @Slf4j
@@ -40,9 +38,8 @@ public class PaymentsUtils {
 		return winBasedKeyOptional
 				.map(it -> {
 					String clientId = it.getData();
-					List<Integer> integers = integersOf(it.getTime());
 					log.trace("\n\t{} spent a total of {} GBP untill {}", clientId, amount, format(it.getTime()));
-					return KeyValue.pair(clientId, new PeriodTotalSpent(clientId, integers, amount));
+					return KeyValue.pair(clientId, new PeriodTotalSpent(clientId, it.getTime(), amount));
 				})
 				.orElse(null);
 	}

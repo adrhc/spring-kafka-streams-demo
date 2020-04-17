@@ -169,12 +169,16 @@
                     <execution>
                         <phase>generate-sources</phase>
                         <goals>
-                            <goal>schema</goal>
+                            <goal>protocol</goal>
                         </goals>
                         <configuration>
                             <sourceDirectory>${project.basedir}/src/main/avro</sourceDirectory>
                             <outputDirectory>${project.basedir}/src/main/java/</outputDirectory>
                             <stringType>String</stringType>
+                            <fieldVisibility>PRIVATE</fieldVisibility>
+                            <includes>
+                                <include>**/*.avpr</include>
+                            </includes>
                         </configuration>
                     </execution>
                 </executions>
