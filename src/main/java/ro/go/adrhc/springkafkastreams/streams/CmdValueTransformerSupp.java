@@ -4,6 +4,7 @@ import org.apache.kafka.streams.kstream.ValueTransformer;
 import org.apache.kafka.streams.kstream.ValueTransformerSupplier;
 import org.apache.kafka.streams.processor.ProcessorContext;
 import org.apache.kafka.streams.state.KeyValueStore;
+import org.apache.kafka.streams.state.ValueAndTimestamp;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
 import ro.go.adrhc.springkafkastreams.messages.Command;
 
@@ -17,8 +18,8 @@ public class CmdValueTransformerSupp implements ValueTransformerSupplier<Command
 	@Override
 	public ValueTransformer<Command, List<String>> get() {
 		return new ValueTransformer<>() {
-			private KeyValueStore<String, Integer> dailyTotalSpent;
-			private KeyValueStore<String, Integer> periodTotalSpent;
+			private KeyValueStore<String, ValueAndTimestamp<Integer>> dailyTotalSpent;
+			private KeyValueStore<String, ValueAndTimestamp<Integer>> periodTotalSpent;
 
 			@Override
 			public void init(ProcessorContext context) {

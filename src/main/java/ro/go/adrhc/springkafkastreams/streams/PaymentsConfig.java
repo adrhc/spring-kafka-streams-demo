@@ -19,6 +19,7 @@ import org.springframework.kafka.annotation.EnableKafkaStreams;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
 import ro.go.adrhc.springkafkastreams.helper.StreamsHelper;
 import ro.go.adrhc.springkafkastreams.messages.ClientProfile;
+import ro.go.adrhc.springkafkastreams.messages.Command;
 import ro.go.adrhc.springkafkastreams.messages.Transaction;
 import ro.go.adrhc.springkafkastreams.transformers.aggregators.DaysPeriodExpensesAggregator;
 
@@ -63,12 +64,24 @@ public class PaymentsConfig {
 		KStream<String, Transaction> transactions = helper.transactionsStream(streamsBuilder);
 
 		KGroupedStream<String, Transaction> grouped = transactionsGroupedByClientId(transactions);
-		dailyExceeds(grouped, clientProfileTable); // total expenses per day
-		periodExceeds(grouped, clientProfileTable); // total expenses for a period
+		dailyExceeds(grouped, clientProfileTable, streamsBuilder); // total expenses per day
+		periodExceeds(grouped, clientProfileTable, streamsBuilder); // total expenses for a period
 //		periodExceedsWithTransformer(transactions, clientProfileTable, streamsBuilder);
 //		periodExceedsWithEnhancer(transactions, clientProfileTable, streamsBuilder);
+		reports(streamsBuilder);
 
 		return transactions;
+	}
+
+	/**
+	 * It needs the ktable stores of:
+	 * KTable<String, Integer> dailyTotalSpentTable
+	 * KTable<String, Integer> periodTotalSpentTable
+	 */
+	public void reports(StreamsBuilder streamsBuilder) {
+		KStream<String, Command> stream = streamsBuilder.stream(properties.getCommand());
+		stream.transformValues(new CmdValueTransformerSupp(properties),
+				properties.getDailyTotalSpent(), properties.getPeriodTotalSpent());
 	}
 
 	/**
@@ -88,7 +101,7 @@ public class PaymentsConfig {
 	 * calculating total expenses per day
 	 */
 	private void dailyExceeds(KGroupedStream<String, Transaction> groupedTransactions,
-			KTable<String, ClientProfile> clientProfileTable) {
+			KTable<String, ClientProfile> clientProfileTable, StreamsBuilder streamsBuilder) {
 		groupedTransactions
 				// group by 1 day
 				.windowedBy(TimeWindows.of(Duration.ofDays(1)).grace(Duration.ofDays(DELAY)))
@@ -98,8 +111,16 @@ public class PaymentsConfig {
 				// clientId-yyyy.MM.dd:amount
 				.toStream((win, amount) -> keyOf(win))
 				// save clientIdDay:amount into a compact stream (aka table)
-				.through(properties.getDailyTotalSpent(),
-						helper.produceInteger(properties.getDailyTotalSpent()))
+				.to(properties.getDailyTotalSpent(),
+						helper.produceInteger("to-" + properties.getDailyTotalSpent()));
+//				.through(properties.getDailyTotalSpent(),
+//						helper.produceInteger("to-" + properties.getDailyTotalSpent() + "-stream"))
+
+		// not using through(properties.getDailyTotalSpent() because we later need the related store
+		KTable<String, Integer> dailyTotalSpentTable = helper.dailyTotalSpentTable(streamsBuilder);
+
+		dailyTotalSpentTable
+				.toStream()
 				// clientIdDay:amount -> clientId:DailyTotalSpent
 				.map(PaymentsUtils::clientIdDailyTotalSpentOf)
 				// clientId:DailyTotalSpent join clientId:ClientProfile
@@ -118,7 +139,7 @@ public class PaymentsConfig {
 	 * calculating total expenses for a period
 	 */
 	private void periodExceeds(KGroupedStream<String, Transaction> groupedTransactions,
-			KTable<String, ClientProfile> clientProfileTable) {
+			KTable<String, ClientProfile> clientProfileTable, StreamsBuilder streamsBuilder) {
 		groupedTransactions
 				// UnsupportedTemporalTypeException: Unit must not have an estimated duration
 /*
@@ -133,6 +154,14 @@ public class PaymentsConfig {
 						helper.dailyTotalSpentByClientId(DELAY + windowSize, "3days"))
 				// clientId-yyyy.MM.dd:amount
 				.toStream((win, amount) -> keyOf(win))
+				.to(properties.getPeriodTotalSpent(),
+						helper.produceInteger("to-" + properties.getPeriodTotalSpent()));
+
+		// not using through(properties.getDailyTotalSpent() because we later need the related store
+		KTable<String, Integer> periodTotalSpentTable = helper.periodTotalSpentTable(streamsBuilder);
+
+		periodTotalSpentTable
+				.toStream()
 				.peek((clientIdPeriod, amount) -> printPeriodTotalExpenses(clientIdPeriod, amount, windowSize, DAYS))
 				// clientIdDay:amount -> clientIdDay:PeriodTotalSpent
 				.map(PaymentsUtils::clientIdPeriodTotalSpentOf)

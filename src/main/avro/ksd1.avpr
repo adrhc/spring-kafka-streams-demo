@@ -127,7 +127,7 @@
 		{
 		  "name": "parameters",
 		  "type": {
-			"type": "array",
+			"type": ["null", "array"],
 			"items": "string"
 		  }
 		}

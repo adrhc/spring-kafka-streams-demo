@@ -63,6 +63,18 @@ public class StreamsHelper {
 				Materialized.as(properties.getClientProfiles()));
 	}
 
+	public KTable<String, Integer> dailyTotalSpentTable(StreamsBuilder streamsBuilder) {
+		return streamsBuilder.table(properties.getDailyTotalSpent(),
+				Consumed.<String, Integer>
+						as(properties.getDailyTotalSpent())
+						.withKeySerde(Serdes.String())
+						.withValueSerde(Serdes.Integer()),
+				Materialized.<String, Integer, KeyValueStore<Bytes, byte[]>>
+						as(properties.getDailyTotalSpent())
+						.withKeySerde(Serdes.String())
+						.withValueSerde(Serdes.Integer()));
+	}
+
 	public KTable<String, Integer> periodTotalSpentTable(StreamsBuilder streamsBuilder) {
 		return streamsBuilder.table(properties.getPeriodTotalSpent(),
 				Consumed.<String, Integer>
