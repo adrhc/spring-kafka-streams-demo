@@ -10,8 +10,8 @@ kdelete ksd1.daily-exceeds.v2
 kdelete ksd1.daily-total-spent.v2
 kdelete ksd1-dailyTotalSpentByClientId-1day-changelog
 kdelete ksd1-dailyTotalSpentByClientId-3days-changelog
-kdelete ksd1-periodTotalSpentByClientId-3DAYS-changelog
-kdelete ksd1-periodTotalSpentByClientId-1MONTHS-changelog
+kdelete ksd1-periodTotalSpentByClientId-3Days-changelog
+kdelete ksd1-periodTotalSpentByClientId-1Months-changelog
 kdelete ksd1-dailyTotalSpentJoinClientProfile-repartition
 kdelete ksd1-periodTotalSpentJoinClientProfile-repartition
 kdelete ksd1-periodTotalSpentStore-changelog
