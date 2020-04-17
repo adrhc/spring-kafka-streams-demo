@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.transformers.debug;
+package ro.go.adrhc.springkafkastreams.transformers.aggregators;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.streams.KeyValue;
@@ -8,18 +8,21 @@ import org.apache.kafka.streams.processor.ProcessorContext;
 import org.apache.kafka.streams.state.KeyValueStore;
 import ro.go.adrhc.springkafkastreams.messages.Transaction;
 
+import java.time.temporal.TemporalUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static ro.go.adrhc.springkafkastreams.util.LocalDateBasedKey.keyOf;
 
 @Slf4j
-public class PeriodTotalExpensesAggregator implements TransformerSupplier<String, Transaction, Iterable<KeyValue<String, Integer>>> {
-	private final int totalPeriod;
+public class TotalExpensesAggregator implements TransformerSupplier<String, Transaction, Iterable<KeyValue<String, Integer>>> {
+	private final int period;
 	private final String storeName;
+	private final TemporalUnit unit;
 
-	public PeriodTotalExpensesAggregator(int totalPeriod, String storeName) {
-		this.totalPeriod = totalPeriod;
+	public TotalExpensesAggregator(int period, TemporalUnit unit, String storeName) {
+		this.period = period;
+		this.unit = unit;
 		this.storeName = storeName;
 	}
 
@@ -36,9 +39,9 @@ public class PeriodTotalExpensesAggregator implements TransformerSupplier<String
 			@Override
 			public Iterable<KeyValue<String, Integer>> transform(
 					String clientId, Transaction transaction) {
-				return IntStream.range(0, totalPeriod)
+				return IntStream.range(0, period)
 						.mapToObj(it -> {
-							String key = keyOf(clientId, transaction.getTime().plusDays(it));
+							String key = keyOf(clientId, transaction.getTime().plus(it, unit));
 							Integer previousPeriodAmount = this.kvStore.get(key);
 							if (previousPeriodAmount == null) {
 								this.kvStore.put(key, transaction.getAmount());
