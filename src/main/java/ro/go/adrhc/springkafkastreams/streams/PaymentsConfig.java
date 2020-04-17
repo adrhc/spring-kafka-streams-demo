@@ -126,7 +126,7 @@ public class PaymentsConfig {
 						.advanceBy(Duration.ofDays(1)).grace(Duration.ofDays(DELAY)))
 */
 				// group by 3 days
-				.windowedBy(TimeWindows.of(Duration.ofDays(windowSize))
+				.windowedBy(TimeWindows.of(Duration.of(windowSize, windowUnit))
 						.advanceBy(Duration.ofDays(1)).grace(Duration.ofDays(DELAY)))
 				// aggregate amount per clientId-3-days
 				.aggregate(() -> 0, (k, v, sum) -> sum + v.getAmount(),
