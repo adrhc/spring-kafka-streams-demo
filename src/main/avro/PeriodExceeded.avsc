@@ -1,0 +1,15 @@
+{
+  "name": "PeriodExceeded",
+  "type": "record",
+  "namespace": "ro.go.adrhc.springkafkastreams.model",
+  "fields": [
+	{
+	  "name": "periodMaxAmount",
+	  "type": "int"
+	},
+	{
+	  "name": "periodTotalSpent",
+	  "type": "PeriodTotalSpent"
+	}
+  ]
+}

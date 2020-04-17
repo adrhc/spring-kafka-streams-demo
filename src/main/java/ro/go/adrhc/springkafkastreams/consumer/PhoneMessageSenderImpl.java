@@ -8,7 +8,10 @@ import ro.go.adrhc.springkafkastreams.model.DailyTotalSpent;
 import ro.go.adrhc.springkafkastreams.model.PeriodExceeded;
 import ro.go.adrhc.springkafkastreams.model.PeriodTotalSpent;
 
+import java.time.LocalDate;
+
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.format;
+import static ro.go.adrhc.springkafkastreams.util.DateUtils.localDateOf;
 
 @Service
 @Slf4j
@@ -28,8 +31,9 @@ public class PhoneMessageSenderImpl implements PhoneMessageSender {
 	@Override
 	public void send(PeriodExceeded de) {
 		PeriodTotalSpent dts = de.getPeriodTotalSpent();
+		LocalDate time = localDateOf(dts.getTime());
 		log.debug("\n\tNotification:\t{} spent a total of {} GBP for the period {} - {}\n\tOverdue:\t{} GBP\n\tLimit:\t\t{} GBP",
-				dts.getClientId(), dts.getAmount(), format(dts.getTime().minusDays(totalPeriod - 1)),
-				format(dts.getTime()), dts.getAmount() - de.getPeriodMaxAmount(), de.getPeriodMaxAmount());
+				dts.getClientId(), dts.getAmount(), format(time.minusDays(totalPeriod - 1)),
+				format(time), dts.getAmount() - de.getPeriodMaxAmount(), de.getPeriodMaxAmount());
 	}
 }
