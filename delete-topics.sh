@@ -9,8 +9,8 @@ kdelete ksd1.client-profiles.v2
 kdelete ksd1.command.v2
 kdelete ksd1.daily-exceeds.v2
 kdelete ksd1.daily-total-spent.v2
-kdelete ksd1-dailyTotalSpentByClientId-1day-changelog
-kdelete ksd1-dailyTotalSpentByClientId-3days-changelog
+kdelete ksd1-dailyTotalSpentByClientId-1Days-changelog
+kdelete ksd1-dailyTotalSpentByClientId-3Days-changelog
 kdelete ksd1-periodTotalSpentByClientId-3Days-changelog
 kdelete ksd1-periodTotalSpentByClientId-1Months-changelog
 kdelete ksd1-dailyTotalSpentJoinClientProfile-repartition
