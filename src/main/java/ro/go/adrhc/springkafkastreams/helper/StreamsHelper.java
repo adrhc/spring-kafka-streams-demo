@@ -11,6 +11,7 @@ import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
 import ro.go.adrhc.springkafkastreams.messages.*;
 
 import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 
 @Component
 public class StreamsHelper {
@@ -41,19 +42,27 @@ public class StreamsHelper {
 		return Consumed.as(properties.getDailyTotalSpent());
 	}
 
+	public static String dailyTotalSpentByClientIdStoreName(int windowSize, ChronoUnit windowUnit) {
+		return "dailyTotalSpentByClientId-" + windowSize + windowUnit.toString();
+	}
+
 	public Materialized<String, Integer, WindowStore<Bytes, byte[]>> dailyTotalSpentByClientId(
-			int retentionDays, String nameSuffix) {
+			int retentionDays, int windowSize, ChronoUnit windowUnit) {
 		return Materialized.<String, Integer, WindowStore<Bytes, byte[]>>
-				as("dailyTotalSpentByClientId-" + nameSuffix)
+				as(dailyTotalSpentByClientIdStoreName(windowSize, windowUnit))
 				.withKeySerde(Serdes.String())
 				.withValueSerde(Serdes.Integer())
 				.withRetention(Duration.ofDays(retentionDays));
 	}
 
+	public static String periodTotalSpentByClientIdStoreName(int windowSize, ChronoUnit windowUnit) {
+		return "periodTotalSpentByClientId-" + windowSize + windowUnit.toString();
+	}
+
 	public Materialized<String, Integer, KeyValueStore<String, Integer>>
-	periodTotalSpentByClientId(String suffix) {
+	periodTotalSpentByClientId(int windowSize, ChronoUnit windowUnit) {
 		return Materialized.<String, Integer, KeyValueStore<String, Integer>>
-				as("periodTotalSpentByClientId-" + suffix)
+				as(periodTotalSpentByClientIdStoreName(windowSize, windowUnit))
 				.withValueSerde(Serdes.Integer());
 	}
 
