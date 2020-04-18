@@ -66,10 +66,15 @@ public class PaymentsConfig {
 
 		clientProfile(clientProfileTable);
 		KGroupedStream<String, Transaction> grouped = transactionsGroupedByClientId(transactions);
-		dailyExceeds(grouped, clientProfileTable, streamsBuilder); // total expenses per day
-		periodExceeds(grouped, clientProfileTable, streamsBuilder); // total expenses for a period
+
+		// total expenses per day
+		dailyExceeds(grouped, clientProfileTable, streamsBuilder);
+
+		// total expenses for a period
+		periodExceeds(grouped, clientProfileTable, streamsBuilder);
 //		periodExceedsWithTransformer(transactions, clientProfileTable, streamsBuilder);
 //		periodExceedsWithEnhancer(transactions, clientProfileTable, streamsBuilder);
+		
 		reports(streamsBuilder);
 
 		return transactions;
