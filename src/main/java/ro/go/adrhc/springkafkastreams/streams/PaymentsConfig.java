@@ -38,6 +38,7 @@ import static ro.go.adrhc.springkafkastreams.util.LocalDateBasedKey.keyOf;
  * see https://issues.apache.org/jira/browse/KAFKA-6817
  * see https://stackoverflow.com/questions/49872827/unknownproduceridexception-in-kafka-streams-when-enabling-exactly-once
  * transactional.id.expiration.ms set by default to 7 days
+ * see also log.retention.hours which defaults to 168h = 7 days
  */
 @Configuration
 @EnableKafka
