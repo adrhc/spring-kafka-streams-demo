@@ -63,6 +63,7 @@ public class PaymentsConfig {
 		KTable<String, ClientProfile> clientProfileTable = helper.clientProfileTable(streamsBuilder);
 		KStream<String, Transaction> transactions = helper.transactionsStream(streamsBuilder);
 
+		clientProfile(clientProfileTable);
 		KGroupedStream<String, Transaction> grouped = transactionsGroupedByClientId(transactions);
 		dailyExceeds(grouped, clientProfileTable, streamsBuilder); // total expenses per day
 		periodExceeds(grouped, clientProfileTable, streamsBuilder); // total expenses for a period
@@ -73,12 +74,16 @@ public class PaymentsConfig {
 		return transactions;
 	}
 
+	private void clientProfile(KTable<String, ClientProfile> clientProfileTable) {
+		clientProfileTable.toStream().foreach((clientId, profile) -> log.debug("\n\t{}", profile));
+	}
+
 	/**
 	 * It needs the ktable stores of:
 	 * KTable<String, Integer> dailyTotalSpentTable
 	 * KTable<String, Integer> periodTotalSpentTable
 	 */
-	public void reports(StreamsBuilder streamsBuilder) {
+	private void reports(StreamsBuilder streamsBuilder) {
 		KStream<String, Command> stream = streamsBuilder.stream(properties.getCommand());
 		stream
 				.filter((k, v) -> v.getParameters().contains("daily"))
@@ -177,7 +182,7 @@ public class PaymentsConfig {
 				.to(properties.getPeriodTotalSpent(),
 						helper.produceInteger("to-" + properties.getPeriodTotalSpent()));
 
-		// not using through(properties.getDailyTotalSpent() because we later need the related store
+		// not using through(properties.getPeriodTotalSpent() because we later need the related store
 		KTable<String, Integer> periodTotalSpentTable = helper.periodTotalSpentTable(streamsBuilder);
 
 		periodTotalSpentTable
