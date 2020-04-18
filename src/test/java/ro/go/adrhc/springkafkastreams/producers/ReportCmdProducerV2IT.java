@@ -31,7 +31,7 @@ public class ReportCmdProducerV2IT {
 		log.debug("Command topic: {}", properties.getCommand());
 		String reportType = System.getProperty("reportType");
 		Command report = new Command("report",
-				reportType == null ? List.of("daily") : List.of(reportType));
+				reportType == null ? List.of("daily") : List.of(reportType.split(",")));
 		log.debug("report command:\n\t{}", report);
 		avroKTemplate.send(properties.getCommand(), report.getName(), report);
 	}
