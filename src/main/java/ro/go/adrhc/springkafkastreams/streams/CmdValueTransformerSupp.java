@@ -34,14 +34,16 @@ public abstract class CmdValueTransformerSupp<T> implements ValueTransformerSupp
 
 			@Override
 			public List<T> transform(Command value) {
-				KeyValueIterator<String, ValueAndTimestamp<Integer>> iterator = store.all();
-				List<T> records = new ArrayList<>();
-				while (iterator.hasNext()) {
-					KeyValue<String, ValueAndTimestamp<Integer>> kv = iterator.next();
-					parseWithStringData(kv.key).ifPresent(it ->
-							records.add(newT(it.getData(), it.getTime(), kv.value.value())));
+				// https://docs.confluent.io/current/streams/faq.html#why-does-my-kstreams-application-use-so-much-memory
+				try (KeyValueIterator<String, ValueAndTimestamp<Integer>> iterator = store.all()) {
+					List<T> records = new ArrayList<>();
+					while (iterator.hasNext()) {
+						KeyValue<String, ValueAndTimestamp<Integer>> kv = iterator.next();
+						parseWithStringData(kv.key).ifPresent(it ->
+								records.add(newT(it.getData(), it.getTime(), kv.value.value())));
+					}
+					return records;
 				}
-				return records;
 			}
 
 			@Override
