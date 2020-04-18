@@ -10,8 +10,8 @@ or
 ./delete-topics.sh
 
 ./run-v2.sh | egrep -i "client1|Notification:|Overdue:|Limit:|ERROR|WARN|totals:"
-./run-v2.sh "log" "v2,monthWindow" | egrep -i "client1|Notification:|Overdue:|Limit:|ERROR|WARN|totals:"
-./run-v2.sh "log" "v2" | egrep -i "client1|Notification:|Overdue:|Limit:|ERROR|WARN|totals:"
+./run-v2.sh "app.log" "v2,monthWindow" | egrep -i "client1|Notification:|Overdue:|Limit:|ERROR|WARN|totals:"
+./run-v2.sh "app.log" "v2" | egrep -i "client1|Notification:|Overdue:|Limit:|ERROR|WARN|totals:"
 ./run-v2.sh - "v2,monthWindow" | egrep -i "client1|Notification:|Overdue:|Limit:|ERROR|WARN|totals:"
 ./run-v2.sh - "v2" | egrep -i "client1|Notification:|Overdue:|Limit:|ERROR|WARN|totals:"
 tailf app.log | egrep -i "client1|Notification:|Overdue:|Limit:|ERROR|WARN|totals:"
