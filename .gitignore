@@ -29,6 +29,6 @@ build/
 
 ### VS Code ###
 .vscode/
-/app.log
+/app*.log
 /profile.log
 /transactions.log
