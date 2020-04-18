@@ -25,7 +25,7 @@ public abstract class CmdValueTransformerSupp<T> implements ValueTransformerSupp
 	@Override
 	public ValueTransformer<Command, List<T>> get() {
 		return new ValueTransformer<>() {
-			private KeyValueStore<String, ValueAndTimestamp<Integer>> store;
+			private KeyValueStore<String, ?> store;
 
 			@Override
 			public void init(ProcessorContext context) {
@@ -35,15 +35,25 @@ public abstract class CmdValueTransformerSupp<T> implements ValueTransformerSupp
 			@Override
 			public List<T> transform(Command value) {
 				// https://docs.confluent.io/current/streams/faq.html#why-does-my-kstreams-application-use-so-much-memory
-				try (KeyValueIterator<String, ValueAndTimestamp<Integer>> iterator = store.all()) {
+				try (KeyValueIterator<String, ?> iterator = store.all()) {
 					List<T> records = new ArrayList<>();
 					while (iterator.hasNext()) {
-						KeyValue<String, ValueAndTimestamp<Integer>> kv = iterator.next();
+						KeyValue<String, ?> kv = iterator.next();
 						parseWithStringData(kv.key).ifPresent(it ->
-								records.add(newT(it.getData(), it.getTime(), kv.value.value())));
+								records.add(newT(it.getData(), it.getTime(), integerOf(kv.value))));
 					}
 					return records;
 				}
+			}
+
+			private Integer integerOf(Object o) {
+				if (o instanceof Integer) {
+					return (Integer) o;
+				}
+				if (o instanceof ValueAndTimestamp) {
+					return integerOf(((ValueAndTimestamp<?>) o).value());
+				}
+				throw new UnsupportedOperationException();
 			}
 
 			@Override
