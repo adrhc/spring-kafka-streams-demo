@@ -127,11 +127,10 @@ public class PaymentsConfig {
 				});
 		stream
 				.filter((k, v) -> v.getParameters().contains("config"))
-				.foreach((k, v) -> {
-					log.debug("\n\tspring profiles = {}\n\tapp version = {}\n\twindowSize = {}\n\twindowUnit = {}",
-							env.getActiveProfiles(), app.getVersion(),
-							app.getWindowSize(), app.getWindowUnit());
-				});
+				.foreach((k, v) -> log.debug("\n\tspring profiles = {}\n\tapp version = {}" +
+								"\n\twindowSize = {}\n\twindowUnit = {}\n\tenhancements = {}",
+						env.getActiveProfiles(), app.getVersion(), app.getWindowSize(),
+						app.getWindowUnit(), app.isKafkaEnhanced()));
 	}
 
 	/**
