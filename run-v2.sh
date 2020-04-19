@@ -2,11 +2,13 @@
 shopt -s expand_aliases
 source ~/.bash_aliases
 
-LOG_FILE=$1
+LOG_ARG="--logging.file.name=app.log"
+ARGS="$LOG_ARG $1"
 PROFILES=${2:-v2}
+
+echo "ARGS: $ARGS"
+echo "PROFILES: $PROFILES"
+
 # tailf app.log | egrep -i "client1|Notification:|Overdue:|Limit:|ERROR|WARN"
-if [[ "$LOG_FILE" == "" || "$LOG_FILE" == "-" ]]; then
-	./mvnw spring-boot:run -Dspring-boot.run.profiles=$PROFILES
-else
-	./mvnw spring-boot:run -Dspring-boot.run.profiles=$PROFILES -Dspring-boot.run.arguments=--logging.file.name=$LOG_FILE
-fi
+rm -fv *.log
+./mvnw -Dspring-boot.run.profiles="$PROFILES" -Dspring-boot.run.arguments="$ARGS" spring-boot:run
