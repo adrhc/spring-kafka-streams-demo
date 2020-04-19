@@ -158,7 +158,7 @@ public class PaymentsConfig {
 				// aggregate amount per clientId-day
 				.aggregate(() -> 0, (k, v, sum) -> sum + v.getAmount(),
 						helper.dailyTotalSpentByClientId(DELAY + 1, 1, DAYS))
-				// clientId-yyyy.MM.dd:amount
+				// clientIdDay:amount
 				.toStream((win, amount) -> keyOf(win))
 				// save clientIdDay:amount into a compact stream (aka table)
 				.to(properties.getDailyTotalSpent(),
@@ -200,11 +200,11 @@ public class PaymentsConfig {
 				// group by 3 days
 				.windowedBy(TimeWindows.of(Duration.of(app.getWindowSize(), app.getWindowUnit()))
 						.advanceBy(Duration.ofDays(1)).grace(Duration.ofDays(DELAY)))
-				// aggregate amount per clientId-3-days
+				// aggregate amount per clientId-period
 				.aggregate(() -> 0, (clientId, transaction, sum) -> sum + transaction.getAmount(),
 						helper.dailyTotalSpentByClientId(DELAY + app.getWindowSize(),
 								app.getWindowSize(), app.getWindowUnit()))
-				// clientId-yyyy.MM.dd:amount
+				// clientIdPeriod:amount
 				.toStream((win, amount) -> keyOf(win))
 				.to(properties.getPeriodTotalSpent(),
 						helper.produceInteger("to-" + properties.getPeriodTotalSpent()));
@@ -237,6 +237,7 @@ public class PaymentsConfig {
 			KTable<String, ClientProfile> clientProfileTable) {
 		transactions
 				.windowedBy(app.getWindowSize(), app.getWindowUnit())
+				// aggregate amount per clientId-period
 				.aggregate(() -> 0, (clientId, transaction, sum) -> sum + transaction.getAmount(),
 						helper.periodTotalSpentByClientId(app.getWindowSize(), app.getWindowUnit()))
 				// clientIdPeriod:amount (i.e. clientIdDay:amount)

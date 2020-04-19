@@ -9,7 +9,7 @@
 ```
 # scenario 2: 1 MONTH, kafka enhancer OFF
 ```bash
-./run-v2.sh "--app.window-size=1 --app.window-unit=MONTHS" | egrep -i "error|warn|Unit must not have an estimated duration"
+./run-v2.sh "--app.window-size=1 --app.window-unit=MONTHS" | egrep -i "error|UnsupportedTemporalTypeException|Unit must not have an estimated duration"
 ```
 # scenario 3: 1 MONTH, kafka enhancer ON
 ```bash
