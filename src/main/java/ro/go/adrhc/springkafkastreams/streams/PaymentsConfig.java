@@ -148,6 +148,7 @@ public class PaymentsConfig {
 
 	/**
 	 * calculating total expenses per day
+	 * using Tumbling time window
 	 */
 	private void dailyExceeds(KGroupedStream<String, Transaction> groupedTransactions,
 			KTable<String, ClientProfile> clientProfileTable, StreamsBuilder streamsBuilder) {
@@ -186,6 +187,7 @@ public class PaymentsConfig {
 
 	/**
 	 * calculating total expenses for a period
+	 * using Hopping time window
 	 */
 	private void periodExceeds(KGroupedStream<String, Transaction> groupedTransactions,
 			KTable<String, ClientProfile> clientProfileTable, StreamsBuilder streamsBuilder) {
