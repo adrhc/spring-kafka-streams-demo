@@ -215,7 +215,7 @@ public class PaymentsConfig {
 		periodTotalSpentTable
 				.toStream()
 				.peek((clientIdPeriod, amount) -> printPeriodTotalExpenses(clientIdPeriod, amount, app.getWindowSize(), DAYS))
-				// clientIdDay:amount -> clientIdDay:PeriodTotalSpent
+				// clientIdPeriod:amount -> clientIdPeriod:PeriodTotalSpent
 				.map(PaymentsUtils::clientIdPeriodTotalSpentOf)
 				// clientId:PeriodTotalSpent join clientId:ClientProfile
 				.join(clientProfileTable,
@@ -241,7 +241,7 @@ public class PaymentsConfig {
 				// aggregate amount per clientId-period
 				.aggregate(() -> 0, (clientId, transaction, sum) -> sum + transaction.getAmount(),
 						helper.periodTotalSpentByClientId(app.getWindowSize(), app.getWindowUnit()))
-				// clientIdPeriod:amount (i.e. clientIdDay:amount)
+				// clientIdPeriod:amount
 				.peek((clientIdPeriod, amount) -> printPeriodTotalExpenses(
 						clientIdPeriod, amount, app.getWindowSize(), app.getWindowUnit()))
 				// clientIdPeriod:amount -> clientIdPeriod:PeriodTotalSpent
