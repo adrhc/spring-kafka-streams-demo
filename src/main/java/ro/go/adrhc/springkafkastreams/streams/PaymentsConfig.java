@@ -209,7 +209,7 @@ public class PaymentsConfig {
 				.to(properties.getPeriodTotalSpent(),
 						helper.produceInteger("to-" + properties.getPeriodTotalSpent()));
 
-		// not using through(properties.getPeriodTotalSpent() because we later need the related store
+		// not using through(properties.getPeriodTotalSpent()) because we later need the related store
 		KTable<String, Integer> periodTotalSpentTable = helper.periodTotalSpentTable(streamsBuilder);
 
 		periodTotalSpentTable
