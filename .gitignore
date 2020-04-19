@@ -32,3 +32,4 @@ build/
 /app*.log
 /profile.log
 /transactions.log
+/*.log.*.gz
