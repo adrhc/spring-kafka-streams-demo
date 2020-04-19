@@ -236,6 +236,7 @@ public class PaymentsConfig {
 	private void periodExceedsWithEnhancer(KStreamEnhancer<String, Transaction> transactions,
 			KTable<String, ClientProfile> clientProfileTable) {
 		transactions
+				// group by e.g. 1 month
 				.windowedBy(app.getWindowSize(), app.getWindowUnit())
 				// aggregate amount per clientId-period
 				.aggregate(() -> 0, (clientId, transaction, sum) -> sum + transaction.getAmount(),
