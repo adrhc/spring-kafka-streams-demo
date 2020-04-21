@@ -17,4 +17,7 @@ public class AppProperties {
 	private String version;
 	private int windowSize;
 	private ChronoUnit windowUnit;
+	private int dailyGrace;
+	private int periodGrace;
+	private String currency;
 }

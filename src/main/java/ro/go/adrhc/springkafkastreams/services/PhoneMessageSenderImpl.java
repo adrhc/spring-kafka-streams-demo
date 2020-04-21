@@ -22,17 +22,19 @@ public class PhoneMessageSenderImpl implements PhoneMessageSender {
 	@Override
 	public void send(DailyExceeded de) {
 		DailyTotalSpent dts = de.getDailyTotalSpent();
-		log.debug("\n\tNotification:\t{} spent a total of {} GBP on {}\n\tOverdue:\t{} GBP\n\tLimit:\t\t{} GBP",
-				dts.getClientId(), dts.getAmount(), format(dts.getTime()),
-				dts.getAmount() - de.getDailyMaxAmount(), de.getDailyMaxAmount());
+		log.debug("\n\tNotification:\t{} spent a total of {} {} on {}\n\tOverdue:\t{} {}\n\tLimit:\t\t{} {}",
+				dts.getClientId(), dts.getAmount(), app.getCurrency(), format(dts.getTime()),
+				dts.getAmount() - de.getDailyMaxAmount(), app.getCurrency(),
+				de.getDailyMaxAmount(), app.getCurrency());
 	}
 
 	@Override
 	public void send(PeriodExceeded de) {
 		PeriodTotalSpent dts = de.getPeriodTotalSpent();
-		log.debug("\n\tNotification:\t{} spent a total of {} GBP for the period {} - {}\n\tOverdue:\t{} GBP\n\tLimit:\t\t{} GBP",
-				dts.getClientId(), dts.getAmount(),
+		log.debug("\n\tNotification:\t{} spent a total of {} {} during {} - {}\n\tOverdue:\t{} {}\n\tLimit:\t\t{} {}",
+				dts.getClientId(), dts.getAmount(), app.getCurrency(),
 				format(dts.getTime().minus(app.getWindowSize(), app.getWindowUnit()).plusDays(1)),
-				format(dts.getTime()), dts.getAmount() - de.getPeriodMaxAmount(), de.getPeriodMaxAmount());
+				format(dts.getTime()), dts.getAmount() - de.getPeriodMaxAmount(),
+				app.getCurrency(), de.getPeriodMaxAmount(), app.getCurrency());
 	}
 }

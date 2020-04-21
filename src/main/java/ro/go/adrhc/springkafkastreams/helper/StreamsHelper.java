@@ -15,11 +15,18 @@ import java.time.temporal.ChronoUnit;
 
 @Component
 public class StreamsHelper {
-	public static final int DELAY = 5;
 	private final TopicsProperties properties;
 
 	public StreamsHelper(TopicsProperties properties) {
 		this.properties = properties;
+	}
+
+	public static String dailyTotalSpentByClientIdStoreName(int windowSize, ChronoUnit windowUnit) {
+		return "dailyTotalSpentByClientId-" + windowSize + windowUnit.toString();
+	}
+
+	public static String periodTotalSpentByClientIdStoreName(int windowSize, ChronoUnit windowUnit) {
+		return "periodTotalSpentByClientId-" + windowSize + windowUnit.toString();
 	}
 
 	public Produced<String, Integer> produceInteger(String processorName) {
@@ -42,10 +49,6 @@ public class StreamsHelper {
 		return Consumed.as(properties.getDailyTotalSpent());
 	}
 
-	public static String dailyTotalSpentByClientIdStoreName(int windowSize, ChronoUnit windowUnit) {
-		return "dailyTotalSpentByClientId-" + windowSize + windowUnit.toString();
-	}
-
 	public Materialized<String, Integer, WindowStore<Bytes, byte[]>> dailyTotalSpentByClientId(
 			int retentionDays, int windowSize, ChronoUnit windowUnit) {
 		return Materialized.<String, Integer, WindowStore<Bytes, byte[]>>
@@ -53,10 +56,6 @@ public class StreamsHelper {
 				.withKeySerde(Serdes.String())
 				.withValueSerde(Serdes.Integer())
 				.withRetention(Duration.ofDays(retentionDays));
-	}
-
-	public static String periodTotalSpentByClientIdStoreName(int windowSize, ChronoUnit windowUnit) {
-		return "periodTotalSpentByClientId-" + windowSize + windowUnit.toString();
 	}
 
 	public Materialized<String, Integer, KeyValueStore<String, Integer>>

@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.ActiveProfiles;
+import ro.go.adrhc.springkafkastreams.config.AppProperties;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
 import ro.go.adrhc.springkafkastreams.messages.Transaction;
 
@@ -27,6 +28,8 @@ public class TransactionsProducerV2IT {
 	@Qualifier("avroKTemplate")
 	private KafkaTemplate<Object, Object> avroKTemplate;
 	@Autowired
+	private AppProperties app;
+	@Autowired
 	private TopicsProperties properties;
 	@Autowired
 	private Environment env;
@@ -36,7 +39,7 @@ public class TransactionsProducerV2IT {
 	void send() {
 		log.debug("\n\tprofiles: {}", String.join(" + ", env.getActiveProfiles()));
 		log.debug("\n\ttransactions topic: {}", properties.getTransactions());
-		Transaction transaction = randomTransaction();
+		Transaction transaction = randomTransaction(app.getDailyGrace());
 		log.debug("transaction:\n\t{}", transaction);
 		avroKTemplate.send(properties.getTransactions(), transaction.getClientId(), transaction);
 	}

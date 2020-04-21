@@ -12,7 +12,6 @@ import java.util.function.IntSupplier;
 import java.util.function.Supplier;
 
 import static java.time.temporal.ChronoUnit.DAYS;
-import static ro.go.adrhc.springkafkastreams.helper.StreamsHelper.DELAY;
 
 public class AbstractTestDTOFactory {
 	private static final Supplier<String> CLIENT_ID_SUPP =
@@ -39,8 +38,8 @@ public class AbstractTestDTOFactory {
 		return new DailyTotalSpent(CLIENT_ID_SUPP.get(), LocalDate.now(), AMOUNT_SUPP.getAsInt());
 	}
 
-	public static Transaction randomTransaction() {
-		Instant randomInstant = Instant.now().minus(randomInt(1, DELAY), DAYS);
+	public static Transaction randomTransaction(int maxIncludedDaysBeforeNow) {
+		Instant randomInstant = Instant.now().minus(randomInt(1, maxIncludedDaysBeforeNow), DAYS);
 		LocalDate ldt = LocalDate.ofInstant(randomInstant, ZoneOffset.UTC);
 		return new Transaction(ldt,
 				MERCHANT_ID_SUPP.get(),

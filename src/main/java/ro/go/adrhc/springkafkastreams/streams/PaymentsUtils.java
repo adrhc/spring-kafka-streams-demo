@@ -18,11 +18,13 @@ import static ro.go.adrhc.springkafkastreams.util.LocalDateBasedKey.parseWithStr
 
 @Slf4j
 public class PaymentsUtils {
+	public static String CURRENCY;
+
 	public static DailyExceeded joinDailyTotalSpentWithClientProfileOnClientId(DailyTotalSpent dts, ClientProfile cp) {
 		if (cp.getDailyMaxAmount() < dts.getAmount()) {
 			return new DailyExceeded(cp.getDailyMaxAmount(), dts);
 		}
-		log.trace("\n\tskipping daily total spent under {} GBP\n\t{}\n\t{}", cp.getDailyMaxAmount(), dts, cp);
+		log.trace("\n\tskipping daily total spent under {} {}\n\t{}\n\t{}", cp.getDailyMaxAmount(), CURRENCY, dts, cp);
 		return null;
 	}
 
@@ -32,8 +34,8 @@ public class PaymentsUtils {
 			if (cp.getPeriodMaxAmount() < pts.getAmount()) {
 				return new PeriodExceeded(cp.getPeriodMaxAmount(), pts);
 			}
-			log.trace("\n\tskipping total spent for {} {} under {} GBP\n\t{}\n\t{}",
-					windowSize, windowUnit.toString().toLowerCase(), cp.getPeriodMaxAmount(), pts, cp);
+			log.trace("\n\tskipping total spent for {} {} under {} {}\n\t{}\n\t{}",
+					windowSize, windowUnit.toString().toLowerCase(), cp.getPeriodMaxAmount(), CURRENCY, pts, cp);
 			return null;
 		};
 	}
@@ -43,7 +45,8 @@ public class PaymentsUtils {
 		return winBasedKeyOptional
 				.map(it -> {
 					String clientId = it.getData();
-					log.trace("\n\t{} spent a total of {} GBP until {} (including)", clientId, amount, format(it.getTime()));
+					log.trace("\n\t{} spent a total of {} {} until {} (including)",
+							clientId, amount, CURRENCY, format(it.getTime()));
 					return KeyValue.pair(clientId, new PeriodTotalSpent(clientId, it.getTime(), amount));
 				})
 				.orElse(null);
@@ -52,7 +55,8 @@ public class PaymentsUtils {
 	public static KeyValue<String, PeriodTotalSpent> clientIdPeriodTotalSpentOf(Windowed<String> clientIdWindow, Integer amount) {
 		String clientId = clientIdWindow.key();
 		LocalDate time = localDateOf(clientIdWindow.window().end()).minusDays(1);
-		log.trace("\n\t{} spent a total of {} GBP until {} (including)", clientId, amount, format(time));
+		log.trace("\n\t{} spent a total of {} {} until {} (including)",
+				clientId, amount, CURRENCY, format(time));
 		return KeyValue.pair(clientId, new PeriodTotalSpent(clientId, time, amount));
 	}
 
@@ -61,7 +65,8 @@ public class PaymentsUtils {
 		return winBasedKeyOptional
 				.map(it -> {
 					String clientId = it.getData();
-					log.debug("\n\t{} spent a total of {} GBP on {}", clientId, amount, format(it.getTime()));
+					log.debug("\n\t{} spent a total of {} {} on {}",
+							clientId, amount, CURRENCY, format(it.getTime()));
 					return KeyValue.pair(clientId, new DailyTotalSpent(clientId, it.getTime(), amount));
 				})
 				.orElse(null);
@@ -72,15 +77,18 @@ public class PaymentsUtils {
 		Optional<LocalDateBasedKey<String>> winBasedKeyOptional = parseWithStringData(clientIdPeriod);
 		winBasedKeyOptional.ifPresent(it -> {
 			String clientId = it.getData();
-			log.debug("\n\t{} spent a total of {} GBP for the period {} - {}",
-					clientId, amount, format(it.getTime().minus(windowSize, unit).plusDays(1)), format(it.getTime()));
+			log.debug("\n\t{} spent a total of {} {} during {} - {}",
+					clientId, amount, CURRENCY,
+					format(it.getTime().minus(windowSize, unit).plusDays(1)),
+					format(it.getTime()));
 		});
 	}
 
 	public static void printPeriodTotalExpenses(Windowed<String> clientIdWindow,
 			Integer amount, int windowSize, TemporalUnit unit) {
 		LocalDate time = localDateOf(clientIdWindow.window().end()).minusDays(1);
-		log.debug("\n\t{} spent a total of {} GBP for the period {} - {}",
-				clientIdWindow.key(), amount, format(time.minus(windowSize, unit).plusDays(1)), format(time));
+		log.debug("\n\t{} spent a total of {} {} during {} - {}",
+				clientIdWindow.key(), amount, CURRENCY,
+				format(time.minus(windowSize, unit).plusDays(1)), format(time));
 	}
 }

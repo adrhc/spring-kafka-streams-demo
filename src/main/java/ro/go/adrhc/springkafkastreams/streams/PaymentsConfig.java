@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 import static ro.go.adrhc.springkafkastreams.enhancer.KafkaEnhancer.enhance;
-import static ro.go.adrhc.springkafkastreams.helper.StreamsHelper.DELAY;
 import static ro.go.adrhc.springkafkastreams.helper.StreamsHelper.periodTotalSpentByClientIdStoreName;
 import static ro.go.adrhc.springkafkastreams.streams.PaymentsUtils.joinPeriodTotalSpentWithClientProfileOnClientId;
 import static ro.go.adrhc.springkafkastreams.streams.PaymentsUtils.printPeriodTotalExpenses;
@@ -109,7 +108,8 @@ public class PaymentsConfig {
 				.foreach((k, list) -> {
 					list.sort(Comparator.comparing(DailyTotalSpent::getTime));
 					log.debug("\n\tDaily totals:\n\t{}", list.stream().map(it ->
-							it.getClientId() + ", " + format(it.getTime()) + ": " + it.getAmount())
+							it.getClientId() + ", " + format(it.getTime()) +
+									": " + it.getAmount() + " " + app.getCurrency())
 							.collect(Collectors.joining("\n\t")));
 				});
 		stream
@@ -122,7 +122,8 @@ public class PaymentsConfig {
 					log.debug("\n\t{} {} totals:\n\t{}", app.getWindowSize(), app.getWindowUnit(),
 							list.stream().map(it -> it.getClientId() + ", " +
 									format(it.getTime().minus(app.getWindowSize(), app.getWindowUnit()).plusDays(1))
-									+ " - " + format(it.getTime()) + ": " + it.getAmount())
+									+ " - " + format(it.getTime()) + ": " +
+									it.getAmount() + " " + app.getCurrency())
 									.collect(Collectors.joining("\n\t")));
 				});
 		stream
@@ -139,8 +140,8 @@ public class PaymentsConfig {
 	private KGroupedStream<String, Transaction> transactionsGroupedByClientId(
 			KStream<String, Transaction> transactions) {
 		return transactions
-				.peek((clientId, transaction) -> log.debug("\n\t{} spent {} GBP on {}", clientId,
-						transaction.getAmount(), format(transaction.getTime())))
+				.peek((clientId, transaction) -> log.debug("\n\t{} spent {} {} on {}", clientId,
+						transaction.getAmount(), app.getCurrency(), format(transaction.getTime())))
 //				.transform(new TransformerDebugger<>())
 //				.transformValues(new ValueTransformerWithKeyDebugger<>())
 				.groupByKey(helper.transactionsGroupedByClientId());
@@ -154,10 +155,11 @@ public class PaymentsConfig {
 			KTable<String, ClientProfile> clientProfileTable, StreamsBuilder streamsBuilder) {
 		groupedTransactions
 				// group by 1 day
-				.windowedBy(TimeWindows.of(Duration.ofDays(1)).grace(Duration.ofDays(DELAY)))
+				.windowedBy(TimeWindows.of(Duration.ofDays(1))
+						.grace(Duration.ofDays(app.getDailyGrace())))
 				// aggregate amount per clientId-day
 				.aggregate(() -> 0, (k, v, sum) -> sum + v.getAmount(),
-						helper.dailyTotalSpentByClientId(DELAY + 1, 1, DAYS))
+						helper.dailyTotalSpentByClientId(app.getDailyGrace() + 1, 1, DAYS))
 				// clientIdDay:amount
 				.toStream((win, amount) -> keyOf(win))
 				// save clientIdDay:amount into a compact stream (aka table)
@@ -191,18 +193,18 @@ public class PaymentsConfig {
 	 */
 	private void periodExceeds(KGroupedStream<String, Transaction> groupedTransactions,
 			KTable<String, ClientProfile> clientProfileTable, StreamsBuilder streamsBuilder) {
+		Duration windowDuration = Duration.of(app.getWindowSize(), app.getWindowUnit());
 		groupedTransactions
 /*
 				// UnsupportedTemporalTypeException: Unit must not have an estimated duration
-				.windowedBy(TimeWindows.of(Duration.of(1, MONTHS))
-						.advanceBy(Duration.ofDays(1)).grace(Duration.ofDays(DELAY)))
+				.windowedBy(TimeWindows.of(Duration.of(1, MONTHS))...
 */
 				// group by 3 days
-				.windowedBy(TimeWindows.of(Duration.of(app.getWindowSize(), app.getWindowUnit()))
-						.advanceBy(Duration.ofDays(1)).grace(Duration.ofDays(DELAY)))
+				.windowedBy(TimeWindows.of(windowDuration)
+						.advanceBy(Duration.ofDays(1)).grace(Duration.ofDays(app.getPeriodGrace())))
 				// aggregate amount per clientId-period
 				.aggregate(() -> 0, (clientId, transaction, sum) -> sum + transaction.getAmount(),
-						helper.dailyTotalSpentByClientId(DELAY + app.getWindowSize(),
+						helper.dailyTotalSpentByClientId(app.getPeriodGrace() + (int) windowDuration.toDays(),
 								app.getWindowSize(), app.getWindowUnit()))
 				// clientIdPeriod:amount
 				.toStream((win, amount) -> keyOf(win))
