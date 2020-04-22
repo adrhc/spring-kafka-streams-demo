@@ -69,9 +69,9 @@ public class PaymentsConfig {
 		KStreamEnh<String, Transaction> transactions = helper.transactionsStream(streamsBuilder);
 
 		processClientProfiles(clientProfileTable);
-		KGroupedStream<String, Transaction> trGroupedByCl = transactionsGroupedByClientId(transactions);
 
 		// total expenses per day
+		KGroupedStream<String, Transaction> trGroupedByCl = transactionsGroupedByClientId(transactions);
 		dailyExceeds(trGroupedByCl, clientProfileTable, streamsBuilder);
 
 		// total expenses for a period
@@ -105,6 +105,7 @@ public class PaymentsConfig {
 
 	private void report(String periodTotalSpentStoreName, StreamsBuilderEnh streamsBuilder) {
 		KStream<String, Command> stream = helper.commandsStream(streamsBuilder);
+		// daily report
 		stream
 				.filter((k, v) -> v.getParameters().contains("daily"))
 				.transformValues(
@@ -117,6 +118,7 @@ public class PaymentsConfig {
 									": " + it.getAmount() + " " + app.getCurrency())
 							.collect(Collectors.joining("\n\t")));
 				});
+		// period report
 		stream
 				.filter((k, v) -> v.getParameters().contains("period"))
 				.transformValues(
@@ -131,9 +133,10 @@ public class PaymentsConfig {
 									it.getAmount() + " " + app.getCurrency())
 									.collect(Collectors.joining("\n\t")));
 				});
+		// configuration report
 		stream
 				.filter((k, v) -> v.getParameters().contains("config"))
-				.foreach((k, v) -> log.debug("\n\tspring profiles = {}\n\tapp version = {}" +
+				.foreach((k, v) -> log.debug("\n\tConfiguration:\n\tspring profiles = {}\n\tapp version = {}" +
 								"\n\twindowSize = {}\n\twindowUnit = {}\n\tenhancements = {}",
 						env.getActiveProfiles(), app.getVersion(), app.getWindowSize(),
 						app.getWindowUnit(), app.isKafkaEnhanced()));
