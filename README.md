@@ -1,3 +1,5 @@
+# confluent
+http://localhost:9021/clusters
 # scenario 1: 3 DAYS, kafka enhancer OFF
 ```bash
 ./delete-topics.sh
