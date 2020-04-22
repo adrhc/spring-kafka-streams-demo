@@ -18,7 +18,8 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.EnableKafkaStreams;
 import ro.go.adrhc.springkafkastreams.config.AppProperties;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
-import ro.go.adrhc.springkafkastreams.enhancer.KStreamEnhancer;
+import ro.go.adrhc.springkafkastreams.enhancer.KStreamEnh;
+import ro.go.adrhc.springkafkastreams.enhancer.StreamsBuilderEnh;
 import ro.go.adrhc.springkafkastreams.helper.StreamsHelper;
 import ro.go.adrhc.springkafkastreams.messages.*;
 import ro.go.adrhc.springkafkastreams.transformers.aggregators.DaysPeriodExpensesAggregator;
@@ -28,11 +29,12 @@ import java.util.Comparator;
 import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.DAYS;
-import static ro.go.adrhc.springkafkastreams.enhancer.KafkaEnhancer.enhance;
+import static ro.go.adrhc.springkafkastreams.enhancer.KafkaEnh.enhance;
 import static ro.go.adrhc.springkafkastreams.helper.StreamsHelper.periodTotalSpentByClientIdStoreName;
 import static ro.go.adrhc.springkafkastreams.streams.PaymentsUtils.joinPeriodTotalSpentWithClientProfileOnClientId;
 import static ro.go.adrhc.springkafkastreams.streams.PaymentsUtils.printPeriodTotalExpenses;
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.format;
+import static ro.go.adrhc.springkafkastreams.util.DateUtils.localDateTimeOf;
 import static ro.go.adrhc.springkafkastreams.util.LocalDateBasedKey.keyOf;
 
 /**
@@ -60,22 +62,25 @@ public class PaymentsConfig {
 	}
 
 	@Bean
-	public KStream<String, ?> transactions(StreamsBuilder streamsBuilder) {
+	public KStream<String, ?> transactions(StreamsBuilder pStreamsBuilder) {
+		StreamsBuilderEnh streamsBuilder = enhance(pStreamsBuilder);
+
 		KTable<String, ClientProfile> clientProfileTable = helper.clientProfileTable(streamsBuilder);
-		KStream<String, Transaction> transactions = helper.transactionsStream(streamsBuilder);
+		KStreamEnh<String, Transaction> transactions = helper.transactionsStream(streamsBuilder);
 
 		processClientProfiles(clientProfileTable);
-		KGroupedStream<String, Transaction> grouped = transactionsGroupedByClientId(transactions);
+		KGroupedStream<String, Transaction> trGroupedByCl = transactionsGroupedByClientId(transactions);
 
 		// total expenses per day
-		dailyExceeds(grouped, clientProfileTable, streamsBuilder);
+		dailyExceeds(trGroupedByCl, clientProfileTable, streamsBuilder);
 
 		// total expenses for a period
 		if (app.isKafkaEnhanced()) {
-			periodExceedsWithEnhancer(enhance(streamsBuilder).stream(transactions), clientProfileTable);
-			report(periodTotalSpentByClientIdStoreName(app.getWindowSize(), app.getWindowUnit()), streamsBuilder);
+			periodExceedsWithEnhancer(transactions, clientProfileTable);
+			report(periodTotalSpentByClientIdStoreName(
+					app.getWindowSize(), app.getWindowUnit()), streamsBuilder);
 		} else {
-			periodExceeds(grouped, clientProfileTable, streamsBuilder);
+			periodExceeds(trGroupedByCl, clientProfileTable, streamsBuilder);
 			report(streamsBuilder);
 		}
 
@@ -94,12 +99,12 @@ public class PaymentsConfig {
 	 * KTable<String, Integer> dailyTotalSpentTable
 	 * KTable<String, Integer> periodTotalSpentTable
 	 */
-	private void report(StreamsBuilder streamsBuilder) {
+	private void report(StreamsBuilderEnh streamsBuilder) {
 		report(properties.getPeriodTotalSpent(), streamsBuilder);
 	}
 
-	private void report(String periodTotalSpentStoreName, StreamsBuilder streamsBuilder) {
-		KStream<String, Command> stream = streamsBuilder.stream(properties.getCommand());
+	private void report(String periodTotalSpentStoreName, StreamsBuilderEnh streamsBuilder) {
+		KStream<String, Command> stream = helper.commandsStream(streamsBuilder);
 		stream
 				.filter((k, v) -> v.getParameters().contains("daily"))
 				.transformValues(
@@ -138,12 +143,20 @@ public class PaymentsConfig {
 	 * group transactions by clientId
 	 */
 	private KGroupedStream<String, Transaction> transactionsGroupedByClientId(
-			KStream<String, Transaction> transactions) {
+			KStreamEnh<String, Transaction> transactions) {
 		return transactions
-				.peek((clientId, transaction) -> log.debug("\n\t{} spent {} {} on {}", clientId,
-						transaction.getAmount(), app.getCurrency(), format(transaction.getTime())))
-//				.transform(new TransformerDebugger<>())
-//				.transformValues(new ValueTransformerWithKeyDebugger<>())
+				/*
+				 * Wire Tap operator implementation
+				 * see https://www.enterpriseintegrationpatterns.com/patterns/messaging/WireTap.html
+				 * similar to peek() but also allow partially access to ProcessorContext
+				 */
+				.tap(it -> {
+					log.trace("\n\ttopic: {}\n\ttimestamp: {}",
+							it.context.topic(), localDateTimeOf(it.context.timestamp()));
+					log.debug("\n\t{} spent {} {} on {}", it.key,
+							it.value.getAmount(), app.getCurrency(), format(it.value.getTime()));
+					it.context.headers().forEach(h -> log.trace(h.toString()));
+				})
 				.groupByKey(helper.transactionsGroupedByClientId());
 	}
 
@@ -152,7 +165,7 @@ public class PaymentsConfig {
 	 * using Tumbling time window
 	 */
 	private void dailyExceeds(KGroupedStream<String, Transaction> groupedTransactions,
-			KTable<String, ClientProfile> clientProfileTable, StreamsBuilder streamsBuilder) {
+			KTable<String, ClientProfile> clientProfileTable, StreamsBuilderEnh streamsBuilder) {
 		groupedTransactions
 				// group by 1 day
 				.windowedBy(TimeWindows.of(Duration.ofDays(1))
@@ -192,7 +205,7 @@ public class PaymentsConfig {
 	 * using Hopping time window
 	 */
 	private void periodExceeds(KGroupedStream<String, Transaction> groupedTransactions,
-			KTable<String, ClientProfile> clientProfileTable, StreamsBuilder streamsBuilder) {
+			KTable<String, ClientProfile> clientProfileTable, StreamsBuilderEnh streamsBuilder) {
 		Duration windowDuration = Duration.of(app.getWindowSize(), app.getWindowUnit());
 		groupedTransactions
 /*
@@ -235,7 +248,7 @@ public class PaymentsConfig {
 	 * calculating total expenses for a period
 	 * equivalent to windowedBy + aggregate
 	 */
-	private void periodExceedsWithEnhancer(KStreamEnhancer<String, Transaction> transactions,
+	private void periodExceedsWithEnhancer(KStreamEnh<String, Transaction> transactions,
 			KTable<String, ClientProfile> clientProfileTable) {
 		transactions
 				// group by e.g. 1 month

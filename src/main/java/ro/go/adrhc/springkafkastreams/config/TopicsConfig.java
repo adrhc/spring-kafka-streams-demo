@@ -43,6 +43,6 @@ public class TopicsConfig {
 
 	@Bean
 	public NewTopic commandTopic() {
-		return TopicBuilder.name(properties.getCommand()).build();
+		return TopicBuilder.name(properties.getCommands()).build();
 	}
 }

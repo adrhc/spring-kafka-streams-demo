@@ -28,11 +28,11 @@ public class ReportCmdProducerV2IT {
 	@Test
 	void upsert() {
 		log.debug("profiles: {}", String.join(", ", env.getActiveProfiles()));
-		log.debug("Command topic: {}", properties.getCommand());
+		log.debug("Command topic: {}", properties.getCommands());
 		String reportType = System.getProperty("reportType");
 		Command report = new Command("report",
 				reportType == null ? List.of("daily") : List.of(reportType.split(",")));
 		log.debug("report command:\n\t{}", report);
-		avroKTemplate.send(properties.getCommand(), report.getName(), report);
+		avroKTemplate.send(properties.getCommands(), report.getName(), report);
 	}
 }

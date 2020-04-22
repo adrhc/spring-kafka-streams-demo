@@ -8,6 +8,8 @@ import org.apache.kafka.streams.state.KeyValueStore;
 import org.apache.kafka.streams.state.WindowStore;
 import org.springframework.stereotype.Component;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
+import ro.go.adrhc.springkafkastreams.enhancer.KStreamEnh;
+import ro.go.adrhc.springkafkastreams.enhancer.StreamsBuilderEnh;
 import ro.go.adrhc.springkafkastreams.messages.*;
 
 import java.time.Duration;
@@ -45,6 +47,10 @@ public class StreamsHelper {
 		return Consumed.as(properties.getTransactions());
 	}
 
+	private Consumed<String, Command> consumeCommand() {
+		return Consumed.as(properties.getCommands());
+	}
+
 	private Consumed<String, DailyTotalSpent> consumeDailyTotalSpent() {
 		return Consumed.as(properties.getDailyTotalSpent());
 	}
@@ -65,13 +71,13 @@ public class StreamsHelper {
 				.withValueSerde(Serdes.Integer());
 	}
 
-	public KTable<String, ClientProfile> clientProfileTable(StreamsBuilder streamsBuilder) {
+	public KTable<String, ClientProfile> clientProfileTable(StreamsBuilderEnh streamsBuilder) {
 		return streamsBuilder.table(properties.getClientProfiles(),
 				Consumed.as(properties.getClientProfiles()),
 				Materialized.as(properties.getClientProfiles()));
 	}
 
-	public KTable<String, Integer> dailyTotalSpentTable(StreamsBuilder streamsBuilder) {
+	public KTable<String, Integer> dailyTotalSpentTable(StreamsBuilderEnh streamsBuilder) {
 		return streamsBuilder.table(properties.getDailyTotalSpent(),
 				Consumed.<String, Integer>
 						as(properties.getDailyTotalSpent())
@@ -83,7 +89,7 @@ public class StreamsHelper {
 						.withValueSerde(Serdes.Integer()));
 	}
 
-	public KTable<String, Integer> periodTotalSpentTable(StreamsBuilder streamsBuilder) {
+	public KTable<String, Integer> periodTotalSpentTable(StreamsBuilderEnh streamsBuilder) {
 		return streamsBuilder.table(properties.getPeriodTotalSpent(),
 				Consumed.<String, Integer>
 						as(properties.getPeriodTotalSpent())
@@ -107,8 +113,12 @@ public class StreamsHelper {
 		return streamsBuilder.stream(properties.getDailyExceeds(), this.consumeDailyTotalSpent());
 	}
 
-	public KStream<String, Transaction> transactionsStream(StreamsBuilder streamsBuilder) {
+	public KStreamEnh<String, Transaction> transactionsStream(StreamsBuilderEnh streamsBuilder) {
 		return streamsBuilder.stream(properties.getTransactions(), this.consumeTransaction());
+	}
+
+	public KStreamEnh<String, Command> commandsStream(StreamsBuilderEnh streamsBuilder) {
+		return streamsBuilder.stream(properties.getCommands(), this.consumeCommand());
 	}
 
 	public Grouped<String, Transaction> transactionsGroupedByClientId() {

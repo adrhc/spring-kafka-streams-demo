@@ -13,7 +13,7 @@ import ro.go.adrhc.springkafkastreams.transformers.aggregators.PeriodAggregator;
 import java.time.temporal.TemporalUnit;
 
 @AllArgsConstructor
-public class WindowByEnhancer<K, V> {
+public class WindowByEnh<K, V> {
 	private final int windowSize;
 	private final TemporalUnit unit;
 	private final KStream<K, V> kStream;

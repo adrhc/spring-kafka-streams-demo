@@ -1,0 +1,34 @@
+package ro.go.adrhc.springkafkastreams.enhancer.operators;
+
+import lombok.AllArgsConstructor;
+import org.apache.kafka.streams.kstream.ValueTransformerWithKey;
+import org.apache.kafka.streams.kstream.ValueTransformerWithKeySupplier;
+import org.apache.kafka.streams.processor.ProcessorContext;
+
+import java.util.function.Consumer;
+
+@AllArgsConstructor
+public class KTap<K, V> implements ValueTransformerWithKeySupplier<K, V, V> {
+	private final Consumer<KTapParams<K, V>> consumer;
+
+	public ValueTransformerWithKey<K, V, V> get() {
+		return new ValueTransformerWithKey<>() {
+
+			private ProcessorContext context;
+
+			@Override
+			public void init(ProcessorContext context) {
+				this.context = context;
+			}
+
+			@Override
+			public V transform(K readOnlyKey, V value) {
+				consumer.accept(new KTapParams<>(readOnlyKey, value, new KTapContext(context)));
+				return value;
+			}
+
+			@Override
+			public void close() {}
+		};
+	}
+}

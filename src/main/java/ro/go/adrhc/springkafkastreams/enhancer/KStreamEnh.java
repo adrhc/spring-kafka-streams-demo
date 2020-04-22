@@ -6,16 +6,23 @@ import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.*;
 import org.apache.kafka.streams.processor.ProcessorSupplier;
 import org.apache.kafka.streams.processor.TopicNameExtractor;
+import ro.go.adrhc.springkafkastreams.enhancer.operators.KTap;
+import ro.go.adrhc.springkafkastreams.enhancer.operators.KTapParams;
 
 import java.time.temporal.TemporalUnit;
+import java.util.function.Consumer;
 
 @AllArgsConstructor
-public class KStreamEnhancer<K, V> implements KStream<K, V> {
+public class KStreamEnh<K, V> implements KStream<K, V> {
 	private final KStream<K, V> delegate;
 	private final StreamsBuilder streamsBuilder;
 
-	public WindowByEnhancer<K, V> windowedBy(int windowSize, TemporalUnit unit) {
-		return new WindowByEnhancer<>(windowSize, unit, delegate, streamsBuilder);
+	public WindowByEnh<K, V> windowedBy(int windowSize, TemporalUnit unit) {
+		return new WindowByEnh<>(windowSize, unit, delegate, streamsBuilder);
+	}
+
+	public KStreamEnh<K, V> tap(Consumer<KTapParams<K, V>> consumer) {
+		return new KStreamEnh<>(delegate.transformValues(new KTap<>(consumer)), streamsBuilder);
 	}
 
 	@Override
@@ -52,7 +59,9 @@ public class KStreamEnhancer<K, V> implements KStream<K, V> {
 	public void foreach(ForeachAction<? super K, ? super V> action) {delegate.foreach(action);}
 
 	@Override
-	public KStream<K, V> peek(ForeachAction<? super K, ? super V> action) {return delegate.peek(action);}
+	public KStreamEnh<K, V> peek(ForeachAction<? super K, ? super V> action) {
+		return new KStreamEnh<>(delegate.peek(action), streamsBuilder);
+	}
 
 	@Override
 	public KStream<K, V>[] branch(Predicate<? super K, ? super V>... predicates) {return delegate.branch(predicates);}
