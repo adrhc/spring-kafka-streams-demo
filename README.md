@@ -1,3 +1,7 @@
+# context
+It's about a person having a bank account with 2 cards attached: his own and one for his wife. The client wants to be notified when a daily-expenses threshold is exceed or one set for a period (e.g. 3 days, 1 month, etc).
+# features
+- using 
 # confluent
 confluent local start
 http://localhost:9021/clusters

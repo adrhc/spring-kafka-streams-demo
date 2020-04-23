@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.streams;
+package ro.go.adrhc.springkafkastreams.streams.processors;
 
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.ValueTransformer;

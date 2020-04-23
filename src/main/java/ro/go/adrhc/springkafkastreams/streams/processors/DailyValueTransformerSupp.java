@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.streams;
+package ro.go.adrhc.springkafkastreams.streams.processors;
 
 import ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent;
 
