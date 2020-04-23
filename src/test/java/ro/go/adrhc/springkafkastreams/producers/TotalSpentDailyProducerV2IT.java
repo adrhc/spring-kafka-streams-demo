@@ -1,6 +1,7 @@
 package ro.go.adrhc.springkafkastreams.producers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,6 +15,7 @@ import ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent;
 import static ro.go.adrhc.springkafkastreams.util.AbstractTestDTOFactory.randomDailyTotalSpent;
 import static ro.go.adrhc.springkafkastreams.util.LocalDateBasedKey.keyOf;
 
+@Disabled
 @ActiveProfiles({"v2", "test"})
 @SpringBootTest
 @Slf4j
