@@ -10,7 +10,7 @@ http://localhost:9021/clusters
 ./create-report-command.sh config | grep parameters
 ./create-report-command.sh daily,period | grep parameters
 ```
-# scenario 2: 1 MONTH, kafka enhancer OFF
+# scenario 2: 1 MONTH, kafka enhancer OFF (not supported by Kafka)
 ```bash
 ./run-v2.sh "--app.window-size=1 --app.window-unit=MONTHS" | egrep -i "error|UnsupportedTemporalTypeException|Unit must not have an estimated duration"
 ```
