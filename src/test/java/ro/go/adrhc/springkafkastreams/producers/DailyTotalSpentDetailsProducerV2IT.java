@@ -1,8 +1,8 @@
 package ro.go.adrhc.springkafkastreams.producers;
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,7 +14,7 @@ import ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent;
 
 import static ro.go.adrhc.springkafkastreams.util.AbstractTestDTOFactory.randomDailyTotalSpent;
 
-@Disabled
+@EnabledIfSystemProperty(named = "enableIT", matches = "true")
 @ActiveProfiles({"v2", "test"})
 @SpringBootTest
 @Slf4j

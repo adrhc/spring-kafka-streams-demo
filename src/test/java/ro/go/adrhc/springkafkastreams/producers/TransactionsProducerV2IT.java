@@ -20,6 +20,7 @@ import java.util.stream.IntStream;
 import static java.lang.Integer.parseInt;
 import static ro.go.adrhc.springkafkastreams.util.AbstractTestDTOFactory.randomTransaction;
 
+@EnabledIfSystemProperty(named = "enableIT", matches = "true")
 @ActiveProfiles({"v2", "test"})
 @SpringBootTest
 @Slf4j

@@ -2,4 +2,4 @@
 shopt -s expand_aliases
 source ~/.bash_aliases
 
-./mvnw -Dtest=ClientProfileProducerV2IT test
+./mvnw -DenableIT=true -Dtest=ClientProfileProducerV2IT test
