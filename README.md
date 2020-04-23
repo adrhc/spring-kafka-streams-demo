@@ -4,7 +4,7 @@ It's about a person having a bank account with 2 cards attached: his own and one
 - using Confluent, AVRO schema/protocol (see ksd1.avpr), Spring Boot, Kafka Streams, java 11
 - using a custom timestamp extractor to fully control payment transactions time (see CustomTimestampExtractor)
 - using grouping, time windows (Tumbling and Hopping), aggregates, transformers
-- *kafka extensions*:
+- *kafka extensions* (kafka sources are not modified):
     - extended Kafka DSL with a new operator for having *dynamic-grouping-windows* (see PeriodExceedsWithEnhancer)
     - extended Kafka DSL with a new operator equivalent to peek() and named tap() which also have access to headers and topic metadata  
 - querying KTable stores from within the kafka streams topology without using a REST endpoints or other similar external approach (see PaymentsReport)
