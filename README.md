@@ -1,7 +1,7 @@
 # context
 It's about a person having a bank account with 2 cards attached: his own and one for his wife. The client wants to be notified when a daily-expenses threshold is exceeded or one related to a period (e.g. 3 days, 1 month, etc).
 # features
-- using Confluent, AVRO schema/protocol (see ksd1.avpr), Spring Boot, Kafka Streams
+- using Confluent, AVRO schema/protocol (see ksd1.avpr), Spring Boot, Kafka Streams, java 11
 - using a custom timestamp extractor to fully control payment transactions time (see CustomTimestampExtractor)
 - using grouping, time windows (Tumbling and Hopping), aggregates
 - *kafka extensions*:
