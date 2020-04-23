@@ -137,7 +137,7 @@ public class PaymentsConfig {
 		stream
 				.filter((k, v) -> v.getParameters().contains("config"))
 				.foreach((k, v) -> log.debug("\n\tConfiguration:\n\tspring profiles = {}\n\tapp version = {}" +
-								"\n\twindowSize = {}\n\twindowUnit = {}\n\tenhancements = {}",
+								"\n\twindowSize = {}\n\twindowUnit = {}\n\tKafka enhancements = {}",
 						env.getActiveProfiles(), app.getVersion(), app.getWindowSize(),
 						app.getWindowUnit(), app.isKafkaEnhanced()));
 	}
