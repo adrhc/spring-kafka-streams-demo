@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
@@ -20,6 +21,7 @@ import java.util.Map;
 
 import static ro.go.adrhc.springkafkastreams.util.KConsumerUtils.consumerOf;
 
+@Disabled
 @ActiveProfiles({"v2", "test"})
 @SpringBootTest(properties = {"spring.kafka.consumer.auto-offset-reset=earliest"})
 @Import(KTableConsumerIT.Config.class)
