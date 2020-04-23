@@ -24,7 +24,7 @@ http://localhost:9021/clusters
 ```bash
 ./run-v2.sh "--app.window-size=1 --app.window-unit=MONTHS" | egrep -i "error|UnsupportedTemporalTypeException|Unit must not have an estimated duration"
 ```
-# scenario 3: 1 MONTH, kafka enhancer ON
+# scenario 3: 1 MONTH, kafka enhancer ON (using extended kafka DSL)
 ```bash
 ./delete-topics.sh
 ./run-v2.sh "--app.window-size=1 --app.window-unit=MONTHS --app.kafka-enhanced=true" | egrep -i "client1|Notification:|Overdue:|Limit:|ERROR[^s]|totals:|Configuration:|spring profiles|app version|windowSize|windowUnit|enhancements" 
