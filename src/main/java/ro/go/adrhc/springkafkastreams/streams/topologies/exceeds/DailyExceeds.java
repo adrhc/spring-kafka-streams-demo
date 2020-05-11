@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.streams.subtopologies.exceeds;
+package ro.go.adrhc.springkafkastreams.streams.topologies.exceeds;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Serdes;

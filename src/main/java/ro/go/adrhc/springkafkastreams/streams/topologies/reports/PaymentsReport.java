@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.streams.subtopologies;
+package ro.go.adrhc.springkafkastreams.streams.topologies.reports;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.streams.kstream.Consumed;
@@ -12,8 +12,8 @@ import ro.go.adrhc.springkafkastreams.enhancer.StreamsBuilderEnh;
 import ro.go.adrhc.springkafkastreams.messages.Command;
 import ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent;
 import ro.go.adrhc.springkafkastreams.messages.PeriodTotalSpent;
-import ro.go.adrhc.springkafkastreams.streams.processors.DailyValueTransformerSupp;
-import ro.go.adrhc.springkafkastreams.streams.processors.PeriodValueTransformerSupp;
+import ro.go.adrhc.springkafkastreams.streams.topologies.reports.processors.DailyValueTransformerSupp;
+import ro.go.adrhc.springkafkastreams.streams.topologies.reports.processors.PeriodValueTransformerSupp;
 
 import java.util.Comparator;
 import java.util.stream.Collectors;

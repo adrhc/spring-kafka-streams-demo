@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.streams;
+package ro.go.adrhc.springkafkastreams.streams.topologies;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.streams.StreamsBuilder;
@@ -15,10 +15,10 @@ import ro.go.adrhc.springkafkastreams.enhancer.StreamsBuilderEnh;
 import ro.go.adrhc.springkafkastreams.helper.StreamsHelper;
 import ro.go.adrhc.springkafkastreams.messages.ClientProfile;
 import ro.go.adrhc.springkafkastreams.messages.Transaction;
-import ro.go.adrhc.springkafkastreams.streams.subtopologies.PaymentsReport;
-import ro.go.adrhc.springkafkastreams.streams.subtopologies.exceeds.DailyExceeds;
-import ro.go.adrhc.springkafkastreams.streams.subtopologies.exceeds.period.PeriodExceeds;
-import ro.go.adrhc.springkafkastreams.streams.subtopologies.exceeds.period.PeriodExceedsWithEnhancer;
+import ro.go.adrhc.springkafkastreams.streams.topologies.reports.PaymentsReport;
+import ro.go.adrhc.springkafkastreams.streams.topologies.exceeds.DailyExceeds;
+import ro.go.adrhc.springkafkastreams.streams.topologies.exceeds.period.PeriodExceeds;
+import ro.go.adrhc.springkafkastreams.streams.topologies.exceeds.period.PeriodExceedsWithEnhancer;
 
 import static ro.go.adrhc.springkafkastreams.enhancer.KafkaEnh.enhance;
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.format;

@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.streams.subtopologies.exceeds;
+package ro.go.adrhc.springkafkastreams.streams.topologies.exceeds;
 
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.common.utils.Bytes;

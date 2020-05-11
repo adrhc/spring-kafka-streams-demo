@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.streams.subtopologies.exceeds.period;
+package ro.go.adrhc.springkafkastreams.streams.topologies.exceeds.period;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Serdes;
@@ -14,7 +14,7 @@ import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
 import ro.go.adrhc.springkafkastreams.helper.StreamsHelper;
 import ro.go.adrhc.springkafkastreams.messages.ClientProfile;
 import ro.go.adrhc.springkafkastreams.messages.Transaction;
-import ro.go.adrhc.springkafkastreams.streams.transformers.aggregators.DaysPeriodExpensesAggregator;
+import ro.go.adrhc.springkafkastreams.streams.topologies.exceeds.period.aggregators.DaysPeriodExpensesAggregator;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 

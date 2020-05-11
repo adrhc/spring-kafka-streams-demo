@@ -1,6 +1,7 @@
-package ro.go.adrhc.springkafkastreams.streams.transformers.aggregators;
+package ro.go.adrhc.springkafkastreams.streams.topologies.exceeds.period.aggregators;
 
 import lombok.extern.slf4j.Slf4j;
+import ro.go.adrhc.springkafkastreams.enhancer.aggregators.PeriodAggregator;
 import ro.go.adrhc.springkafkastreams.messages.Transaction;
 
 import static java.time.temporal.ChronoUnit.DAYS;

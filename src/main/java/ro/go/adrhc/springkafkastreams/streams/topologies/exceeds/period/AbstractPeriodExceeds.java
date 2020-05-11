@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.streams.subtopologies.exceeds.period;
+package ro.go.adrhc.springkafkastreams.streams.topologies.exceeds.period;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.streams.KeyValue;
@@ -11,7 +11,7 @@ import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
 import ro.go.adrhc.springkafkastreams.messages.ClientProfile;
 import ro.go.adrhc.springkafkastreams.messages.PeriodExceeded;
 import ro.go.adrhc.springkafkastreams.messages.PeriodTotalSpent;
-import ro.go.adrhc.springkafkastreams.streams.subtopologies.exceeds.AbstractExceeds;
+import ro.go.adrhc.springkafkastreams.streams.topologies.exceeds.AbstractExceeds;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
