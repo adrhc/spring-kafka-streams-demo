@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.transformers.aggregators;
+package ro.go.adrhc.springkafkastreams.streams.transformers.aggregators;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.streams.KeyValue;
@@ -14,7 +14,7 @@ import java.util.List;
 
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.localDateOf;
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.millisecondsOf;
-import static ro.go.adrhc.springkafkastreams.util.LocalDateBasedKey.keyOf;
+import static ro.go.adrhc.springkafkastreams.util.streams.LocalDateBasedKey.keyOf;
 
 @Slf4j
 public class PeriodAggregator<K, V, R> implements TransformerSupplier<K, V, Iterable<KeyValue<Windowed<K>, R>>> {

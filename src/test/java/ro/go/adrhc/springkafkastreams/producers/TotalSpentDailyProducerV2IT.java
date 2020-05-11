@@ -13,7 +13,7 @@ import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
 import ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent;
 
 import static ro.go.adrhc.springkafkastreams.util.AbstractTestDTOFactory.randomDailyTotalSpent;
-import static ro.go.adrhc.springkafkastreams.util.LocalDateBasedKey.keyOf;
+import static ro.go.adrhc.springkafkastreams.util.streams.LocalDateBasedKey.keyOf;
 
 @EnabledIfSystemProperty(named = "enableIT", matches = "true")
 @ActiveProfiles({"v2", "test"})

@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.transformers.aggregators;
+package ro.go.adrhc.springkafkastreams.streams.transformers.aggregators;
 
 import lombok.extern.slf4j.Slf4j;
 import ro.go.adrhc.springkafkastreams.messages.Transaction;

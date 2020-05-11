@@ -8,7 +8,7 @@ import org.apache.kafka.streams.processor.StateStore;
 import org.apache.kafka.streams.state.KeyValueStore;
 import org.apache.kafka.streams.state.StoreBuilder;
 import org.apache.kafka.streams.state.Stores;
-import ro.go.adrhc.springkafkastreams.transformers.aggregators.PeriodAggregator;
+import ro.go.adrhc.springkafkastreams.streams.transformers.aggregators.PeriodAggregator;
 
 import java.time.temporal.TemporalUnit;
 

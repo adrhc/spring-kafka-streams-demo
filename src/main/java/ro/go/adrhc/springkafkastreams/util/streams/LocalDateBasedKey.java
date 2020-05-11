@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.util;
+package ro.go.adrhc.springkafkastreams.util.streams;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

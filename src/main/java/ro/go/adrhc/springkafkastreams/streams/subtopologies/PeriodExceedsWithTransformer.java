@@ -11,28 +11,28 @@ import org.apache.kafka.streams.state.Stores;
 import org.springframework.stereotype.Component;
 import ro.go.adrhc.springkafkastreams.config.AppProperties;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
+import ro.go.adrhc.springkafkastreams.helper.PaymentsHelper;
 import ro.go.adrhc.springkafkastreams.helper.StreamsHelper;
 import ro.go.adrhc.springkafkastreams.messages.ClientProfile;
 import ro.go.adrhc.springkafkastreams.messages.Transaction;
-import ro.go.adrhc.springkafkastreams.streams.PaymentsUtils;
-import ro.go.adrhc.springkafkastreams.transformers.aggregators.DaysPeriodExpensesAggregator;
+import ro.go.adrhc.springkafkastreams.streams.transformers.aggregators.DaysPeriodExpensesAggregator;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 import static ro.go.adrhc.springkafkastreams.helper.StreamsHelper.periodTotalSpentByClientIdStoreName;
-import static ro.go.adrhc.springkafkastreams.streams.PaymentsUtils.joinPeriodTotalSpentWithClientProfileOnClientId;
-import static ro.go.adrhc.springkafkastreams.streams.PaymentsUtils.printPeriodTotalExpenses;
 
 @Component
 @Slf4j
 public class PeriodExceedsWithTransformer {
 	private final TopicsProperties properties;
 	private final AppProperties app;
-	private final StreamsHelper helper;
+	private final StreamsHelper streamsHelper;
+	private final PaymentsHelper paymentsHelper;
 
-	public PeriodExceedsWithTransformer(TopicsProperties properties, AppProperties app, StreamsHelper helper) {
+	public PeriodExceedsWithTransformer(TopicsProperties properties, AppProperties app, StreamsHelper streamsHelper, PaymentsHelper paymentsHelper) {
 		this.properties = properties;
 		this.app = app;
-		this.helper = helper;
+		this.streamsHelper = streamsHelper;
+		this.paymentsHelper = paymentsHelper;
 	}
 
 	/**
@@ -51,16 +51,16 @@ public class PeriodExceedsWithTransformer {
 				.flatTransform(new DaysPeriodExpensesAggregator(app.getWindowSize(),
 						periodTotalSpentStore.name()), periodTotalSpentStore.name())
 				// clientIdWindow:amount
-				.peek((clientIdWindow, amount) -> printPeriodTotalExpenses(clientIdWindow, amount, app.getWindowSize(), DAYS))
+				.peek((clientIdWindow, amount) -> paymentsHelper.printPeriodTotalExpenses(clientIdWindow, amount, app.getWindowSize(), DAYS))
 				// clientIdWindow:amount -> clientIdPeriod:PeriodTotalSpent
-				.map(PaymentsUtils::clientIdPeriodTotalSpentOf)
+				.map(paymentsHelper::clientIdPeriodTotalSpentOf)
 				// clientId:PeriodTotalSpent join clientId:ClientProfile -> clientId:PeriodExceeded
 				.join(clientProfileTable,
-						joinPeriodTotalSpentWithClientProfileOnClientId(app.getWindowSize(), DAYS),
-						helper.periodTotalSpentJoinClientProfile())
+						paymentsHelper.joinPeriodTotalSpentWithClientProfileOnClientId(app.getWindowSize(), DAYS),
+						streamsHelper.periodTotalSpentJoinClientProfile())
 				// skip for less than periodMaxAmount
 				.filter((clientId, periodExceeded) -> periodExceeded != null)
 				// clientId:PeriodExceeded stream
-				.to(properties.getPeriodExceeds(), helper.producePeriodExceeded());
+				.to(properties.getPeriodExceeds(), streamsHelper.producePeriodExceeded());
 	}
 }

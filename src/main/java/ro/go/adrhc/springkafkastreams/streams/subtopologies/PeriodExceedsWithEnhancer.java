@@ -6,25 +6,24 @@ import org.springframework.stereotype.Component;
 import ro.go.adrhc.springkafkastreams.config.AppProperties;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
 import ro.go.adrhc.springkafkastreams.enhancer.KStreamEnh;
+import ro.go.adrhc.springkafkastreams.helper.PaymentsHelper;
 import ro.go.adrhc.springkafkastreams.helper.StreamsHelper;
 import ro.go.adrhc.springkafkastreams.messages.ClientProfile;
 import ro.go.adrhc.springkafkastreams.messages.Transaction;
-import ro.go.adrhc.springkafkastreams.streams.PaymentsUtils;
-
-import static ro.go.adrhc.springkafkastreams.streams.PaymentsUtils.joinPeriodTotalSpentWithClientProfileOnClientId;
-import static ro.go.adrhc.springkafkastreams.streams.PaymentsUtils.printPeriodTotalExpenses;
 
 @Component
 @Slf4j
 public class PeriodExceedsWithEnhancer {
 	private final TopicsProperties properties;
 	private final AppProperties app;
-	private final StreamsHelper helper;
+	private final StreamsHelper streamsHelper;
+	private final PaymentsHelper paymentsHelper;
 
-	public PeriodExceedsWithEnhancer(TopicsProperties properties, AppProperties app, StreamsHelper helper) {
+	public PeriodExceedsWithEnhancer(TopicsProperties properties, AppProperties app, StreamsHelper streamsHelper, PaymentsHelper paymentsHelper) {
 		this.properties = properties;
 		this.app = app;
-		this.helper = helper;
+		this.streamsHelper = streamsHelper;
+		this.paymentsHelper = paymentsHelper;
 	}
 
 	/**
@@ -38,19 +37,19 @@ public class PeriodExceedsWithEnhancer {
 				.windowedBy(app.getWindowSize(), app.getWindowUnit())
 				// aggregate amount per clientId-period
 				.aggregate(() -> 0, (clientId, transaction, sum) -> sum + transaction.getAmount(),
-						helper.periodTotalSpentByClientId(app.getWindowSize(), app.getWindowUnit()))
+						streamsHelper.periodTotalSpentByClientId(app.getWindowSize(), app.getWindowUnit()))
 				// clientIdPeriod:amount
-				.peek((clientIdPeriod, amount) -> printPeriodTotalExpenses(
+				.peek((clientIdPeriod, amount) -> paymentsHelper.printPeriodTotalExpenses(
 						clientIdPeriod, amount, app.getWindowSize(), app.getWindowUnit()))
 				// clientIdPeriod:amount -> clientIdPeriod:PeriodTotalSpent
-				.map(PaymentsUtils::clientIdPeriodTotalSpentOf)
+				.map(paymentsHelper::clientIdPeriodTotalSpentOf)
 				// clientId:PeriodTotalSpent join clientId:ClientProfile -> clientId:PeriodExceeded
 				.join(clientProfileTable,
-						joinPeriodTotalSpentWithClientProfileOnClientId(app.getWindowSize(), app.getWindowUnit()),
-						helper.periodTotalSpentJoinClientProfile())
+						paymentsHelper.joinPeriodTotalSpentWithClientProfileOnClientId(app.getWindowSize(), app.getWindowUnit()),
+						streamsHelper.periodTotalSpentJoinClientProfile())
 				// skip for less than periodMaxAmount
 				.filter((clientId, periodExceeded) -> periodExceeded != null)
 				// clientId:PeriodExceeded stream
-				.to(properties.getPeriodExceeds(), helper.producePeriodExceeded());
+				.to(properties.getPeriodExceeds(), streamsHelper.producePeriodExceeded());
 	}
 }

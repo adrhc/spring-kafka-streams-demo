@@ -8,29 +8,29 @@ import org.springframework.stereotype.Component;
 import ro.go.adrhc.springkafkastreams.config.AppProperties;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
 import ro.go.adrhc.springkafkastreams.enhancer.StreamsBuilderEnh;
+import ro.go.adrhc.springkafkastreams.helper.PaymentsHelper;
 import ro.go.adrhc.springkafkastreams.helper.StreamsHelper;
 import ro.go.adrhc.springkafkastreams.messages.ClientProfile;
 import ro.go.adrhc.springkafkastreams.messages.Transaction;
-import ro.go.adrhc.springkafkastreams.streams.PaymentsUtils;
 
 import java.time.Duration;
 
 import static java.time.temporal.ChronoUnit.DAYS;
-import static ro.go.adrhc.springkafkastreams.streams.PaymentsUtils.joinPeriodTotalSpentWithClientProfileOnClientId;
-import static ro.go.adrhc.springkafkastreams.streams.PaymentsUtils.printPeriodTotalExpenses;
-import static ro.go.adrhc.springkafkastreams.util.LocalDateBasedKey.keyOf;
+import static ro.go.adrhc.springkafkastreams.util.streams.LocalDateBasedKey.keyOf;
 
 @Component
 @Slf4j
 public class PeriodExceeds {
 	private final TopicsProperties properties;
 	private final AppProperties app;
-	private final StreamsHelper helper;
+	private final StreamsHelper streamsHelper;
+	private final PaymentsHelper paymentsHelper;
 
-	public PeriodExceeds(TopicsProperties properties, AppProperties app, StreamsHelper helper) {
+	public PeriodExceeds(TopicsProperties properties, AppProperties app, StreamsHelper streamsHelper, PaymentsHelper paymentsHelper) {
 		this.properties = properties;
 		this.app = app;
-		this.helper = helper;
+		this.streamsHelper = streamsHelper;
+		this.paymentsHelper = paymentsHelper;
 	}
 
 	/**
@@ -50,30 +50,30 @@ public class PeriodExceeds {
 						.advanceBy(Duration.ofDays(1)).grace(Duration.ofDays(app.getPeriodGrace())))
 				// aggregate amount per clientId-period
 				.aggregate(() -> 0, (clientId, transaction, sum) -> sum + transaction.getAmount(),
-						helper.dailyTotalSpentByClientId(app.getPeriodGrace() + (int) windowDuration.toDays(),
+						streamsHelper.dailyTotalSpentByClientId(app.getPeriodGrace() + (int) windowDuration.toDays(),
 								app.getWindowSize(), app.getWindowUnit()))
 				// clientIdPeriod:amount
 				.toStream((win, amount) -> keyOf(win))
 				.to(properties.getPeriodTotalSpent(),
-						helper.produceInteger("to-" + properties.getPeriodTotalSpent()));
+						streamsHelper.produceInteger("to-" + properties.getPeriodTotalSpent()));
 
 		// not using through(properties.getPeriodTotalSpent()) because we later need the related store
-		KTable<String, Integer> periodTotalSpentTable = helper.periodTotalSpentTable(streamsBuilder);
+		KTable<String, Integer> periodTotalSpentTable = streamsHelper.periodTotalSpentTable(streamsBuilder);
 
 		periodTotalSpentTable
 				.toStream()
-				.peek((clientIdPeriod, amount) -> printPeriodTotalExpenses(clientIdPeriod, amount, app.getWindowSize(), DAYS))
+				.peek((clientIdPeriod, amount) -> paymentsHelper.printPeriodTotalExpenses(clientIdPeriod, amount, app.getWindowSize(), DAYS))
 				// clientIdPeriod:amount -> clientIdPeriod:PeriodTotalSpent
-				.map(PaymentsUtils::clientIdPeriodTotalSpentOf)
+				.map(paymentsHelper::clientIdPeriodTotalSpentOf)
 				// clientId:PeriodTotalSpent join clientId:ClientProfile
 				.join(clientProfileTable,
-						joinPeriodTotalSpentWithClientProfileOnClientId(app.getWindowSize(), DAYS),
-						helper.periodTotalSpentJoinClientProfile())
+						paymentsHelper.joinPeriodTotalSpentWithClientProfileOnClientId(app.getWindowSize(), DAYS),
+						streamsHelper.periodTotalSpentJoinClientProfile())
 				// skip for less than periodMaxAmount
 				.filter((clientId, periodExceeded) -> periodExceeded != null)
 				// clientId:PeriodExceeded stream
 //				.foreach((clientId, periodExceeded) ->
 //						log.debug("\n\tclientId: {}\n\t{}", clientId, periodExceeded));
-				.to(properties.getPeriodExceeds(), helper.producePeriodExceeded());
+				.to(properties.getPeriodExceeds(), streamsHelper.producePeriodExceeded());
 	}
 }
