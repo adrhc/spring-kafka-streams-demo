@@ -64,8 +64,8 @@ public class PaymentsConfig {
 		processClientProfiles(clientProfileTable);
 
 		// total expenses per day
-		KGroupedStream<String, Transaction> trGroupedByCl = transactionsGroupedByClientId(transactions);
-		dailyExceeds.accept(trGroupedByCl, clientProfileTable, streamsBuilder);
+		KGroupedStream<String, Transaction> txGroupedByCli = txGroupedByClientId(transactions);
+		dailyExceeds.accept(txGroupedByCli, clientProfileTable, streamsBuilder);
 
 		// total expenses for a period
 		if (app.isKafkaEnhanced()) {
@@ -73,7 +73,7 @@ public class PaymentsConfig {
 			paymentsReport.accept(periodTotalSpentByClientIdStoreName(
 					app.getWindowSize(), app.getWindowUnit()), streamsBuilder);
 		} else {
-			periodExceeds.accept(trGroupedByCl, clientProfileTable, streamsBuilder);
+			periodExceeds.accept(txGroupedByCli, clientProfileTable, streamsBuilder);
 			paymentsReport.accept(streamsBuilder);
 		}
 
@@ -87,7 +87,7 @@ public class PaymentsConfig {
 	/**
 	 * group transactions by clientId
 	 */
-	private KGroupedStream<String, Transaction> transactionsGroupedByClientId(
+	private KGroupedStream<String, Transaction> txGroupedByClientId(
 			KStreamEnh<String, Transaction> transactions) {
 		return transactions
 				/*
