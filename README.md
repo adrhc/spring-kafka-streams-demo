@@ -9,8 +9,12 @@ It's about a person having a bank account with 2 cards attached: his own and one
     - extended Kafka DSL with a new operator equivalent to peek() and named tap() which also have access to headers and topic metadata  
 - querying KTable stores from within the kafka streams topology without using a REST endpoints or other similar external approach (see PaymentsReport)
 # Setup
+```bash
+export CONFLUENT_HOME="/home/adr/tools/confluent/confluent-5.4.1"
+export PATH="$CONFLUENT_HOME/bin:$PATH"
 confluent local start
-http://localhost:9021/clusters
+```
+see http://localhost:9021/clusters
 # Scenario 1: 3 DAYS, kafka enhancer OFF
 ```bash
 ./delete-topics.sh
