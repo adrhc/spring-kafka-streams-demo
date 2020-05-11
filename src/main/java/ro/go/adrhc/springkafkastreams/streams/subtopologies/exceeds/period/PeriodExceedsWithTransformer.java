@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.streams.subtopologies;
+package ro.go.adrhc.springkafkastreams.streams.subtopologies.exceeds.period;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Serdes;
@@ -11,28 +11,21 @@ import org.apache.kafka.streams.state.Stores;
 import org.springframework.stereotype.Component;
 import ro.go.adrhc.springkafkastreams.config.AppProperties;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
-import ro.go.adrhc.springkafkastreams.helper.PaymentsHelper;
 import ro.go.adrhc.springkafkastreams.helper.StreamsHelper;
 import ro.go.adrhc.springkafkastreams.messages.ClientProfile;
 import ro.go.adrhc.springkafkastreams.messages.Transaction;
 import ro.go.adrhc.springkafkastreams.streams.transformers.aggregators.DaysPeriodExpensesAggregator;
 
 import static java.time.temporal.ChronoUnit.DAYS;
-import static ro.go.adrhc.springkafkastreams.helper.StreamsHelper.periodTotalSpentByClientIdStoreName;
 
 @Component
 @Slf4j
-public class PeriodExceedsWithTransformer {
-	private final TopicsProperties properties;
-	private final AppProperties app;
+public class PeriodExceedsWithTransformer extends AbstractPeriodExceeds {
 	private final StreamsHelper streamsHelper;
-	private final PaymentsHelper paymentsHelper;
 
-	public PeriodExceedsWithTransformer(TopicsProperties properties, AppProperties app, StreamsHelper streamsHelper, PaymentsHelper paymentsHelper) {
-		this.properties = properties;
-		this.app = app;
+	public PeriodExceedsWithTransformer(TopicsProperties topicsProperties, AppProperties appProperties, StreamsHelper streamsHelper) {
+		super(topicsProperties, appProperties);
 		this.streamsHelper = streamsHelper;
-		this.paymentsHelper = paymentsHelper;
 	}
 
 	/**
@@ -43,24 +36,24 @@ public class PeriodExceedsWithTransformer {
 			KTable<String, ClientProfile> clientProfileTable, StreamsBuilder streamsBuilder) {
 		StoreBuilder<KeyValueStore<String, Integer>> periodTotalSpentStore =
 				Stores.keyValueStoreBuilder(
-						Stores.persistentKeyValueStore(periodTotalSpentByClientIdStoreName(app.getWindowSize(), app.getWindowUnit())),
+						Stores.persistentKeyValueStore(streamsHelper.periodTotalSpentByClientIdStoreName()),
 						Serdes.String(), Serdes.Integer());
 		streamsBuilder.addStateStore(periodTotalSpentStore);
 
 		transactions
-				.flatTransform(new DaysPeriodExpensesAggregator(app.getWindowSize(),
+				.flatTransform(new DaysPeriodExpensesAggregator(appProperties.getWindowSize(),
 						periodTotalSpentStore.name()), periodTotalSpentStore.name())
 				// clientIdWindow:amount
-				.peek((clientIdWindow, amount) -> paymentsHelper.printPeriodTotalExpenses(clientIdWindow, amount, app.getWindowSize(), DAYS))
+				.peek((clientIdWindow, amount) -> printPeriodTotalExpenses(clientIdWindow, amount, appProperties.getWindowSize(), DAYS))
 				// clientIdWindow:amount -> clientIdPeriod:PeriodTotalSpent
-				.map(paymentsHelper::clientIdPeriodTotalSpentOf)
+				.map(this::clientIdPeriodTotalSpentOf)
 				// clientId:PeriodTotalSpent join clientId:ClientProfile -> clientId:PeriodExceeded
 				.join(clientProfileTable,
-						paymentsHelper.joinPeriodTotalSpentWithClientProfileOnClientId(app.getWindowSize(), DAYS),
-						streamsHelper.periodTotalSpentJoinClientProfile())
+						joinPeriodTotalSpentWithClientProfileOnClientId(appProperties.getWindowSize(), DAYS),
+						periodTotalSpentJoinClientProfile())
 				// skip for less than periodMaxAmount
 				.filter((clientId, periodExceeded) -> periodExceeded != null)
 				// clientId:PeriodExceeded stream
-				.to(properties.getPeriodExceeds(), streamsHelper.producePeriodExceeded());
+				.to(topicsProperties.getPeriodExceeds(), producePeriodExceeded());
 	}
 }

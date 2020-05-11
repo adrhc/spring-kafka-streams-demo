@@ -2,27 +2,25 @@ package ro.go.adrhc.springkafkastreams.streams;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.streams.StreamsBuilder;
-import org.apache.kafka.streams.kstream.KGroupedStream;
-import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.KTable;
+import org.apache.kafka.streams.kstream.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.EnableKafkaStreams;
 import ro.go.adrhc.springkafkastreams.config.AppProperties;
+import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
 import ro.go.adrhc.springkafkastreams.enhancer.KStreamEnh;
 import ro.go.adrhc.springkafkastreams.enhancer.StreamsBuilderEnh;
 import ro.go.adrhc.springkafkastreams.helper.StreamsHelper;
 import ro.go.adrhc.springkafkastreams.messages.ClientProfile;
 import ro.go.adrhc.springkafkastreams.messages.Transaction;
-import ro.go.adrhc.springkafkastreams.streams.subtopologies.DailyExceeds;
 import ro.go.adrhc.springkafkastreams.streams.subtopologies.PaymentsReport;
-import ro.go.adrhc.springkafkastreams.streams.subtopologies.PeriodExceeds;
-import ro.go.adrhc.springkafkastreams.streams.subtopologies.PeriodExceedsWithEnhancer;
+import ro.go.adrhc.springkafkastreams.streams.subtopologies.exceeds.DailyExceeds;
+import ro.go.adrhc.springkafkastreams.streams.subtopologies.exceeds.period.PeriodExceeds;
+import ro.go.adrhc.springkafkastreams.streams.subtopologies.exceeds.period.PeriodExceedsWithEnhancer;
 
 import static ro.go.adrhc.springkafkastreams.enhancer.KafkaEnh.enhance;
-import static ro.go.adrhc.springkafkastreams.helper.StreamsHelper.periodTotalSpentByClientIdStoreName;
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.format;
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.localDateTimeOf;
 
@@ -39,15 +37,17 @@ import static ro.go.adrhc.springkafkastreams.util.DateUtils.localDateTimeOf;
 @Slf4j
 public class PaymentsConfig {
 	private final AppProperties app;
-	private final StreamsHelper helper;
+	private final TopicsProperties topicsProperties;
+	private final StreamsHelper streamsHelper;
 	private final PaymentsReport paymentsReport;
 	private final DailyExceeds dailyExceeds;
 	private final PeriodExceeds periodExceeds;
 	private final PeriodExceedsWithEnhancer periodExceedsWithEnhancer;
 
-	public PaymentsConfig(AppProperties app, StreamsHelper helper, PaymentsReport paymentsReport, DailyExceeds dailyExceeds, PeriodExceeds periodExceeds, PeriodExceedsWithEnhancer periodExceedsWithEnhancer) {
+	public PaymentsConfig(AppProperties app, TopicsProperties topicsProperties, StreamsHelper streamsHelper, PaymentsReport paymentsReport, DailyExceeds dailyExceeds, PeriodExceeds periodExceeds, PeriodExceedsWithEnhancer periodExceedsWithEnhancer) {
 		this.app = app;
-		this.helper = helper;
+		this.topicsProperties = topicsProperties;
+		this.streamsHelper = streamsHelper;
 		this.paymentsReport = paymentsReport;
 		this.dailyExceeds = dailyExceeds;
 		this.periodExceeds = periodExceeds;
@@ -58,8 +58,8 @@ public class PaymentsConfig {
 	public KStream<String, ?> transactions(StreamsBuilder pStreamsBuilder) {
 		StreamsBuilderEnh streamsBuilder = enhance(pStreamsBuilder);
 
-		KTable<String, ClientProfile> clientProfileTable = helper.clientProfileTable(streamsBuilder);
-		KStreamEnh<String, Transaction> transactions = helper.transactionsStream(streamsBuilder);
+		KTable<String, ClientProfile> clientProfileTable = clientProfileTable(streamsBuilder);
+		KStreamEnh<String, Transaction> transactions = transactionsStream(streamsBuilder);
 
 		processClientProfiles(clientProfileTable);
 
@@ -70,18 +70,13 @@ public class PaymentsConfig {
 		// total expenses for a period
 		if (app.isKafkaEnhanced()) {
 			periodExceedsWithEnhancer.accept(transactions, clientProfileTable);
-			paymentsReport.accept(periodTotalSpentByClientIdStoreName(
-					app.getWindowSize(), app.getWindowUnit()), streamsBuilder);
+			paymentsReport.accept(streamsHelper.periodTotalSpentByClientIdStoreName(), streamsBuilder);
 		} else {
 			periodExceeds.accept(txGroupedByCli, clientProfileTable, streamsBuilder);
 			paymentsReport.accept(streamsBuilder);
 		}
 
 		return transactions;
-	}
-
-	private void processClientProfiles(KTable<String, ClientProfile> clientProfileTable) {
-		clientProfileTable.toStream().foreach((clientId, profile) -> log.debug("\n\t{}", profile));
 	}
 
 	/**
@@ -102,7 +97,25 @@ public class PaymentsConfig {
 							it.value.getAmount(), app.getCurrency(), format(it.value.getTime()));
 					it.context.headers().forEach(h -> log.trace(h.toString()));
 				})
-				.groupByKey(helper.transactionsGroupedByClientId());
+				.groupByKey(transactionsGroupedByClientId());
 	}
 
+	private void processClientProfiles(KTable<String, ClientProfile> clientProfileTable) {
+		clientProfileTable.toStream().foreach((clientId, profile) -> log.debug("\n\t{}", profile));
+	}
+
+	private KTable<String, ClientProfile> clientProfileTable(StreamsBuilderEnh streamsBuilder) {
+		return streamsBuilder.table(topicsProperties.getClientProfiles(),
+				Consumed.as(topicsProperties.getClientProfiles()),
+				Materialized.as(topicsProperties.getClientProfiles()));
+	}
+
+	private KStreamEnh<String, Transaction> transactionsStream(StreamsBuilderEnh streamsBuilder) {
+		return streamsBuilder.stream(topicsProperties.getTransactions(),
+				Consumed.as(topicsProperties.getTransactions()));
+	}
+
+	private Grouped<String, Transaction> transactionsGroupedByClientId() {
+		return Grouped.as("transactionsGroupedByClientId");
+	}
 }

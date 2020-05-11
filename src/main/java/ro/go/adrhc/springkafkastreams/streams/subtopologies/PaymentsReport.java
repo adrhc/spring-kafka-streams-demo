@@ -1,13 +1,14 @@
 package ro.go.adrhc.springkafkastreams.streams.subtopologies;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.KStream;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import ro.go.adrhc.springkafkastreams.config.AppProperties;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
+import ro.go.adrhc.springkafkastreams.enhancer.KStreamEnh;
 import ro.go.adrhc.springkafkastreams.enhancer.StreamsBuilderEnh;
-import ro.go.adrhc.springkafkastreams.helper.StreamsHelper;
 import ro.go.adrhc.springkafkastreams.messages.Command;
 import ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent;
 import ro.go.adrhc.springkafkastreams.messages.PeriodTotalSpent;
@@ -23,15 +24,13 @@ import static ro.go.adrhc.springkafkastreams.util.DateUtils.format;
 @Slf4j
 public class PaymentsReport {
 	private final Environment env;
-	private final TopicsProperties properties;
-	private final AppProperties app;
-	private final StreamsHelper helper;
+	private final TopicsProperties topicsProperties;
+	private final AppProperties appProperties;
 
-	public PaymentsReport(Environment env, TopicsProperties properties, AppProperties app, StreamsHelper helper) {
+	public PaymentsReport(Environment env, TopicsProperties topicsProperties, AppProperties appProperties) {
 		this.env = env;
-		this.properties = properties;
-		this.app = app;
-		this.helper = helper;
+		this.topicsProperties = topicsProperties;
+		this.appProperties = appProperties;
 	}
 
 	/**
@@ -40,22 +39,22 @@ public class PaymentsReport {
 	 * KTable<String, Integer> periodTotalSpentTable
 	 */
 	public void accept(StreamsBuilderEnh streamsBuilder) {
-		accept(properties.getPeriodTotalSpent(), streamsBuilder);
+		accept(topicsProperties.getPeriodTotalSpent(), streamsBuilder);
 	}
 
 	public void accept(String periodTotalSpentStoreName, StreamsBuilderEnh streamsBuilder) {
-		KStream<String, Command> stream = helper.commandsStream(streamsBuilder);
+		KStream<String, Command> stream = commandsStream(streamsBuilder);
 		// daily report
 		stream
 				.filter((k, v) -> v.getParameters().contains("daily"))
 				.transformValues(
-						new DailyValueTransformerSupp(properties.getDailyTotalSpent()),
-						properties.getDailyTotalSpent())
+						new DailyValueTransformerSupp(topicsProperties.getDailyTotalSpent()),
+						topicsProperties.getDailyTotalSpent())
 				.foreach((k, list) -> {
 					list.sort(Comparator.comparing(DailyTotalSpent::getTime));
 					log.debug("\n\tDaily totals:\n\t{}", list.stream().map(it ->
 							it.getClientId() + ", " + format(it.getTime()) +
-									": " + it.getAmount() + " " + app.getCurrency())
+									": " + it.getAmount() + " " + appProperties.getCurrency())
 							.collect(Collectors.joining("\n\t")));
 				});
 		// period report
@@ -66,11 +65,11 @@ public class PaymentsReport {
 						periodTotalSpentStoreName)
 				.foreach((k, list) -> {
 					list.sort(Comparator.comparing(PeriodTotalSpent::getTime));
-					log.debug("\n\t{} {} totals:\n\t{}", app.getWindowSize(), app.getWindowUnit(),
+					log.debug("\n\t{} {} totals:\n\t{}", appProperties.getWindowSize(), appProperties.getWindowUnit(),
 							list.stream().map(it -> it.getClientId() + ", " +
-									format(it.getTime().minus(app.getWindowSize(), app.getWindowUnit()).plusDays(1))
+									format(it.getTime().minus(appProperties.getWindowSize(), appProperties.getWindowUnit()).plusDays(1))
 									+ " - " + format(it.getTime()) + ": " +
-									it.getAmount() + " " + app.getCurrency())
+									it.getAmount() + " " + appProperties.getCurrency())
 									.collect(Collectors.joining("\n\t")));
 				});
 		// configuration report
@@ -78,7 +77,12 @@ public class PaymentsReport {
 				.filter((k, v) -> v.getParameters().contains("config"))
 				.foreach((k, v) -> log.debug("\n\tConfiguration:\n\tspring profiles = {}\n\tapp version = {}" +
 								"\n\twindowSize = {}\n\twindowUnit = {}\n\tKafka enhancements = {}",
-						env.getActiveProfiles(), app.getVersion(), app.getWindowSize(),
-						app.getWindowUnit(), app.isKafkaEnhanced()));
+						env.getActiveProfiles(), appProperties.getVersion(), appProperties.getWindowSize(),
+						appProperties.getWindowUnit(), appProperties.isKafkaEnhanced()));
+	}
+
+	private KStreamEnh<String, Command> commandsStream(StreamsBuilderEnh streamsBuilder) {
+		return streamsBuilder.stream(topicsProperties.getCommands(),
+				Consumed.as(topicsProperties.getCommands()));
 	}
 }
