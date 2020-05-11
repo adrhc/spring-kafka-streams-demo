@@ -9,7 +9,7 @@ import org.apache.kafka.streams.state.KeyValueStore;
 import org.springframework.stereotype.Component;
 import ro.go.adrhc.springkafkastreams.config.AppProperties;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
-import ro.go.adrhc.springkafkastreams.enhancer.StreamsBuilderEnh;
+import ro.go.adrhc.springkafkastreams.ksdsl.StreamsBuilderEnh;
 import ro.go.adrhc.springkafkastreams.messages.ClientProfile;
 import ro.go.adrhc.springkafkastreams.messages.PeriodTotalSpent;
 import ro.go.adrhc.springkafkastreams.messages.Transaction;

@@ -8,8 +8,8 @@ import org.apache.kafka.streams.state.KeyValueStore;
 import org.springframework.stereotype.Component;
 import ro.go.adrhc.springkafkastreams.config.AppProperties;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
-import ro.go.adrhc.springkafkastreams.enhancer.KStreamEnh;
-import ro.go.adrhc.springkafkastreams.helper.StreamsHelper;
+import ro.go.adrhc.springkafkastreams.ksdsl.KStreamEnh;
+import ro.go.adrhc.springkafkastreams.helpers.StreamsHelper;
 import ro.go.adrhc.springkafkastreams.messages.ClientProfile;
 import ro.go.adrhc.springkafkastreams.messages.Transaction;
 

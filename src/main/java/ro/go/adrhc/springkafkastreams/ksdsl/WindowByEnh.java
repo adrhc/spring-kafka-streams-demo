@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.enhancer;
+package ro.go.adrhc.springkafkastreams.ksdsl;
 
 import lombok.AllArgsConstructor;
 import org.apache.kafka.common.serialization.Serdes;
@@ -8,7 +8,7 @@ import org.apache.kafka.streams.processor.StateStore;
 import org.apache.kafka.streams.state.KeyValueStore;
 import org.apache.kafka.streams.state.StoreBuilder;
 import org.apache.kafka.streams.state.Stores;
-import ro.go.adrhc.springkafkastreams.enhancer.aggregators.PeriodAggregator;
+import ro.go.adrhc.springkafkastreams.ksdsl.aggregators.PeriodAggregator;
 
 import java.time.temporal.TemporalUnit;
 

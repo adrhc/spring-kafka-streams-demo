@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.enhancer;
+package ro.go.adrhc.springkafkastreams.ksdsl;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.enhancer;
+package ro.go.adrhc.springkafkastreams.ksdsl;
 
 import lombok.AllArgsConstructor;
 import org.apache.kafka.streams.KeyValue;
@@ -6,8 +6,8 @@ import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.*;
 import org.apache.kafka.streams.processor.ProcessorSupplier;
 import org.apache.kafka.streams.processor.TopicNameExtractor;
-import ro.go.adrhc.springkafkastreams.enhancer.operators.KTap;
-import ro.go.adrhc.springkafkastreams.enhancer.operators.KTapParams;
+import ro.go.adrhc.springkafkastreams.ksdsl.operators.KTap;
+import ro.go.adrhc.springkafkastreams.ksdsl.operators.KTapParams;
 
 import java.time.temporal.TemporalUnit;
 import java.util.function.Consumer;

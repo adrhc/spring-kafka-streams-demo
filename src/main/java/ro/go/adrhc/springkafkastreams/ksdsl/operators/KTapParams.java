@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.enhancer.operators;
+package ro.go.adrhc.springkafkastreams.ksdsl.operators;
 
 import lombok.AllArgsConstructor;
 

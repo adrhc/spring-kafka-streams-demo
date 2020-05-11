@@ -10,17 +10,17 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.EnableKafkaStreams;
 import ro.go.adrhc.springkafkastreams.config.AppProperties;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
-import ro.go.adrhc.springkafkastreams.enhancer.KStreamEnh;
-import ro.go.adrhc.springkafkastreams.enhancer.StreamsBuilderEnh;
-import ro.go.adrhc.springkafkastreams.helper.StreamsHelper;
+import ro.go.adrhc.springkafkastreams.helpers.StreamsHelper;
+import ro.go.adrhc.springkafkastreams.ksdsl.KStreamEnh;
+import ro.go.adrhc.springkafkastreams.ksdsl.StreamsBuilderEnh;
 import ro.go.adrhc.springkafkastreams.messages.ClientProfile;
 import ro.go.adrhc.springkafkastreams.messages.Transaction;
-import ro.go.adrhc.springkafkastreams.streams.topologies.reports.PaymentsReport;
 import ro.go.adrhc.springkafkastreams.streams.topologies.exceeds.DailyExceeds;
 import ro.go.adrhc.springkafkastreams.streams.topologies.exceeds.period.PeriodExceeds;
 import ro.go.adrhc.springkafkastreams.streams.topologies.exceeds.period.PeriodExceedsWithEnhancer;
+import ro.go.adrhc.springkafkastreams.streams.topologies.reports.PaymentsReport;
 
-import static ro.go.adrhc.springkafkastreams.enhancer.KafkaEnh.enhance;
+import static ro.go.adrhc.springkafkastreams.ksdsl.KafkaEnh.enhance;
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.format;
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.localDateTimeOf;
 

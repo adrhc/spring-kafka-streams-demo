@@ -9,7 +9,7 @@ import org.apache.kafka.streams.state.KeyValueStore;
 import org.springframework.stereotype.Component;
 import ro.go.adrhc.springkafkastreams.config.AppProperties;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
-import ro.go.adrhc.springkafkastreams.enhancer.StreamsBuilderEnh;
+import ro.go.adrhc.springkafkastreams.ksdsl.StreamsBuilderEnh;
 import ro.go.adrhc.springkafkastreams.messages.ClientProfile;
 import ro.go.adrhc.springkafkastreams.messages.DailyExceeded;
 import ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent;
@@ -53,8 +53,8 @@ public class DailyExceeds extends AbstractExceeds {
 				// save clientIdDay:amount into a compact stream (aka table)
 				.to(topicsProperties.getDailyTotalSpent(),
 						produceInteger("to-" + topicsProperties.getDailyTotalSpent()));
-//				.through(properties.getDailyTotalSpent(),
-//						helper.produceInteger("to-" + properties.getDailyTotalSpent() + "-stream"))
+//				.through(topicsProperties.getDailyTotalSpent(),
+//						produceInteger("to-" + properties.getDailyTotalSpent() + "-stream"))
 
 		// not using through(properties.getDailyTotalSpent() because we later need the related store
 		KTable<String, Integer> dailyTotalSpentTable = dailyTotalSpentTable(streamsBuilder);

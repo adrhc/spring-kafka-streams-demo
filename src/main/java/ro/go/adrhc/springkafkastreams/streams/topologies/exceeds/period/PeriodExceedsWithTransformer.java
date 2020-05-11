@@ -11,7 +11,7 @@ import org.apache.kafka.streams.state.Stores;
 import org.springframework.stereotype.Component;
 import ro.go.adrhc.springkafkastreams.config.AppProperties;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
-import ro.go.adrhc.springkafkastreams.helper.StreamsHelper;
+import ro.go.adrhc.springkafkastreams.helpers.StreamsHelper;
 import ro.go.adrhc.springkafkastreams.messages.ClientProfile;
 import ro.go.adrhc.springkafkastreams.messages.Transaction;
 import ro.go.adrhc.springkafkastreams.streams.topologies.exceeds.period.aggregators.DaysPeriodExpensesAggregator;

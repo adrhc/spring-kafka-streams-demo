@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.helper;
+package ro.go.adrhc.springkafkastreams.helpers;
 
 import org.springframework.stereotype.Component;
 import ro.go.adrhc.springkafkastreams.config.AppProperties;
