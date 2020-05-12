@@ -1,0 +1,70 @@
+{
+  "namespace": "ro.go.adrhc.springkafkastreams.payments.messages",
+  "protocol": "PaymentsProtocol",
+  "doc": "payments protocol",
+  "types": [
+	{
+	  "name": "ClientProfile",
+	  "type": "record",
+	  "fields": [
+		{
+		  "name": "clientId",
+		  "type": "string"
+		},
+		{
+		  "name": "dailyMaxAmount",
+		  "type": "int"
+		},
+		{
+		  "name": "periodMaxAmount",
+		  "type": "int"
+		}
+	  ]
+	},
+	{
+	  "name": "Transaction",
+	  "type": "record",
+	  "fields": [
+		{
+		  "name": "time",
+		  "type": {
+			"type": "int",
+			"logicalType": "date"
+		  }
+		},
+		{
+		  "name": "merchantId",
+		  "type": "string"
+		},
+		{
+		  "name": "clientId",
+		  "type": "string"
+		},
+		{
+		  "name": "amount",
+		  "type": "int"
+		}
+	  ]
+	},
+	{
+	  "name": "Command",
+	  "type": "record",
+	  "fields": [
+		{
+		  "name": "name",
+		  "type": "string"
+		},
+		{
+		  "name": "parameters",
+		  "type": [
+			"null",
+			{
+			  "type": "array",
+			  "items": "string"
+			}
+		  ]
+		}
+	  ]
+	}
+  ]
+}

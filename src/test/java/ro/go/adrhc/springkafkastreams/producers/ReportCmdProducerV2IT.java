@@ -6,16 +6,19 @@ import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.ActiveProfiles;
+import ro.go.adrhc.springkafkastreams.config.KafkaTemplateConfig;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
-import ro.go.adrhc.springkafkastreams.messages.Command;
+import ro.go.adrhc.springkafkastreams.payments.messages.Command;
 
 import java.util.List;
 
 @EnabledIfSystemProperty(named = "enableIT", matches = "true")
 @ActiveProfiles({"v2", "test"})
+@Import(KafkaTemplateConfig.class)
 @SpringBootTest
 @Slf4j
 public class ReportCmdProducerV2IT {
