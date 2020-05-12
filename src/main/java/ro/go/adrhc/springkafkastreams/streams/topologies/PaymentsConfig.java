@@ -10,7 +10,6 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.EnableKafkaStreams;
 import ro.go.adrhc.springkafkastreams.config.AppProperties;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
-import ro.go.adrhc.springkafkastreams.helpers.StreamsHelper;
 import ro.go.adrhc.springkafkastreams.ksdsl.KStreamEnh;
 import ro.go.adrhc.springkafkastreams.ksdsl.StreamsBuilderEnh;
 import ro.go.adrhc.springkafkastreams.messages.ClientProfile;
@@ -38,16 +37,14 @@ import static ro.go.adrhc.springkafkastreams.util.DateUtils.localDateTimeOf;
 public class PaymentsConfig {
 	private final AppProperties app;
 	private final TopicsProperties topicsProperties;
-	private final StreamsHelper streamsHelper;
 	private final PaymentsReport paymentsReport;
 	private final DailyExceeds dailyExceeds;
 	private final PeriodExceeds periodExceeds;
 	private final PeriodExceedsWithEnhancer periodExceedsWithEnhancer;
 
-	public PaymentsConfig(AppProperties app, TopicsProperties topicsProperties, StreamsHelper streamsHelper, PaymentsReport paymentsReport, DailyExceeds dailyExceeds, PeriodExceeds periodExceeds, PeriodExceedsWithEnhancer periodExceedsWithEnhancer) {
+	public PaymentsConfig(AppProperties app, TopicsProperties topicsProperties, PaymentsReport paymentsReport, DailyExceeds dailyExceeds, PeriodExceeds periodExceeds, PeriodExceedsWithEnhancer periodExceedsWithEnhancer) {
 		this.app = app;
 		this.topicsProperties = topicsProperties;
-		this.streamsHelper = streamsHelper;
 		this.paymentsReport = paymentsReport;
 		this.dailyExceeds = dailyExceeds;
 		this.periodExceeds = periodExceeds;
@@ -70,10 +67,10 @@ public class PaymentsConfig {
 		// total expenses for a period
 		if (app.isKafkaEnhanced()) {
 			periodExceedsWithEnhancer.accept(transactions, clientProfileTable);
-			paymentsReport.accept(streamsHelper.periodTotalSpentByClientIdStoreName(), streamsBuilder);
+			paymentsReport.accept(periodExceedsWithEnhancer.periodTotalSpentByClientIdStoreName(), streamsBuilder);
 		} else {
 			periodExceeds.accept(txGroupedByCli, clientProfileTable, streamsBuilder);
-			paymentsReport.accept(streamsBuilder);
+			paymentsReport.accept(topicsProperties.getPeriodTotalSpent(), streamsBuilder);
 		}
 
 		return transactions;

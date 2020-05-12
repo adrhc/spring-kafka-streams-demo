@@ -9,18 +9,14 @@ import org.springframework.stereotype.Component;
 import ro.go.adrhc.springkafkastreams.config.AppProperties;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
 import ro.go.adrhc.springkafkastreams.ksdsl.KStreamEnh;
-import ro.go.adrhc.springkafkastreams.helpers.StreamsHelper;
 import ro.go.adrhc.springkafkastreams.messages.ClientProfile;
 import ro.go.adrhc.springkafkastreams.messages.Transaction;
 
 @Component
 @Slf4j
 public class PeriodExceedsWithEnhancer extends AbstractPeriodExceeds {
-	private final StreamsHelper streamsHelper;
-
-	public PeriodExceedsWithEnhancer(TopicsProperties topicsProperties, AppProperties appProperties, StreamsHelper streamsHelper) {
+	public PeriodExceedsWithEnhancer(TopicsProperties topicsProperties, AppProperties appProperties) {
 		super(topicsProperties, appProperties);
-		this.streamsHelper = streamsHelper;
 	}
 
 	/**
@@ -54,7 +50,7 @@ public class PeriodExceedsWithEnhancer extends AbstractPeriodExceeds {
 	private Materialized<String, Integer, KeyValueStore<String, Integer>>
 	periodTotalSpentByClientId() {
 		return Materialized.<String, Integer, KeyValueStore<String, Integer>>
-				as(streamsHelper.periodTotalSpentByClientIdStoreName())
+				as(periodTotalSpentByClientIdStoreName())
 				.withValueSerde(Serdes.Integer());
 	}
 }

@@ -38,11 +38,7 @@ public class PaymentsReport {
 	 * KTable<String, Integer> dailyTotalSpentTable
 	 * KTable<String, Integer> periodTotalSpentTable
 	 */
-	public void accept(StreamsBuilderEnh streamsBuilder) {
-		accept(topicsProperties.getPeriodTotalSpent(), streamsBuilder);
-	}
-
-	public void accept(String periodTotalSpentStoreName, StreamsBuilderEnh streamsBuilder) {
+	public void accept(String totalSpentStoreName, StreamsBuilderEnh streamsBuilder) {
 		KStream<String, Command> stream = commandsStream(streamsBuilder);
 		// daily report
 		stream
@@ -61,8 +57,8 @@ public class PaymentsReport {
 		stream
 				.filter((k, v) -> v.getParameters().contains("period"))
 				.transformValues(
-						new PeriodValueTransformerSupp(periodTotalSpentStoreName),
-						periodTotalSpentStoreName)
+						new PeriodValueTransformerSupp(totalSpentStoreName),
+						totalSpentStoreName)
 				.foreach((k, list) -> {
 					list.sort(Comparator.comparing(PeriodTotalSpent::getTime));
 					log.debug("\n\t{} {} totals:\n\t{}", appProperties.getWindowSize(), appProperties.getWindowUnit(),

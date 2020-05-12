@@ -11,7 +11,6 @@ import org.apache.kafka.streams.state.Stores;
 import org.springframework.stereotype.Component;
 import ro.go.adrhc.springkafkastreams.config.AppProperties;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
-import ro.go.adrhc.springkafkastreams.helpers.StreamsHelper;
 import ro.go.adrhc.springkafkastreams.messages.ClientProfile;
 import ro.go.adrhc.springkafkastreams.messages.Transaction;
 import ro.go.adrhc.springkafkastreams.streams.topologies.exceeds.period.aggregators.DaysPeriodExpensesAggregator;
@@ -21,11 +20,8 @@ import static java.time.temporal.ChronoUnit.DAYS;
 @Component
 @Slf4j
 public class PeriodExceedsWithTransformer extends AbstractPeriodExceeds {
-	private final StreamsHelper streamsHelper;
-
-	public PeriodExceedsWithTransformer(TopicsProperties topicsProperties, AppProperties appProperties, StreamsHelper streamsHelper) {
+	public PeriodExceedsWithTransformer(TopicsProperties topicsProperties, AppProperties appProperties) {
 		super(topicsProperties, appProperties);
-		this.streamsHelper = streamsHelper;
 	}
 
 	/**
@@ -36,7 +32,7 @@ public class PeriodExceedsWithTransformer extends AbstractPeriodExceeds {
 			KTable<String, ClientProfile> clientProfileTable, StreamsBuilder streamsBuilder) {
 		StoreBuilder<KeyValueStore<String, Integer>> periodTotalSpentStore =
 				Stores.keyValueStoreBuilder(
-						Stores.persistentKeyValueStore(streamsHelper.periodTotalSpentByClientIdStoreName()),
+						Stores.persistentKeyValueStore(periodTotalSpentByClientIdStoreName()),
 						Serdes.String(), Serdes.Integer());
 		streamsBuilder.addStateStore(periodTotalSpentStore);
 

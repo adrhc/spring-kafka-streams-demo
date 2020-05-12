@@ -66,4 +66,8 @@ public abstract class AbstractPeriodExceeds extends AbstractExceeds {
 				clientIdWindow.key(), amount, appProperties.getCurrency(),
 				format(time.minus(windowSize, unit).plusDays(1)), format(time));
 	}
+
+	public String periodTotalSpentByClientIdStoreName() {
+		return "periodTotalSpentByClientId-" + appProperties.getWindowSize() + appProperties.getWindowUnit().toString();
+	}
 }
