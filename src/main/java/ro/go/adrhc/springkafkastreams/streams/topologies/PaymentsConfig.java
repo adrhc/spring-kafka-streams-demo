@@ -82,12 +82,7 @@ public class PaymentsConfig {
 	private KGroupedStream<String, Transaction> txGroupedByClientId(
 			KStreamEnh<String, Transaction> transactions) {
 		return transactions
-				/*
-				 * Wire Tap operator implementation
-				 * see https://www.enterpriseintegrationpatterns.com/patterns/messaging/WireTap.html
-				 * similar to peek() but also allow partially access to ProcessorContext
-				 */
-				.tap(it -> {
+				.peek(it -> {
 					log.trace("\n\ttopic: {}\n\ttimestamp: {}",
 							it.context.topic(), localDateTimeOf(it.context.timestamp()));
 					log.debug("\n\t{} spent {} {} on {}", it.key,

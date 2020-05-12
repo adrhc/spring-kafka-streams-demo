@@ -7,7 +7,7 @@ import org.apache.kafka.streams.kstream.*;
 import org.apache.kafka.streams.processor.ProcessorSupplier;
 import org.apache.kafka.streams.processor.TopicNameExtractor;
 import ro.go.adrhc.springkafkastreams.ksdsl.operators.KTap;
-import ro.go.adrhc.springkafkastreams.ksdsl.operators.KTapParams;
+import ro.go.adrhc.springkafkastreams.ksdsl.operators.KPeekParams;
 
 import java.time.temporal.TemporalUnit;
 import java.util.function.Consumer;
@@ -21,7 +21,10 @@ public class KStreamEnh<K, V> implements KStream<K, V> {
 		return new WindowByEnh<>(windowSize, unit, delegate, streamsBuilder);
 	}
 
-	public KStreamEnh<K, V> tap(Consumer<KTapParams<K, V>> consumer) {
+	/**
+	 * similar to KStream.peek() but also allow partially access to ProcessorContext
+	 */
+	public KStreamEnh<K, V> peek(Consumer<KPeekParams<K, V>> consumer) {
 		return new KStreamEnh<>(delegate.transformValues(new KTap<>(consumer)), streamsBuilder);
 	}
 

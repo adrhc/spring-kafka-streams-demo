@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 
 @AllArgsConstructor
 public class KTap<K, V> implements ValueTransformerWithKeySupplier<K, V, V> {
-	private final Consumer<KTapParams<K, V>> consumer;
+	private final Consumer<KPeekParams<K, V>> consumer;
 
 	public ValueTransformerWithKey<K, V, V> get() {
 		return new ValueTransformerWithKey<>() {
@@ -23,7 +23,7 @@ public class KTap<K, V> implements ValueTransformerWithKeySupplier<K, V, V> {
 
 			@Override
 			public V transform(K readOnlyKey, V value) {
-				consumer.accept(new KTapParams<>(readOnlyKey, value, new KTapContext(context)));
+				consumer.accept(new KPeekParams<>(readOnlyKey, value, new KTapContext(context)));
 				return value;
 			}
 
