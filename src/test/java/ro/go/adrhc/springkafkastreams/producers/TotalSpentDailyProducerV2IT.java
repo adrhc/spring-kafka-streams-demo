@@ -10,10 +10,10 @@ import org.springframework.core.env.Environment;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
-import ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent;
+import ro.go.adrhc.springkafkastreams.topologies.exceeds.daily.messages.DailyTotalSpent;
 
+import static ro.go.adrhc.springkafkastreams.streams.kstream.operators.aggregators.LocalDateBasedKey.keyOf;
 import static ro.go.adrhc.springkafkastreams.util.AbstractTestDTOFactory.randomDailyTotalSpent;
-import static ro.go.adrhc.springkafkastreams.util.streams.LocalDateBasedKey.keyOf;
 
 @EnabledIfSystemProperty(named = "enableIT", matches = "true")
 @ActiveProfiles({"v2", "test"})

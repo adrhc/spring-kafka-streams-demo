@@ -1,0 +1,58 @@
+package ro.go.adrhc.springkafkastreams.streams.kstream.operators.aggregators;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.streams.kstream.Windowed;
+
+import java.text.MessageFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
+
+import static ro.go.adrhc.springkafkastreams.util.DateUtils.localDateOf;
+
+@Getter
+@AllArgsConstructor
+@Slf4j
+public class LocalDateBasedKey<T> {
+	private static final ThreadLocal<MessageFormat> WINDOW_KEY =
+			ThreadLocal.withInitial(() -> new MessageFormat("{0}-{1}"));
+	private static final DateTimeFormatter keyLocalDateFormat =
+			DateTimeFormatter.ofPattern("yyyy.MM.dd");
+
+	private final T data;
+	private final LocalDate time;
+
+	/**
+	 * includingEndDate means that is the included end date of a time period
+	 */
+	public static <T> String keyOf(T data, LocalDate includingEndDate) {
+		return data.toString() + '-' + includingEndDate.format(keyLocalDateFormat);
+	}
+
+	/**
+	 * key = clientId-windowEndingDateMinus1
+	 * windowEndingDateMinus1 is an "including" date
+	 */
+	public static <T> String keyOf(Windowed<T> windowed) {
+		return LocalDateBasedKey.keyOf(windowed.key().toString(),
+				localDateOf(windowed.window().end()).minusDays(1));
+	}
+
+	public static <T> LocalDateBasedKey<T> convert(Windowed<T> clientIdWindow) {
+		return new LocalDateBasedKey<T>(clientIdWindow.key(), localDateOf(clientIdWindow.window().end()).minusDays(1));
+	}
+
+	public static Optional<LocalDateBasedKey<String>> parseWithStringData(String key) {
+		Object[] parts;
+		try {
+			parts = WINDOW_KEY.get().parse(key);
+			return Optional.of(new LocalDateBasedKey<>((String) parts[0],
+					keyLocalDateFormat.parse((String) parts[1], LocalDate::from)));
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			return Optional.empty();
+		}
+	}
+}

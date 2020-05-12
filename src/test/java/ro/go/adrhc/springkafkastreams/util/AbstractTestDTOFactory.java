@@ -2,8 +2,8 @@ package ro.go.adrhc.springkafkastreams.util;
 
 import org.apache.commons.lang3.RandomUtils;
 import ro.go.adrhc.springkafkastreams.messages.ClientProfile;
-import ro.go.adrhc.springkafkastreams.messages.DailyTotalSpent;
 import ro.go.adrhc.springkafkastreams.messages.Transaction;
+import ro.go.adrhc.springkafkastreams.topologies.exceeds.daily.messages.DailyTotalSpent;
 
 import java.time.Instant;
 import java.time.LocalDate;
