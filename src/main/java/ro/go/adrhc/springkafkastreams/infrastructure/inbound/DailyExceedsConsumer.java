@@ -1,23 +1,23 @@
-package ro.go.adrhc.springkafkastreams.consumers;
+package ro.go.adrhc.springkafkastreams.infrastructure.inbound;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+import ro.go.adrhc.springkafkastreams.infrastructure.outbound.PhoneMessageSender;
 import ro.go.adrhc.springkafkastreams.payments.exceeds.daily.messages.DailyExceeded;
-import ro.go.adrhc.springkafkastreams.services.PhoneMessageSender;
 
 @Profile("!test")
 @Component
 @Slf4j
 public class DailyExceedsConsumer {
-	private final PhoneMessageSender sender;
+	private final PhoneMessageSender phoneMessageSender;
 
-	public DailyExceedsConsumer(PhoneMessageSender sender) {this.sender = sender;}
+	public DailyExceedsConsumer(PhoneMessageSender phoneMessageSender) {this.phoneMessageSender = phoneMessageSender;}
 
 	@KafkaListener(id = "dailyExceedsNotifier", topics = "${topic.daily-exceeds}",
 			clientIdPrefix = "dailyExceedsConsumer")
 	public void consume(DailyExceeded de) {
-		sender.send(de);
+		phoneMessageSender.send(de);
 	}
 }

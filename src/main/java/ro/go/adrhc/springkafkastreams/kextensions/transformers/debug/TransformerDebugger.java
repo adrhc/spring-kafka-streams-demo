@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.util.transformers.debug;
+package ro.go.adrhc.springkafkastreams.kextensions.transformers.debug;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.streams.KeyValue;

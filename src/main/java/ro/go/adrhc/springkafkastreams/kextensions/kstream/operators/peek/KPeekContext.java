@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.kenhancements.kstream.operators.peek;
+package ro.go.adrhc.springkafkastreams.kextensions.kstream.operators.peek;
 
 import lombok.AllArgsConstructor;
 import org.apache.kafka.common.header.Headers;

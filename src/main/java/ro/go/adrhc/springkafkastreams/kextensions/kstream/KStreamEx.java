@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.kenhancements.kstream;
+package ro.go.adrhc.springkafkastreams.kextensions.kstream;
 
 import lombok.AllArgsConstructor;
 import org.apache.kafka.streams.KeyValue;
@@ -6,27 +6,27 @@ import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.*;
 import org.apache.kafka.streams.processor.ProcessorSupplier;
 import org.apache.kafka.streams.processor.TopicNameExtractor;
-import ro.go.adrhc.springkafkastreams.kenhancements.kstream.operators.aggregators.WindowByEnh;
-import ro.go.adrhc.springkafkastreams.kenhancements.kstream.operators.peek.KPeek;
-import ro.go.adrhc.springkafkastreams.kenhancements.kstream.operators.peek.KPeekParams;
+import ro.go.adrhc.springkafkastreams.kextensions.kstream.operators.aggregators.WindowByEx;
+import ro.go.adrhc.springkafkastreams.kextensions.kstream.operators.peek.KPeek;
+import ro.go.adrhc.springkafkastreams.kextensions.kstream.operators.peek.KPeekParams;
 
 import java.time.temporal.TemporalUnit;
 import java.util.function.Consumer;
 
 @AllArgsConstructor
-public class KStreamEnh<K, V> implements KStream<K, V> {
+public class KStreamEx<K, V> implements KStream<K, V> {
 	private final KStream<K, V> delegate;
 	private final StreamsBuilder streamsBuilder;
 
-	public WindowByEnh<K, V> windowedBy(int windowSize, TemporalUnit unit) {
-		return new WindowByEnh<>(windowSize, unit, delegate, streamsBuilder);
+	public WindowByEx<K, V> windowedBy(int windowSize, TemporalUnit unit) {
+		return new WindowByEx<>(windowSize, unit, delegate, streamsBuilder);
 	}
 
 	/**
 	 * similar to KStream.peek() but also allow partially access to ProcessorContext
 	 */
-	public KStreamEnh<K, V> peek(Consumer<KPeekParams<K, V>> consumer) {
-		return new KStreamEnh<>(delegate.transformValues(new KPeek<>(consumer)), streamsBuilder);
+	public KStreamEx<K, V> peek(Consumer<KPeekParams<K, V>> consumer) {
+		return new KStreamEx<>(delegate.transformValues(new KPeek<>(consumer)), streamsBuilder);
 	}
 
 	@Override
@@ -63,8 +63,8 @@ public class KStreamEnh<K, V> implements KStream<K, V> {
 	public void foreach(ForeachAction<? super K, ? super V> action) {delegate.foreach(action);}
 
 	@Override
-	public KStreamEnh<K, V> peek(ForeachAction<? super K, ? super V> action) {
-		return new KStreamEnh<>(delegate.peek(action), streamsBuilder);
+	public KStreamEx<K, V> peek(ForeachAction<? super K, ? super V> action) {
+		return new KStreamEx<>(delegate.peek(action), streamsBuilder);
 	}
 
 	@Override

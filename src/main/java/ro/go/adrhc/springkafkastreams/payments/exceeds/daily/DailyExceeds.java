@@ -14,15 +14,15 @@ import ro.go.adrhc.springkafkastreams.payments.exceeds.daily.messages.DailyExcee
 import ro.go.adrhc.springkafkastreams.payments.exceeds.daily.messages.DailyTotalSpent;
 import ro.go.adrhc.springkafkastreams.payments.messages.ClientProfile;
 import ro.go.adrhc.springkafkastreams.payments.messages.Transaction;
-import ro.go.adrhc.springkafkastreams.kenhancements.StreamsBuilderEnh;
-import ro.go.adrhc.springkafkastreams.kenhancements.kstream.operators.aggregators.LocalDateBasedKey;
+import ro.go.adrhc.springkafkastreams.kextensions.StreamsBuilderEx;
+import ro.go.adrhc.springkafkastreams.kextensions.kstream.operators.aggregators.LocalDateBasedKey;
 
 import java.time.Duration;
 import java.util.Optional;
 
 import static java.time.temporal.ChronoUnit.DAYS;
-import static ro.go.adrhc.springkafkastreams.kenhancements.kstream.operators.aggregators.LocalDateBasedKey.keyOf;
-import static ro.go.adrhc.springkafkastreams.kenhancements.kstream.operators.aggregators.LocalDateBasedKey.parseWithStringData;
+import static ro.go.adrhc.springkafkastreams.kextensions.kstream.operators.aggregators.LocalDateBasedKey.keyOf;
+import static ro.go.adrhc.springkafkastreams.kextensions.kstream.operators.aggregators.LocalDateBasedKey.parseWithStringData;
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.format;
 
 @Component
@@ -41,7 +41,7 @@ public class DailyExceeds extends AbstractExceeds {
 	 * using Tumbling time window
 	 */
 	public void accept(KGroupedStream<String, Transaction> groupedTransactions,
-			KTable<String, ClientProfile> clientProfileTable, StreamsBuilderEnh streamsBuilder) {
+			KTable<String, ClientProfile> clientProfileTable, StreamsBuilderEx streamsBuilder) {
 		groupedTransactions
 				// group by 1 day
 				.windowedBy(TimeWindows.of(Duration.ofDays(1))
@@ -80,7 +80,7 @@ public class DailyExceeds extends AbstractExceeds {
 		return Produced.as(topicsProperties.getDailyExceeds());
 	}
 
-	private KTable<String, Integer> dailyTotalSpentTable(StreamsBuilderEnh streamsBuilder) {
+	private KTable<String, Integer> dailyTotalSpentTable(StreamsBuilderEx streamsBuilder) {
 		return streamsBuilder.table(topicsProperties.getDailyTotalSpent(),
 				Consumed.<String, Integer>
 						as(topicsProperties.getDailyTotalSpent())

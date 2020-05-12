@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.kenhancements.kstream.operators.aggregators;
+package ro.go.adrhc.springkafkastreams.kextensions.kstream.operators.aggregators;
 
 import lombok.AllArgsConstructor;
 import org.apache.kafka.common.serialization.Serdes;
@@ -8,12 +8,12 @@ import org.apache.kafka.streams.processor.StateStore;
 import org.apache.kafka.streams.state.KeyValueStore;
 import org.apache.kafka.streams.state.StoreBuilder;
 import org.apache.kafka.streams.state.Stores;
-import ro.go.adrhc.springkafkastreams.kenhancements.kstream.MaterializedEx;
+import ro.go.adrhc.springkafkastreams.kextensions.kstream.MaterializedEx;
 
 import java.time.temporal.TemporalUnit;
 
 @AllArgsConstructor
-public class WindowByEnh<K, V> {
+public class WindowByEx<K, V> {
 	private final int windowSize;
 	private final TemporalUnit unit;
 	private final KStream<K, V> kStream;

@@ -12,14 +12,14 @@ import ro.go.adrhc.springkafkastreams.config.AppProperties;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
 import ro.go.adrhc.springkafkastreams.payments.exceeds.daily.DailyExceeds;
 import ro.go.adrhc.springkafkastreams.payments.exceeds.period.PeriodExceeds;
-import ro.go.adrhc.springkafkastreams.payments.exceeds.period.PeriodExceedsWithEnhancer;
+import ro.go.adrhc.springkafkastreams.payments.exceeds.period.PeriodExceedsWithExtensions;
 import ro.go.adrhc.springkafkastreams.payments.messages.ClientProfile;
 import ro.go.adrhc.springkafkastreams.payments.messages.Transaction;
 import ro.go.adrhc.springkafkastreams.payments.reports.PaymentsReport;
-import ro.go.adrhc.springkafkastreams.kenhancements.StreamsBuilderEnh;
-import ro.go.adrhc.springkafkastreams.kenhancements.kstream.KStreamEnh;
+import ro.go.adrhc.springkafkastreams.kextensions.StreamsBuilderEx;
+import ro.go.adrhc.springkafkastreams.kextensions.kstream.KStreamEx;
 
-import static ro.go.adrhc.springkafkastreams.kenhancements.util.KafkaEnh.enhance;
+import static ro.go.adrhc.springkafkastreams.kextensions.util.KafkaEx.enhance;
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.format;
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.localDateTimeOf;
 
@@ -40,23 +40,23 @@ public class PaymentsConfig {
 	private final PaymentsReport paymentsReport;
 	private final DailyExceeds dailyExceeds;
 	private final PeriodExceeds periodExceeds;
-	private final PeriodExceedsWithEnhancer periodExceedsWithEnhancer;
+	private final PeriodExceedsWithExtensions periodExceedsWithExtensions;
 
-	public PaymentsConfig(AppProperties app, TopicsProperties topicsProperties, PaymentsReport paymentsReport, DailyExceeds dailyExceeds, PeriodExceeds periodExceeds, PeriodExceedsWithEnhancer periodExceedsWithEnhancer) {
+	public PaymentsConfig(AppProperties app, TopicsProperties topicsProperties, PaymentsReport paymentsReport, DailyExceeds dailyExceeds, PeriodExceeds periodExceeds, PeriodExceedsWithExtensions periodExceedsWithExtensions) {
 		this.app = app;
 		this.topicsProperties = topicsProperties;
 		this.paymentsReport = paymentsReport;
 		this.dailyExceeds = dailyExceeds;
 		this.periodExceeds = periodExceeds;
-		this.periodExceedsWithEnhancer = periodExceedsWithEnhancer;
+		this.periodExceedsWithExtensions = periodExceedsWithExtensions;
 	}
 
 	@Bean
 	public KStream<String, ?> transactions(StreamsBuilder pStreamsBuilder) {
-		StreamsBuilderEnh streamsBuilder = enhance(pStreamsBuilder);
+		StreamsBuilderEx streamsBuilder = enhance(pStreamsBuilder);
 
 		KTable<String, ClientProfile> clientProfileTable = clientProfileTable(streamsBuilder);
-		KStreamEnh<String, Transaction> transactions = transactionsStream(streamsBuilder);
+		KStreamEx<String, Transaction> transactions = transactionsStream(streamsBuilder);
 
 		processClientProfiles(clientProfileTable);
 
@@ -66,8 +66,8 @@ public class PaymentsConfig {
 
 		// total expenses for a period
 		if (app.isKafkaEnhanced()) {
-			periodExceedsWithEnhancer.accept(transactions, clientProfileTable);
-			paymentsReport.accept(periodExceedsWithEnhancer.periodTotalSpentByClientIdStoreName(), streamsBuilder);
+			periodExceedsWithExtensions.accept(transactions, clientProfileTable);
+			paymentsReport.accept(periodExceedsWithExtensions.periodTotalSpentByClientIdStoreName(), streamsBuilder);
 		} else {
 			periodExceeds.accept(txGroupedByCli, clientProfileTable, streamsBuilder);
 			paymentsReport.accept(topicsProperties.getPeriodTotalSpent(), streamsBuilder);
@@ -80,7 +80,7 @@ public class PaymentsConfig {
 	 * group transactions by clientId
 	 */
 	private KGroupedStream<String, Transaction> txGroupedByClientId(
-			KStreamEnh<String, Transaction> transactions) {
+			KStreamEx<String, Transaction> transactions) {
 		return transactions
 				.peek(it -> {
 					log.trace("\n\ttopic: {}\n\ttimestamp: {}",
@@ -96,13 +96,13 @@ public class PaymentsConfig {
 		clientProfileTable.toStream().foreach((clientId, profile) -> log.debug("\n\t{}", profile));
 	}
 
-	private KTable<String, ClientProfile> clientProfileTable(StreamsBuilderEnh streamsBuilder) {
+	private KTable<String, ClientProfile> clientProfileTable(StreamsBuilderEx streamsBuilder) {
 		return streamsBuilder.table(topicsProperties.getClientProfiles(),
 				Consumed.as(topicsProperties.getClientProfiles()),
 				Materialized.as(topicsProperties.getClientProfiles()));
 	}
 
-	private KStreamEnh<String, Transaction> transactionsStream(StreamsBuilderEnh streamsBuilder) {
+	private KStreamEx<String, Transaction> transactionsStream(StreamsBuilderEx streamsBuilder) {
 		return streamsBuilder.stream(topicsProperties.getTransactions(),
 				Consumed.as(topicsProperties.getTransactions()));
 	}

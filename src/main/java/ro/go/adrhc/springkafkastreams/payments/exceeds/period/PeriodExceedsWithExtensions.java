@@ -10,12 +10,12 @@ import ro.go.adrhc.springkafkastreams.config.AppProperties;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
 import ro.go.adrhc.springkafkastreams.payments.messages.ClientProfile;
 import ro.go.adrhc.springkafkastreams.payments.messages.Transaction;
-import ro.go.adrhc.springkafkastreams.kenhancements.kstream.KStreamEnh;
+import ro.go.adrhc.springkafkastreams.kextensions.kstream.KStreamEx;
 
 @Component
 @Slf4j
-public class PeriodExceedsWithEnhancer extends AbstractPeriodExceeds {
-	public PeriodExceedsWithEnhancer(TopicsProperties topicsProperties, AppProperties appProperties) {
+public class PeriodExceedsWithExtensions extends AbstractPeriodExceeds {
+	public PeriodExceedsWithExtensions(TopicsProperties topicsProperties, AppProperties appProperties) {
 		super(topicsProperties, appProperties);
 	}
 
@@ -23,7 +23,7 @@ public class PeriodExceedsWithEnhancer extends AbstractPeriodExceeds {
 	 * calculating total expenses for a period
 	 * equivalent to windowedBy + aggregate
 	 */
-	public void accept(KStreamEnh<String, Transaction> transactions,
+	public void accept(KStreamEx<String, Transaction> transactions,
 			KTable<String, ClientProfile> clientProfileTable) {
 		transactions
 				// group by e.g. 1 month

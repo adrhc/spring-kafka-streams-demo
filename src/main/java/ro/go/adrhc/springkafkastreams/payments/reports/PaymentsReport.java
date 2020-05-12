@@ -12,8 +12,8 @@ import ro.go.adrhc.springkafkastreams.payments.exceeds.period.messages.PeriodTot
 import ro.go.adrhc.springkafkastreams.payments.messages.Command;
 import ro.go.adrhc.springkafkastreams.payments.reports.processors.DailyValueTransformerSupp;
 import ro.go.adrhc.springkafkastreams.payments.reports.processors.PeriodValueTransformerSupp;
-import ro.go.adrhc.springkafkastreams.kenhancements.StreamsBuilderEnh;
-import ro.go.adrhc.springkafkastreams.kenhancements.kstream.KStreamEnh;
+import ro.go.adrhc.springkafkastreams.kextensions.StreamsBuilderEx;
+import ro.go.adrhc.springkafkastreams.kextensions.kstream.KStreamEx;
 
 import java.util.Comparator;
 import java.util.stream.Collectors;
@@ -38,7 +38,7 @@ public class PaymentsReport {
 	 * KTable<String, Integer> dailyTotalSpentTable
 	 * KTable<String, Integer> periodTotalSpentTable
 	 */
-	public void accept(String totalSpentStoreName, StreamsBuilderEnh streamsBuilder) {
+	public void accept(String totalSpentStoreName, StreamsBuilderEx streamsBuilder) {
 		KStream<String, Command> stream = commandsStream(streamsBuilder);
 		// daily report
 		stream
@@ -77,7 +77,7 @@ public class PaymentsReport {
 						appProperties.getWindowUnit(), appProperties.isKafkaEnhanced()));
 	}
 
-	private KStreamEnh<String, Command> commandsStream(StreamsBuilderEnh streamsBuilder) {
+	private KStreamEx<String, Command> commandsStream(StreamsBuilderEx streamsBuilder) {
 		return streamsBuilder.stream(topicsProperties.getCommands(),
 				Consumed.as(topicsProperties.getCommands()));
 	}

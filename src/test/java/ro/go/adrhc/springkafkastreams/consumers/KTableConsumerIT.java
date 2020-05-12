@@ -16,6 +16,7 @@ import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.springframework.test.context.ActiveProfiles;
+import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
 
 import java.util.Map;
 
@@ -39,11 +40,13 @@ class KTableConsumerIT {
 	@TestConfiguration
 	static class Config {
 		@Autowired
+		private TopicsProperties topicsProperties;
+		@Autowired
 		private KafkaProperties kafkaProperties;
 
 		@Bean
 		public Consumer<String, Integer> consumer() {
-			return consumerOf(kafkaConsumerFactory(), "adrks1-transactions.v2-changelog");
+			return consumerOf(kafkaConsumerFactory(), topicsProperties.getTransactions() + "-changelog");
 		}
 
 		@Bean
