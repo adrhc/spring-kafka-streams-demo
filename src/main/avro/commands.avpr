@@ -1,0 +1,27 @@
+{
+  "namespace": "ro.go.adrhc.springkafkastreams.payments.reports.messages",
+  "protocol": "CommandsProtocol",
+  "doc": "commands protocol",
+  "types": [
+	{
+	  "name": "Command",
+	  "type": "record",
+	  "fields": [
+		{
+		  "name": "name",
+		  "type": "string"
+		},
+		{
+		  "name": "parameters",
+		  "type": [
+			"null",
+			{
+			  "type": "array",
+			  "items": "string"
+			}
+		  ]
+		}
+	  ]
+	}
+  ]
+}

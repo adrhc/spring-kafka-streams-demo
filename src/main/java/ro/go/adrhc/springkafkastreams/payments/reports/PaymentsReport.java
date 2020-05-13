@@ -3,34 +3,30 @@ package ro.go.adrhc.springkafkastreams.payments.reports;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.KStream;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-import ro.go.adrhc.springkafkastreams.config.AppProperties;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
-import ro.go.adrhc.springkafkastreams.payments.exceeds.daily.messages.DailyTotalSpent;
-import ro.go.adrhc.springkafkastreams.payments.exceeds.period.messages.PeriodTotalSpent;
-import ro.go.adrhc.springkafkastreams.payments.messages.Command;
-import ro.go.adrhc.springkafkastreams.payments.reports.processors.DailyValueTransformerSupp;
-import ro.go.adrhc.springkafkastreams.payments.reports.processors.PeriodValueTransformerSupp;
+import ro.go.adrhc.springkafkastreams.core.services.reports.ConfigService;
+import ro.go.adrhc.springkafkastreams.core.services.reports.DailyTotalSpentService;
+import ro.go.adrhc.springkafkastreams.core.services.reports.PeriodTotalSpentService;
 import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.StreamsBuilderEx;
 import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.KStreamEx;
-
-import java.util.Comparator;
-import java.util.stream.Collectors;
-
-import static ro.go.adrhc.springkafkastreams.util.DateUtils.format;
+import ro.go.adrhc.springkafkastreams.payments.reports.messages.Command;
+import ro.go.adrhc.springkafkastreams.payments.reports.transformers.DailyValueTransformerSupp;
+import ro.go.adrhc.springkafkastreams.payments.reports.transformers.PeriodValueTransformerSupp;
 
 @Component
 @Slf4j
 public class PaymentsReport {
-	private final Environment env;
 	private final TopicsProperties topicsProperties;
-	private final AppProperties appProperties;
+	private final DailyTotalSpentService dailyTotalSpentService;
+	private final PeriodTotalSpentService periodTotalSpentService;
+	private final ConfigService configService;
 
-	public PaymentsReport(Environment env, TopicsProperties topicsProperties, AppProperties appProperties) {
-		this.env = env;
+	public PaymentsReport(TopicsProperties topicsProperties, DailyTotalSpentService dailyTotalSpentService, PeriodTotalSpentService periodTotalSpentService, ConfigService configService) {
 		this.topicsProperties = topicsProperties;
-		this.appProperties = appProperties;
+		this.dailyTotalSpentService = dailyTotalSpentService;
+		this.periodTotalSpentService = periodTotalSpentService;
+		this.configService = configService;
 	}
 
 	/**
@@ -46,35 +42,18 @@ public class PaymentsReport {
 				.transformValues(
 						new DailyValueTransformerSupp(topicsProperties.getDailyTotalSpent()),
 						topicsProperties.getDailyTotalSpent())
-				.foreach((k, list) -> {
-					list.sort(Comparator.comparing(DailyTotalSpent::getTime));
-					log.debug("\n\tDaily totals:\n\t{}", list.stream().map(it ->
-							it.getClientId() + ", " + format(it.getTime()) +
-									": " + it.getAmount() + " " + appProperties.getCurrency())
-							.collect(Collectors.joining("\n\t")));
-				});
+				.foreach((k, list) -> dailyTotalSpentService.report(list));
 		// period report
 		stream
 				.filter((k, v) -> v.getParameters().contains("period"))
 				.transformValues(
 						new PeriodValueTransformerSupp(totalSpentStoreName),
 						totalSpentStoreName)
-				.foreach((k, list) -> {
-					list.sort(Comparator.comparing(PeriodTotalSpent::getTime));
-					log.debug("\n\t{} {} totals:\n\t{}", appProperties.getWindowSize(), appProperties.getWindowUnit(),
-							list.stream().map(it -> it.getClientId() + ", " +
-									format(it.getTime().minus(appProperties.getWindowSize(), appProperties.getWindowUnit()).plusDays(1))
-									+ " - " + format(it.getTime()) + ": " +
-									it.getAmount() + " " + appProperties.getCurrency())
-									.collect(Collectors.joining("\n\t")));
-				});
+				.foreach((k, list) -> periodTotalSpentService.report(list));
 		// configuration report
 		stream
 				.filter((k, v) -> v.getParameters().contains("config"))
-				.foreach((k, v) -> log.debug("\n\tConfiguration:\n\tspring profiles = {}\n\tapp version = {}" +
-								"\n\twindowSize = {}\n\twindowUnit = {}\n\tKafka enhancements = {}",
-						env.getActiveProfiles(), appProperties.getVersion(), appProperties.getWindowSize(),
-						appProperties.getWindowUnit(), appProperties.isKafkaEnhanced()));
+				.foreach((k, v) -> configService.report());
 	}
 
 	private KStreamEx<String, Command> commandsStream(StreamsBuilderEx streamsBuilder) {

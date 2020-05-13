@@ -39,7 +39,7 @@ public abstract class AbstractPeriodExceeds extends AbstractExceeds {
 	}
 
 	protected ValueJoiner<PeriodTotalSpent, ClientProfile, PeriodExceeded>
-	joinPeriodTotalSpentWithClientProfileOnClientId(int windowSize, ChronoUnit windowUnit) {
+	periodExceededJoiner(int windowSize, ChronoUnit windowUnit) {
 		return (PeriodTotalSpent pts, ClientProfile cp) -> {
 			if (cp.getPeriodMaxAmount() < pts.getAmount()) {
 				return new PeriodExceeded(cp.getPeriodMaxAmount(), pts);

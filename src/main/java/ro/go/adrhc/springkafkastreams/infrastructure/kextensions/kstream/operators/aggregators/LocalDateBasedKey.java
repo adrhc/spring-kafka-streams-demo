@@ -26,28 +26,33 @@ public class LocalDateBasedKey<T> {
 
 	/**
 	 * includingEndDate means that is the included end date of a time period
+	 *
+	 * @return data-includingEndDate
 	 */
 	public static <T> String keyOf(T data, LocalDate includingEndDate) {
 		return data.toString() + '-' + includingEndDate.format(keyLocalDateFormat);
 	}
 
 	/**
-	 * key = clientId-windowEndingDateMinus1
+	 * windowed.key() = e.g. clientId
 	 * windowEndingDateMinus1 is an "including" date
+	 *
+	 * @return windowed.key()-windowEndingDateMinus1
 	 */
 	public static <T> String keyOf(Windowed<T> windowed) {
 		return LocalDateBasedKey.keyOf(windowed.key().toString(),
 				localDateOf(windowed.window().end()).minusDays(1));
 	}
 
-	public static <T> LocalDateBasedKey<T> convert(Windowed<T> clientIdWindow) {
-		return new LocalDateBasedKey<T>(clientIdWindow.key(), localDateOf(clientIdWindow.window().end()).minusDays(1));
+	public static <T> LocalDateBasedKey<T> convert(Windowed<T> windowed) {
+		return new LocalDateBasedKey<>(windowed.key(),
+				localDateOf(windowed.window().end()).minusDays(1));
 	}
 
-	public static Optional<LocalDateBasedKey<String>> parseWithStringData(String key) {
+	public static Optional<LocalDateBasedKey<String>> parseWithStringData(String localDateBasedKey) {
 		Object[] parts;
 		try {
-			parts = WINDOW_KEY.get().parse(key);
+			parts = WINDOW_KEY.get().parse(localDateBasedKey);
 			return Optional.of(new LocalDateBasedKey<>((String) parts[0],
 					keyLocalDateFormat.parse((String) parts[1], LocalDate::from)));
 		} catch (Exception e) {

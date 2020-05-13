@@ -38,7 +38,7 @@ public class PeriodExceedsWithExtensions extends AbstractPeriodExceeds {
 				.map(this::clientIdPeriodTotalSpentOf)
 				// clientId:PeriodTotalSpent join clientId:ClientProfile -> clientId:PeriodExceeded
 				.join(clientProfileTable,
-						joinPeriodTotalSpentWithClientProfileOnClientId(
+						periodExceededJoiner(
 								appProperties.getWindowSize(), appProperties.getWindowUnit()),
 						periodTotalSpentJoinClientProfile())
 				// skip for less than periodMaxAmount

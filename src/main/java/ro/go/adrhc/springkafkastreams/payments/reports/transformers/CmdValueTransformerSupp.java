@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.payments.reports.processors;
+package ro.go.adrhc.springkafkastreams.payments.reports.transformers;
 
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.ValueTransformer;
@@ -7,7 +7,7 @@ import org.apache.kafka.streams.processor.ProcessorContext;
 import org.apache.kafka.streams.state.KeyValueIterator;
 import org.apache.kafka.streams.state.KeyValueStore;
 import org.apache.kafka.streams.state.ValueAndTimestamp;
-import ro.go.adrhc.springkafkastreams.payments.messages.Command;
+import ro.go.adrhc.springkafkastreams.payments.reports.messages.Command;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -15,6 +15,11 @@ import java.util.List;
 
 import static ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.operators.aggregators.LocalDateBasedKey.parseWithStringData;
 
+/**
+ * Takes all data from storeName into a list of T; the list is the transformer's "value".
+ *
+ * @param <T> is something that can be created based on: String clientId, LocalDate time, Integer amount.
+ */
 public abstract class CmdValueTransformerSupp<T> implements ValueTransformerSupplier<Command, List<T>> {
 	private final String storeName;
 

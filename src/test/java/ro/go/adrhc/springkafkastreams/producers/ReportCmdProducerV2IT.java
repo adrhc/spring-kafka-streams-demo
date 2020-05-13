@@ -12,7 +12,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import ro.go.adrhc.springkafkastreams.config.KafkaTemplateConfig;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
-import ro.go.adrhc.springkafkastreams.payments.messages.Command;
+import ro.go.adrhc.springkafkastreams.payments.reports.messages.Command;
 
 import java.util.List;
 

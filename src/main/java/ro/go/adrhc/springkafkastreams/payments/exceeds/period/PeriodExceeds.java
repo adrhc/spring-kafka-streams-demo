@@ -9,11 +9,11 @@ import org.apache.kafka.streams.state.KeyValueStore;
 import org.springframework.stereotype.Component;
 import ro.go.adrhc.springkafkastreams.config.AppProperties;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
+import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.StreamsBuilderEx;
+import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.operators.aggregators.LocalDateBasedKey;
 import ro.go.adrhc.springkafkastreams.payments.exceeds.period.messages.PeriodTotalSpent;
 import ro.go.adrhc.springkafkastreams.payments.messages.ClientProfile;
 import ro.go.adrhc.springkafkastreams.payments.messages.Transaction;
-import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.StreamsBuilderEx;
-import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.operators.aggregators.LocalDateBasedKey;
 
 import java.time.Duration;
 import java.time.temporal.TemporalUnit;
@@ -65,8 +65,7 @@ public class PeriodExceeds extends AbstractPeriodExceeds {
 				.map(this::clientIdPeriodTotalSpentOf)
 				// clientId:PeriodTotalSpent join clientId:ClientProfile
 				.join(clientProfileTable,
-						joinPeriodTotalSpentWithClientProfileOnClientId(
-								appProperties.getWindowSize(), DAYS),
+						periodExceededJoiner(appProperties.getWindowSize(), DAYS),
 						periodTotalSpentJoinClientProfile())
 				// skip for less than periodMaxAmount
 				.filter((clientId, periodExceeded) -> periodExceeded != null)

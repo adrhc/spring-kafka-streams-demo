@@ -45,26 +45,6 @@
 		  "type": "int"
 		}
 	  ]
-	},
-	{
-	  "name": "Command",
-	  "type": "record",
-	  "fields": [
-		{
-		  "name": "name",
-		  "type": "string"
-		},
-		{
-		  "name": "parameters",
-		  "type": [
-			"null",
-			{
-			  "type": "array",
-			  "items": "string"
-			}
-		  ]
-		}
-	  ]
 	}
   ]
 }

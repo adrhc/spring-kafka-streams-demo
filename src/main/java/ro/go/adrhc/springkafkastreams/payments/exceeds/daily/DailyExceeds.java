@@ -9,13 +9,13 @@ import org.apache.kafka.streams.state.KeyValueStore;
 import org.springframework.stereotype.Component;
 import ro.go.adrhc.springkafkastreams.config.AppProperties;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
+import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.StreamsBuilderEx;
+import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.operators.aggregators.LocalDateBasedKey;
 import ro.go.adrhc.springkafkastreams.payments.exceeds.AbstractExceeds;
 import ro.go.adrhc.springkafkastreams.payments.exceeds.daily.messages.DailyExceeded;
 import ro.go.adrhc.springkafkastreams.payments.exceeds.daily.messages.DailyTotalSpent;
 import ro.go.adrhc.springkafkastreams.payments.messages.ClientProfile;
 import ro.go.adrhc.springkafkastreams.payments.messages.Transaction;
-import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.StreamsBuilderEx;
-import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.operators.aggregators.LocalDateBasedKey;
 
 import java.time.Duration;
 import java.util.Optional;
@@ -57,7 +57,8 @@ public class DailyExceeds extends AbstractExceeds {
 //				.through(topicsProperties.getDailyTotalSpent(),
 //						produceInteger("to-" + properties.getDailyTotalSpent() + "-stream"))
 
-		// not using through(properties.getDailyTotalSpent() because we later need the related store
+		// Not using KStream.through(...) because we later need the related KTable store.
+		// With this line we pop-up into existence the topicsProperties.getDailyTotalSpent() KTable store.
 		KTable<String, Integer> dailyTotalSpentTable = dailyTotalSpentTable(streamsBuilder);
 
 		dailyTotalSpentTable
@@ -66,7 +67,7 @@ public class DailyExceeds extends AbstractExceeds {
 				.map(this::clientIdDailyTotalSpentOf)
 				// clientId:DailyTotalSpent join clientId:ClientProfile
 				.join(clientProfileTable,
-						this::joinDailyTotalSpentWithClientProfileOnClientId,
+						this::dailyExceededJoiner,
 						dailyTotalSpentJoinClientProfile())
 				// skip for less than dailyMaxAmount
 				.filter((clientId, dailyExceeded) -> dailyExceeded != null)
@@ -96,7 +97,7 @@ public class DailyExceeds extends AbstractExceeds {
 		return Joined.as("dailyTotalSpentJoinClientProfile");
 	}
 
-	private DailyExceeded joinDailyTotalSpentWithClientProfileOnClientId(DailyTotalSpent dts, ClientProfile cp) {
+	private DailyExceeded dailyExceededJoiner(DailyTotalSpent dts, ClientProfile cp) {
 		if (cp.getDailyMaxAmount() < dts.getAmount()) {
 			return new DailyExceeded(cp.getDailyMaxAmount(), dts);
 		}

@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.payments.reports.processors;
+package ro.go.adrhc.springkafkastreams.payments.reports.transformers;
 
 import ro.go.adrhc.springkafkastreams.payments.exceeds.period.messages.PeriodTotalSpent;
 
