@@ -3,10 +3,10 @@ package ro.go.adrhc.springkafkastreams.infrastructure.adapters.outbound;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ro.go.adrhc.springkafkastreams.config.AppProperties;
-import ro.go.adrhc.springkafkastreams.payments.exceeds.daily.messages.DailyExceeded;
-import ro.go.adrhc.springkafkastreams.payments.exceeds.daily.messages.DailyTotalSpent;
-import ro.go.adrhc.springkafkastreams.payments.exceeds.period.messages.PeriodExceeded;
-import ro.go.adrhc.springkafkastreams.payments.exceeds.period.messages.PeriodTotalSpent;
+import ro.go.adrhc.springkafkastreams.infrastructure.adapters.inbound.topologies.payments.exceeds.daily.messages.DailyExceeded;
+import ro.go.adrhc.springkafkastreams.infrastructure.adapters.inbound.topologies.payments.exceeds.daily.messages.DailyTotalSpent;
+import ro.go.adrhc.springkafkastreams.infrastructure.adapters.inbound.topologies.payments.exceeds.period.messages.PeriodExceeded;
+import ro.go.adrhc.springkafkastreams.infrastructure.adapters.inbound.topologies.payments.exceeds.period.messages.PeriodTotalSpent;
 
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.format;
 

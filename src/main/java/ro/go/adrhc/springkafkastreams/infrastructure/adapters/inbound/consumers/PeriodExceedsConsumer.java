@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import ro.go.adrhc.springkafkastreams.infrastructure.adapters.outbound.PhoneMessageSender;
-import ro.go.adrhc.springkafkastreams.payments.exceeds.period.messages.PeriodExceeded;
+import ro.go.adrhc.springkafkastreams.infrastructure.adapters.inbound.topologies.payments.exceeds.period.messages.PeriodExceeded;
 
 @Profile("!test")
 @Component

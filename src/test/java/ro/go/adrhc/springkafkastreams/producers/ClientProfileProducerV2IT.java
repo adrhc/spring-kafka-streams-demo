@@ -12,7 +12,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import ro.go.adrhc.springkafkastreams.config.KafkaTemplateConfig;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
-import ro.go.adrhc.springkafkastreams.payments.messages.ClientProfile;
+import ro.go.adrhc.springkafkastreams.infrastructure.adapters.inbound.topologies.payments.messages.ClientProfile;
 
 import static ro.go.adrhc.springkafkastreams.util.AbstractTestDTOFactory.randomClientProfile;
 

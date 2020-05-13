@@ -1,6 +1,6 @@
 package ro.go.adrhc.springkafkastreams.core.services.reports;
 
-import ro.go.adrhc.springkafkastreams.payments.exceeds.daily.messages.DailyTotalSpent;
+import ro.go.adrhc.springkafkastreams.infrastructure.adapters.inbound.topologies.payments.exceeds.daily.messages.DailyTotalSpent;
 
 import java.util.List;
 

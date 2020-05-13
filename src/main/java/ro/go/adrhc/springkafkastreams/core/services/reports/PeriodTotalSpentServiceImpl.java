@@ -3,7 +3,7 @@ package ro.go.adrhc.springkafkastreams.core.services.reports;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ro.go.adrhc.springkafkastreams.config.AppProperties;
-import ro.go.adrhc.springkafkastreams.payments.exceeds.period.messages.PeriodTotalSpent;
+import ro.go.adrhc.springkafkastreams.infrastructure.adapters.inbound.topologies.payments.exceeds.period.messages.PeriodTotalSpent;
 
 import java.util.Comparator;
 import java.util.List;
