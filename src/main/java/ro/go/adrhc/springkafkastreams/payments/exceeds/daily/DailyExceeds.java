@@ -14,15 +14,15 @@ import ro.go.adrhc.springkafkastreams.payments.exceeds.daily.messages.DailyExcee
 import ro.go.adrhc.springkafkastreams.payments.exceeds.daily.messages.DailyTotalSpent;
 import ro.go.adrhc.springkafkastreams.payments.messages.ClientProfile;
 import ro.go.adrhc.springkafkastreams.payments.messages.Transaction;
-import ro.go.adrhc.springkafkastreams.kextensions.StreamsBuilderEx;
-import ro.go.adrhc.springkafkastreams.kextensions.kstream.operators.aggregators.LocalDateBasedKey;
+import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.StreamsBuilderEx;
+import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.operators.aggregators.LocalDateBasedKey;
 
 import java.time.Duration;
 import java.util.Optional;
 
 import static java.time.temporal.ChronoUnit.DAYS;
-import static ro.go.adrhc.springkafkastreams.kextensions.kstream.operators.aggregators.LocalDateBasedKey.keyOf;
-import static ro.go.adrhc.springkafkastreams.kextensions.kstream.operators.aggregators.LocalDateBasedKey.parseWithStringData;
+import static ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.operators.aggregators.LocalDateBasedKey.keyOf;
+import static ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.operators.aggregators.LocalDateBasedKey.parseWithStringData;
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.format;
 
 @Component

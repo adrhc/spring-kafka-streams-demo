@@ -10,7 +10,7 @@ import ro.go.adrhc.springkafkastreams.config.AppProperties;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
 import ro.go.adrhc.springkafkastreams.payments.messages.ClientProfile;
 import ro.go.adrhc.springkafkastreams.payments.messages.Transaction;
-import ro.go.adrhc.springkafkastreams.kextensions.kstream.KStreamEx;
+import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.KStreamEx;
 
 @Component
 @Slf4j

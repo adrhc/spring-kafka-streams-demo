@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.kextensions.kstream;
+package ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream;
 
 import lombok.AllArgsConstructor;
 import org.apache.kafka.streams.KeyValue;
@@ -6,9 +6,9 @@ import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.*;
 import org.apache.kafka.streams.processor.ProcessorSupplier;
 import org.apache.kafka.streams.processor.TopicNameExtractor;
-import ro.go.adrhc.springkafkastreams.kextensions.kstream.operators.aggregators.WindowByEx;
-import ro.go.adrhc.springkafkastreams.kextensions.kstream.operators.peek.KPeek;
-import ro.go.adrhc.springkafkastreams.kextensions.kstream.operators.peek.KPeekParams;
+import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.operators.aggregators.WindowByEx;
+import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.operators.peek.KPeek;
+import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.operators.peek.KPeekParams;
 
 import java.time.temporal.TemporalUnit;
 import java.util.function.Consumer;

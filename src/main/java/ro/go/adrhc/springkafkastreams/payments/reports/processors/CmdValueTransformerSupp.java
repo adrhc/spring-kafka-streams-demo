@@ -13,7 +13,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ro.go.adrhc.springkafkastreams.kextensions.kstream.operators.aggregators.LocalDateBasedKey.parseWithStringData;
+import static ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.operators.aggregators.LocalDateBasedKey.parseWithStringData;
 
 public abstract class CmdValueTransformerSupp<T> implements ValueTransformerSupplier<Command, List<T>> {
 	private final String storeName;

@@ -12,7 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
 import ro.go.adrhc.springkafkastreams.payments.exceeds.daily.messages.DailyTotalSpent;
 
-import static ro.go.adrhc.springkafkastreams.kextensions.kstream.operators.aggregators.LocalDateBasedKey.keyOf;
+import static ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.operators.aggregators.LocalDateBasedKey.keyOf;
 import static ro.go.adrhc.springkafkastreams.util.AbstractTestDTOFactory.randomDailyTotalSpent;
 
 @EnabledIfSystemProperty(named = "enableIT", matches = "true")

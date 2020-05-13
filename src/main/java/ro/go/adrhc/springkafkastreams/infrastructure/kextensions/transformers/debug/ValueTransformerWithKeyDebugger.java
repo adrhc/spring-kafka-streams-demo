@@ -1,16 +1,14 @@
-package ro.go.adrhc.springkafkastreams.kextensions.kstream.operators.peek;
+package ro.go.adrhc.springkafkastreams.infrastructure.kextensions.transformers.debug;
 
-import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.streams.kstream.ValueTransformerWithKey;
 import org.apache.kafka.streams.kstream.ValueTransformerWithKeySupplier;
 import org.apache.kafka.streams.processor.ProcessorContext;
 
-import java.util.function.Consumer;
+import static ro.go.adrhc.springkafkastreams.util.DateUtils.localDateTimeOf;
 
-@AllArgsConstructor
-public class KPeek<K, V> implements ValueTransformerWithKeySupplier<K, V, V> {
-	private final Consumer<KPeekParams<K, V>> consumer;
-
+@Slf4j
+public class ValueTransformerWithKeyDebugger<K, V> implements ValueTransformerWithKeySupplier<K, V, V> {
 	public ValueTransformerWithKey<K, V, V> get() {
 		return new ValueTransformerWithKey<>() {
 
@@ -23,7 +21,9 @@ public class KPeek<K, V> implements ValueTransformerWithKeySupplier<K, V, V> {
 
 			@Override
 			public V transform(K readOnlyKey, V value) {
-				consumer.accept(new KPeekParams<>(readOnlyKey, value, new KPeekContext(context)));
+				log.debug("\n\ttopic: {}\n\ttimestamp: {}\n\tkey: {}\n\tvalue: {}",
+						this.context.topic(), localDateTimeOf(this.context.timestamp()), readOnlyKey, value);
+				this.context.headers().forEach(h -> log.debug(h.toString()));
 				return value;
 			}
 

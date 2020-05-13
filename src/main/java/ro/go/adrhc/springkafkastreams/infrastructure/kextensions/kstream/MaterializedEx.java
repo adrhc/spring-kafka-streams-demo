@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.kextensions.kstream;
+package ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream;
 
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.reflect.FieldUtils;

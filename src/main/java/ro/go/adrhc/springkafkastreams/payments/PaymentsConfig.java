@@ -16,10 +16,10 @@ import ro.go.adrhc.springkafkastreams.payments.exceeds.period.PeriodExceedsWithE
 import ro.go.adrhc.springkafkastreams.payments.messages.ClientProfile;
 import ro.go.adrhc.springkafkastreams.payments.messages.Transaction;
 import ro.go.adrhc.springkafkastreams.payments.reports.PaymentsReport;
-import ro.go.adrhc.springkafkastreams.kextensions.StreamsBuilderEx;
-import ro.go.adrhc.springkafkastreams.kextensions.kstream.KStreamEx;
+import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.StreamsBuilderEx;
+import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.KStreamEx;
 
-import static ro.go.adrhc.springkafkastreams.kextensions.util.KafkaEx.enhance;
+import static ro.go.adrhc.springkafkastreams.infrastructure.kextensions.util.KafkaEx.enhance;
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.format;
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.localDateTimeOf;
 

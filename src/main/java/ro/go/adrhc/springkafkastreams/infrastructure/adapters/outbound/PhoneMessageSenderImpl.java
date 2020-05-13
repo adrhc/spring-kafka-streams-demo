@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.infrastructure.outbound;
+package ro.go.adrhc.springkafkastreams.infrastructure.adapters.outbound;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

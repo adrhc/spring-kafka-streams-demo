@@ -12,8 +12,8 @@ import ro.go.adrhc.springkafkastreams.payments.exceeds.period.messages.PeriodTot
 import ro.go.adrhc.springkafkastreams.payments.messages.Command;
 import ro.go.adrhc.springkafkastreams.payments.reports.processors.DailyValueTransformerSupp;
 import ro.go.adrhc.springkafkastreams.payments.reports.processors.PeriodValueTransformerSupp;
-import ro.go.adrhc.springkafkastreams.kextensions.StreamsBuilderEx;
-import ro.go.adrhc.springkafkastreams.kextensions.kstream.KStreamEx;
+import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.StreamsBuilderEx;
+import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.KStreamEx;
 
 import java.util.Comparator;
 import java.util.stream.Collectors;

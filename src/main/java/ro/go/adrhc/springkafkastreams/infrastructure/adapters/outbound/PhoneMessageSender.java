@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.infrastructure.outbound;
+package ro.go.adrhc.springkafkastreams.infrastructure.adapters.outbound;
 
 import ro.go.adrhc.springkafkastreams.payments.exceeds.daily.messages.DailyExceeded;
 import ro.go.adrhc.springkafkastreams.payments.exceeds.period.messages.PeriodExceeded;
