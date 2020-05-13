@@ -14,7 +14,8 @@ export CONFLUENT_HOME="/home/adr/tools/confluent/confluent-5.4.1"
 export PATH="$CONFLUENT_HOME/bin:$PATH"
 confluent local start
 ```
-see http://localhost:9021/clusters
+see http://localhost:9021/clusters  
+(disable browser cache)
 # Scenario 1: 3 DAYS, kafka enhancer OFF
 ```bash
 ./delete-topics.sh
