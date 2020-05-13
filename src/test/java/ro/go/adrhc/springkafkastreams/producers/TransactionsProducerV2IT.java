@@ -15,7 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
 import ro.go.adrhc.springkafkastreams.config.AppProperties;
 import ro.go.adrhc.springkafkastreams.config.KafkaTemplateConfig;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
-import ro.go.adrhc.springkafkastreams.infrastructure.adapters.inbound.topologies.payments.messages.Transaction;
+import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.Transaction;
 
 import java.util.stream.IntStream;
 
