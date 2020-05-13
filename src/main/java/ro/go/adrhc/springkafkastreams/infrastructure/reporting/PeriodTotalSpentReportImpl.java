@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.core.services.reports;
+package ro.go.adrhc.springkafkastreams.infrastructure.reporting;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,10 +13,10 @@ import static ro.go.adrhc.springkafkastreams.util.DateUtils.format;
 
 @Service
 @Slf4j
-public class PeriodTotalSpentServiceImpl implements PeriodTotalSpentService {
+public class PeriodTotalSpentReportImpl implements PeriodTotalSpentReport {
 	private final AppProperties appProperties;
 
-	public PeriodTotalSpentServiceImpl(AppProperties appProperties) {
+	public PeriodTotalSpentReportImpl(AppProperties appProperties) {
 		this.appProperties = appProperties;
 	}
 

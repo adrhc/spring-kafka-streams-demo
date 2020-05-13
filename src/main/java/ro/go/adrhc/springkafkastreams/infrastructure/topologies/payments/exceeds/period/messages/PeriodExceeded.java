@@ -5,14 +5,16 @@
  */
 package ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.exceeds.period.messages;
 
+import org.apache.avro.generic.GenericArray;
 import org.apache.avro.specific.SpecificData;
+import org.apache.avro.util.Utf8;
 import org.apache.avro.message.BinaryMessageEncoder;
 import org.apache.avro.message.BinaryMessageDecoder;
 import org.apache.avro.message.SchemaStore;
 
 @org.apache.avro.specific.AvroGenerated
 public class PeriodExceeded extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = -5918874992142241353L;
+  private static final long serialVersionUID = -536889461555499698L;
   public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"PeriodExceeded\",\"namespace\":\"ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.exceeds.period.messages\",\"fields\":[{\"name\":\"periodMaxAmount\",\"type\":\"int\"},{\"name\":\"periodTotalSpent\",\"type\":{\"type\":\"record\",\"name\":\"PeriodTotalSpent\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"time\",\"type\":{\"type\":\"int\",\"logicalType\":\"date\"}},{\"name\":\"amount\",\"type\":\"int\"}]}}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 

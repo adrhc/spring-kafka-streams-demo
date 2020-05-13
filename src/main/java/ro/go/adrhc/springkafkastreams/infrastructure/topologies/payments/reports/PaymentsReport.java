@@ -5,9 +5,9 @@ import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.KStream;
 import org.springframework.stereotype.Component;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
-import ro.go.adrhc.springkafkastreams.core.services.reports.ConfigService;
-import ro.go.adrhc.springkafkastreams.core.services.reports.DailyTotalSpentService;
-import ro.go.adrhc.springkafkastreams.core.services.reports.PeriodTotalSpentService;
+import ro.go.adrhc.springkafkastreams.infrastructure.reporting.ConfigReport;
+import ro.go.adrhc.springkafkastreams.infrastructure.reporting.DailyTotalSpentReport;
+import ro.go.adrhc.springkafkastreams.infrastructure.reporting.PeriodTotalSpentReport;
 import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.StreamsBuilderEx;
 import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.KStreamEx;
 import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.reports.messages.Command;
@@ -18,15 +18,15 @@ import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.reports
 @Slf4j
 public class PaymentsReport {
 	private final TopicsProperties topicsProperties;
-	private final DailyTotalSpentService dailyTotalSpentService;
-	private final PeriodTotalSpentService periodTotalSpentService;
-	private final ConfigService configService;
+	private final DailyTotalSpentReport dailyTotalSpentReport;
+	private final PeriodTotalSpentReport periodTotalSpentReport;
+	private final ConfigReport configReport;
 
-	public PaymentsReport(TopicsProperties topicsProperties, DailyTotalSpentService dailyTotalSpentService, PeriodTotalSpentService periodTotalSpentService, ConfigService configService) {
+	public PaymentsReport(TopicsProperties topicsProperties, DailyTotalSpentReport dailyTotalSpentReport, PeriodTotalSpentReport periodTotalSpentReport, ConfigReport configReport) {
 		this.topicsProperties = topicsProperties;
-		this.dailyTotalSpentService = dailyTotalSpentService;
-		this.periodTotalSpentService = periodTotalSpentService;
-		this.configService = configService;
+		this.dailyTotalSpentReport = dailyTotalSpentReport;
+		this.periodTotalSpentReport = periodTotalSpentReport;
+		this.configReport = configReport;
 	}
 
 	/**
@@ -42,18 +42,18 @@ public class PaymentsReport {
 				.transformValues(
 						new DailyValueTransformerSupp(topicsProperties.getDailyTotalSpent()),
 						topicsProperties.getDailyTotalSpent())
-				.foreach((k, list) -> dailyTotalSpentService.report(list));
+				.foreach((k, list) -> dailyTotalSpentReport.report(list));
 		// period report
 		stream
 				.filter((k, v) -> v.getParameters().contains("period"))
 				.transformValues(
 						new PeriodValueTransformerSupp(totalSpentStoreName),
 						totalSpentStoreName)
-				.foreach((k, list) -> periodTotalSpentService.report(list));
+				.foreach((k, list) -> periodTotalSpentReport.report(list));
 		// configuration report
 		stream
 				.filter((k, v) -> v.getParameters().contains("config"))
-				.foreach((k, v) -> configService.report());
+				.foreach((k, v) -> configReport.report());
 	}
 
 	private KStreamEx<String, Command> commandsStream(StreamsBuilderEx streamsBuilder) {

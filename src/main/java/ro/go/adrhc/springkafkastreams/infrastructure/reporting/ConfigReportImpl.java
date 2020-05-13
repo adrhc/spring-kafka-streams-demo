@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.core.services.reports;
+package ro.go.adrhc.springkafkastreams.infrastructure.reporting;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
@@ -7,11 +7,11 @@ import ro.go.adrhc.springkafkastreams.config.AppProperties;
 
 @Service
 @Slf4j
-public class ConfigServiceImpl implements ConfigService {
+public class ConfigReportImpl implements ConfigReport {
 	private final Environment env;
 	private final AppProperties appProperties;
 
-	public ConfigServiceImpl(Environment env, AppProperties appProperties) {
+	public ConfigReportImpl(Environment env, AppProperties appProperties) {
 		this.env = env;
 		this.appProperties = appProperties;
 	}

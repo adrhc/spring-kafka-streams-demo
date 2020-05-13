@@ -1,5 +1,5 @@
 {
-  "namespace": "ro.go.adrhc.springkafkastreams.infrastructure.adapters.inbound.topologies.payments.messages",
+  "namespace": "ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages",
   "protocol": "PaymentsProtocol",
   "doc": "payments protocol",
   "types": [

@@ -1,9 +1,9 @@
-package ro.go.adrhc.springkafkastreams.core.services.reports;
+package ro.go.adrhc.springkafkastreams.infrastructure.reporting;
 
 import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.exceeds.daily.messages.DailyTotalSpent;
 
 import java.util.List;
 
-public interface DailyTotalSpentService {
+public interface DailyTotalSpentReport {
 	void report(List<DailyTotalSpent> list);
 }

@@ -5,14 +5,16 @@
  */
 package ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.reports.messages;
 
+import org.apache.avro.generic.GenericArray;
 import org.apache.avro.specific.SpecificData;
+import org.apache.avro.util.Utf8;
 import org.apache.avro.message.BinaryMessageEncoder;
 import org.apache.avro.message.BinaryMessageDecoder;
 import org.apache.avro.message.SchemaStore;
 
 @org.apache.avro.specific.AvroGenerated
 public class Command extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = -7332750189980838670L;
+  private static final long serialVersionUID = 1074941745330168486L;
   public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Command\",\"namespace\":\"ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.reports.messages\",\"fields\":[{\"name\":\"name\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"parameters\",\"type\":[\"null\",{\"type\":\"array\",\"items\":{\"type\":\"string\",\"avro.java.string\":\"String\"}}]}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
