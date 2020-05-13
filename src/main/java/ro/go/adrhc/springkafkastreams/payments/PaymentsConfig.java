@@ -62,14 +62,14 @@ public class PaymentsConfig {
 
 		// total expenses per day
 		KGroupedStream<String, Transaction> txGroupedByCli = txGroupedByClientId(transactions);
-		dailyExceeds.accept(txGroupedByCli, clientProfileTable, streamsBuilder);
+		dailyExceeds.accept(clientProfileTable, txGroupedByCli, streamsBuilder);
 
 		// total expenses for a period
 		if (app.isKafkaEnhanced()) {
-			periodExceedsWithExtensions.accept(transactions, clientProfileTable);
+			periodExceedsWithExtensions.accept(clientProfileTable, transactions);
 			paymentsReport.accept(periodExceedsWithExtensions.periodTotalSpentByClientIdStoreName(), streamsBuilder);
 		} else {
-			periodExceeds.accept(txGroupedByCli, clientProfileTable, streamsBuilder);
+			periodExceeds.accept(clientProfileTable, txGroupedByCli, streamsBuilder);
 			paymentsReport.accept(topicsProperties.getPeriodTotalSpent(), streamsBuilder);
 		}
 

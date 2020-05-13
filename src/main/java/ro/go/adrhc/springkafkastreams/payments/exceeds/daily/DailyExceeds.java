@@ -40,9 +40,9 @@ public class DailyExceeds extends AbstractExceeds {
 	 * calculating total expenses per day
 	 * using Tumbling time window
 	 */
-	public void accept(KGroupedStream<String, Transaction> groupedTransactions,
-			KTable<String, ClientProfile> clientProfileTable, StreamsBuilderEx streamsBuilder) {
-		groupedTransactions
+	public void accept(KTable<String, ClientProfile> clientProfileTable,
+			KGroupedStream<String, Transaction> txGroupedByCli, StreamsBuilderEx streamsBuilder) {
+		txGroupedByCli
 				// group by 1 day
 				.windowedBy(TimeWindows.of(Duration.ofDays(1))
 						.grace(Duration.ofDays(appProperties.getDailyGrace())))

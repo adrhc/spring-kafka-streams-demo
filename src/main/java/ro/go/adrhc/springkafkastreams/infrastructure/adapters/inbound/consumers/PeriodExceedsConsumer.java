@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.infrastructure.adapters.inbound;
+package ro.go.adrhc.springkafkastreams.infrastructure.adapters.inbound.consumers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;

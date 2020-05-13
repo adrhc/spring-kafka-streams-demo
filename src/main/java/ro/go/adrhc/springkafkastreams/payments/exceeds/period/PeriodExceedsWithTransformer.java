@@ -28,8 +28,8 @@ public class PeriodExceedsWithTransformer extends AbstractPeriodExceeds {
 	 * calculating total expenses for a days-period
 	 * equivalent to windowedBy + aggregate
 	 */
-	public void accept(KStream<String, Transaction> transactions,
-			KTable<String, ClientProfile> clientProfileTable, StreamsBuilder streamsBuilder) {
+	public void accept(KTable<String, ClientProfile> clientProfileTable,
+			KStream<String, Transaction> transactions, StreamsBuilder streamsBuilder) {
 		StoreBuilder<KeyValueStore<String, Integer>> periodTotalSpentStore =
 				Stores.keyValueStoreBuilder(
 						Stores.persistentKeyValueStore(periodTotalSpentByClientIdStoreName()),

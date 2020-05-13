@@ -35,8 +35,8 @@ public class PeriodExceeds extends AbstractPeriodExceeds {
 	 * calculating total expenses for a period
 	 * using Hopping time window
 	 */
-	public void accept(KGroupedStream<String, Transaction> txGroupedByCli,
-			KTable<String, ClientProfile> clientProfileTable, StreamsBuilderEx streamsBuilder) {
+	public void accept(KTable<String, ClientProfile> clientProfileTable,
+			KGroupedStream<String, Transaction> txGroupedByCli, StreamsBuilderEx streamsBuilder) {
 		Duration windowDuration = Duration.of(appProperties.getWindowSize(), appProperties.getWindowUnit());
 		txGroupedByCli
 /*
