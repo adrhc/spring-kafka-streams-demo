@@ -1,46 +1,61 @@
-package ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.reports;
+package ro.go.adrhc.springkafkastreams.infrastructure.topologies.reports;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.KStream;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import ro.go.adrhc.springkafkastreams.config.AppProperties;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
 import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.StreamsBuilderEx;
 import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.KStreamEx;
 import ro.go.adrhc.springkafkastreams.infrastructure.reporting.ConfigReport;
 import ro.go.adrhc.springkafkastreams.infrastructure.reporting.DailyTotalSpentReport;
 import ro.go.adrhc.springkafkastreams.infrastructure.reporting.PeriodTotalSpentReport;
+import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.exceeds.period.PeriodExceedsWithExtensions;
 import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.ClientProfile;
-import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.reports.messages.Command;
-import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.reports.transformers.DailyValueTransformerSupp;
-import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.reports.transformers.PeriodValueTransformerSupp;
+import ro.go.adrhc.springkafkastreams.infrastructure.topologies.reports.messages.Command;
+import ro.go.adrhc.springkafkastreams.infrastructure.topologies.reports.transformers.DailyValueTransformerSupp;
+import ro.go.adrhc.springkafkastreams.infrastructure.topologies.reports.transformers.PeriodValueTransformerSupp;
 
 import static ro.go.adrhc.springkafkastreams.infrastructure.kextensions.util.KafkaEx.enhance;
 
-@Component
+@Configuration
+@Profile("!test")
 @Slf4j
-public class PaymentsReport {
+public class ReportsConfig {
+	private final AppProperties app;
 	private final TopicsProperties topicsProperties;
 	private final DailyTotalSpentReport dailyTotalSpentReport;
 	private final PeriodTotalSpentReport periodTotalSpentReport;
+	private final PeriodExceedsWithExtensions periodExceedsWithExtensions;
 	private final ConfigReport configReport;
 
-	public PaymentsReport(TopicsProperties topicsProperties, DailyTotalSpentReport dailyTotalSpentReport, PeriodTotalSpentReport periodTotalSpentReport, ConfigReport configReport) {
+	public ReportsConfig(AppProperties app, TopicsProperties topicsProperties, DailyTotalSpentReport dailyTotalSpentReport, PeriodTotalSpentReport periodTotalSpentReport, PeriodExceedsWithExtensions periodExceedsWithExtensions, ConfigReport configReport) {
+		this.app = app;
 		this.topicsProperties = topicsProperties;
 		this.dailyTotalSpentReport = dailyTotalSpentReport;
 		this.periodTotalSpentReport = periodTotalSpentReport;
+		this.periodExceedsWithExtensions = periodExceedsWithExtensions;
 		this.configReport = configReport;
 	}
 
 	/**
-	 * It needs the ktable stores of:
+	 * It needs the KTable stores of:
 	 * KTable<String, Integer> dailyTotalSpentTable
 	 * KTable<String, Integer> periodTotalSpentTable
 	 */
-	public KStream<String, Command> apply(String totalSpentStoreName, StreamsBuilder pStreamsBuilder) {
+	@Bean
+	public KStream<String, ?> reportingCommands(StreamsBuilder pStreamsBuilder) {
+		String totalSpentStoreName = app.isKafkaEnhanced() ?
+				periodExceedsWithExtensions.periodTotalSpentByClientIdStoreName() :
+				topicsProperties.getPeriodTotalSpent();
+
 		StreamsBuilderEx streamsBuilder = enhance(pStreamsBuilder);
 		KStreamEx<String, Command> stream = commandsStream(streamsBuilder);
+
 		// daily report
 		stream
 				.filter((k, cmd) -> cmd.getParameters().contains("daily"))
@@ -48,6 +63,7 @@ public class PaymentsReport {
 						new DailyValueTransformerSupp(topicsProperties.getDailyTotalSpent()),
 						topicsProperties.getDailyTotalSpent())
 				.foreach((k, list) -> dailyTotalSpentReport.report(list));
+
 		// period report
 		stream
 				.filter((k, cmd) -> cmd.getParameters().contains("period"))
@@ -55,15 +71,18 @@ public class PaymentsReport {
 						new PeriodValueTransformerSupp(totalSpentStoreName),
 						totalSpentStoreName)
 				.foreach((k, list) -> periodTotalSpentReport.report(list));
+
 		// configuration report
 		stream
 				.filter((k, cmd) -> cmd.getParameters().contains("config"))
 				.foreach((k, v) -> configReport.report());
+
 		// clients profiles
 		stream
 				.filter((k, cmd) -> cmd.getParameters().contains("profiles"))
 				.<ClientProfile>allOf(topicsProperties.getClientProfiles())
 				.foreach((k, profiles) -> profiles.forEach(profile -> log.debug("\n\t{}", profile)));
+
 		return stream.getDelegate();
 	}
 

@@ -22,8 +22,7 @@ see http://localhost:9021/clusters
 ./run-v2.sh "--app.window-size=3 --app.window-unit=DAYS" | egrep -i "client1|Notification:|Overdue:|Limit:|ERROR[^s]|totals:|Configuration:|spring profiles|app version|windowSize|windowUnit|enhancements"  
 ./create-client-profile.sh | tee -a profile.log | egrep 'ClientProfile\(|client1'
 ./create-transactions.sh 1 | tee -a transactions.log | egrep 'Transaction\(|client1'
-./create-report-command.sh config | grep parameters
-./create-report-command.sh profiles | grep parameters
+./create-report-command.sh config,profiles | grep parameters
 ./create-report-command.sh daily,period | grep parameters
 ```
 # Scenario 2: 1 MONTH, kafka enhancer OFF (not supported by Kafka)

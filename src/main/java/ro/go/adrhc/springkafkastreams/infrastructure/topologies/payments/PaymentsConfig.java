@@ -6,8 +6,6 @@ import org.apache.kafka.streams.kstream.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.kafka.annotation.EnableKafka;
-import org.springframework.kafka.annotation.EnableKafkaStreams;
 import ro.go.adrhc.springkafkastreams.config.AppProperties;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
 import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.StreamsBuilderEx;
@@ -17,7 +15,6 @@ import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.exceeds
 import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.exceeds.period.PeriodExceedsWithExtensions;
 import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.ClientProfile;
 import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.Transaction;
-import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.reports.PaymentsReport;
 
 import static ro.go.adrhc.springkafkastreams.infrastructure.kextensions.util.KafkaEx.enhance;
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.format;
@@ -30,22 +27,18 @@ import static ro.go.adrhc.springkafkastreams.util.DateUtils.localDateTimeOf;
  * see also log.retention.hours which defaults to 168h = 7 days
  */
 @Configuration
-@EnableKafka
-@EnableKafkaStreams
 @Profile("!test")
 @Slf4j
 public class PaymentsConfig {
 	private final AppProperties app;
 	private final TopicsProperties topicsProperties;
-	private final PaymentsReport paymentsReport;
 	private final DailyExceeds dailyExceeds;
 	private final PeriodExceeds periodExceeds;
 	private final PeriodExceedsWithExtensions periodExceedsWithExtensions;
 
-	public PaymentsConfig(AppProperties app, TopicsProperties topicsProperties, PaymentsReport paymentsReport, DailyExceeds dailyExceeds, PeriodExceeds periodExceeds, PeriodExceedsWithExtensions periodExceedsWithExtensions) {
+	public PaymentsConfig(AppProperties app, TopicsProperties topicsProperties, DailyExceeds dailyExceeds, PeriodExceeds periodExceeds, PeriodExceedsWithExtensions periodExceedsWithExtensions) {
 		this.app = app;
 		this.topicsProperties = topicsProperties;
-		this.paymentsReport = paymentsReport;
 		this.dailyExceeds = dailyExceeds;
 		this.periodExceeds = periodExceeds;
 		this.periodExceedsWithExtensions = periodExceedsWithExtensions;
@@ -72,17 +65,6 @@ public class PaymentsConfig {
 		}
 
 		return transactions;
-	}
-
-	@Bean
-	public KStream<String, ?> reportingCommands(StreamsBuilder streamsBuilder) {
-		if (app.isKafkaEnhanced()) {
-			return paymentsReport.apply(periodExceedsWithExtensions
-					.periodTotalSpentByClientIdStoreName(), streamsBuilder);
-		} else {
-			return paymentsReport.apply(topicsProperties
-					.getPeriodTotalSpent(), streamsBuilder);
-		}
 	}
 
 	/**

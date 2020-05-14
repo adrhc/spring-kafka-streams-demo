@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.reports.transformers;
+package ro.go.adrhc.springkafkastreams.infrastructure.topologies.reports.transformers;
 
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.ValueTransformer;
@@ -7,7 +7,7 @@ import org.apache.kafka.streams.processor.ProcessorContext;
 import org.apache.kafka.streams.state.KeyValueIterator;
 import org.apache.kafka.streams.state.KeyValueStore;
 import org.apache.kafka.streams.state.ValueAndTimestamp;
-import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.reports.messages.Command;
+import ro.go.adrhc.springkafkastreams.infrastructure.topologies.reports.messages.Command;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
