@@ -10,14 +10,14 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.EnableKafkaStreams;
 import ro.go.adrhc.springkafkastreams.config.AppProperties;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
+import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.StreamsBuilderEx;
+import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.KStreamEx;
 import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.exceeds.daily.DailyExceeds;
 import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.exceeds.period.PeriodExceeds;
 import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.exceeds.period.PeriodExceedsWithExtensions;
 import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.ClientProfile;
 import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.Transaction;
 import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.reports.PaymentsReport;
-import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.StreamsBuilderEx;
-import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.KStreamEx;
 
 import static ro.go.adrhc.springkafkastreams.infrastructure.kextensions.util.KafkaEx.enhance;
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.format;
@@ -67,13 +67,22 @@ public class PaymentsConfig {
 		// total expenses for a period
 		if (app.isKafkaEnhanced()) {
 			periodExceedsWithExtensions.accept(clientProfileTable, transactions);
-			paymentsReport.accept(periodExceedsWithExtensions.periodTotalSpentByClientIdStoreName(), streamsBuilder);
 		} else {
 			periodExceeds.accept(clientProfileTable, txGroupedByCli, streamsBuilder);
-			paymentsReport.accept(topicsProperties.getPeriodTotalSpent(), streamsBuilder);
 		}
 
 		return transactions;
+	}
+
+	@Bean
+	public KStream<String, ?> reportingCommands(StreamsBuilder streamsBuilder) {
+		if (app.isKafkaEnhanced()) {
+			return paymentsReport.apply(periodExceedsWithExtensions
+					.periodTotalSpentByClientIdStoreName(), streamsBuilder);
+		} else {
+			return paymentsReport.apply(topicsProperties
+					.getPeriodTotalSpent(), streamsBuilder);
+		}
 	}
 
 	/**

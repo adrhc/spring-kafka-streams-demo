@@ -9,23 +9,17 @@ import org.apache.kafka.streams.state.KeyValueStore;
 import org.apache.kafka.streams.state.ValueAndTimestamp;
 import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.reports.messages.Command;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.operators.aggregators.LocalDateBasedKey.parseWithStringData;
+import static ro.go.adrhc.springkafkastreams.util.StreamsUtils.valueFrom;
 
-/**
- * Takes all data from storeName into a list of T; the list is the transformer's "value".
- *
- * @param <T> is something that can be created based on: String clientId, LocalDate time, Integer amount.
- */
-public abstract class CmdValueTransformerSupp<T> implements ValueTransformerSupplier<Command, List<T>> {
+public class QueryAllSupp<T> implements ValueTransformerSupplier<Command, List<T>> {
 	private final String storeName;
 
-	public CmdValueTransformerSupp(String storeName) {this.storeName = storeName;}
-
-	protected abstract T newT(String clientId, LocalDate time, Integer amount);
+	public QueryAllSupp(String storeName) {
+		this.storeName = storeName;
+	}
 
 	@Override
 	public ValueTransformer<Command, List<T>> get() {
@@ -44,21 +38,10 @@ public abstract class CmdValueTransformerSupp<T> implements ValueTransformerSupp
 					List<T> records = new ArrayList<>();
 					while (iterator.hasNext()) {
 						KeyValue<String, ?> kv = iterator.next();
-						parseWithStringData(kv.key).ifPresent(it ->
-								records.add(newT(it.getData(), it.getTime(), integerOf(kv.value))));
+						records.add(valueFrom((ValueAndTimestamp) kv.value));
 					}
 					return records;
 				}
-			}
-
-			private Integer integerOf(Object o) {
-				if (o instanceof Integer) {
-					return (Integer) o;
-				}
-				if (o instanceof ValueAndTimestamp) {
-					return integerOf(((ValueAndTimestamp<?>) o).value());
-				}
-				throw new UnsupportedOperationException();
 			}
 
 			@Override

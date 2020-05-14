@@ -4,7 +4,7 @@ import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.exceeds
 
 import java.time.LocalDate;
 
-public class DailyValueTransformerSupp extends CmdValueTransformerSupp<DailyTotalSpent> {
+public class DailyValueTransformerSupp extends AbstractTotalSpentValueTransformerSupp<DailyTotalSpent> {
 	public DailyValueTransformerSupp(String storeName) {
 		super(storeName);
 	}
