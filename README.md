@@ -23,6 +23,7 @@ see http://localhost:9021/clusters
 ./create-client-profile.sh | tee -a profile.log | egrep 'ClientProfile\(|client1'
 ./create-transactions.sh 1 | tee -a transactions.log | egrep 'Transaction\(|client1'
 ./create-report-command.sh config | grep parameters
+./create-report-command.sh profiles | grep parameters
 ./create-report-command.sh daily,period | grep parameters
 ```
 # Scenario 2: 1 MONTH, kafka enhancer OFF (not supported by Kafka)

@@ -1,6 +1,7 @@
 package ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.*;
@@ -9,14 +10,25 @@ import org.apache.kafka.streams.processor.TopicNameExtractor;
 import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.operators.aggregators.WindowByEx;
 import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.operators.peek.KPeek;
 import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.operators.peek.KPeekParams;
+import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.transformers.queries.QueryAllSupp;
 
 import java.time.temporal.TemporalUnit;
+import java.util.List;
 import java.util.function.Consumer;
 
+@Getter
 @AllArgsConstructor
 public class KStreamEx<K, V> implements KStream<K, V> {
 	private final KStream<K, V> delegate;
 	private final StreamsBuilder streamsBuilder;
+
+	/**
+	 * It queries storeName returning all its values as a List.
+	 * Ignores the received key and value so it is useful mainly for debugging/reporting purposes.
+	 */
+	public <NV> KStreamEx<K, List<NV>> allOf(String storeName) {
+		return new KStreamEx<>(delegate.transformValues(new QueryAllSupp<>(storeName), storeName), streamsBuilder);
+	}
 
 	public WindowByEx<K, V> windowedBy(int windowSize, TemporalUnit unit) {
 		return new WindowByEx<>(windowSize, unit, delegate, streamsBuilder);
@@ -30,7 +42,9 @@ public class KStreamEx<K, V> implements KStream<K, V> {
 	}
 
 	@Override
-	public KStream<K, V> filter(Predicate<? super K, ? super V> predicate) {return delegate.filter(predicate);}
+	public KStreamEx<K, V> filter(Predicate<? super K, ? super V> predicate) {
+		return new KStreamEx<>(delegate.filter(predicate), streamsBuilder);
+	}
 
 	@Override
 	public KStream<K, V> filterNot(Predicate<? super K, ? super V> predicate) {return delegate.filterNot(predicate);}

@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.reports.transformers;
+package ro.go.adrhc.springkafkastreams.infrastructure.kextensions.transformers.queries;
 
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.ValueTransformer;
@@ -7,14 +7,13 @@ import org.apache.kafka.streams.processor.ProcessorContext;
 import org.apache.kafka.streams.state.KeyValueIterator;
 import org.apache.kafka.streams.state.KeyValueStore;
 import org.apache.kafka.streams.state.ValueAndTimestamp;
-import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.reports.messages.Command;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static ro.go.adrhc.springkafkastreams.util.StreamsUtils.valueFrom;
 
-public class QueryAllSupp<T> implements ValueTransformerSupplier<Command, List<T>> {
+public class QueryAllSupp<OV, NV> implements ValueTransformerSupplier<OV, List<NV>> {
 	private final String storeName;
 
 	public QueryAllSupp(String storeName) {
@@ -22,7 +21,7 @@ public class QueryAllSupp<T> implements ValueTransformerSupplier<Command, List<T
 	}
 
 	@Override
-	public ValueTransformer<Command, List<T>> get() {
+	public ValueTransformer<OV, List<NV>> get() {
 		return new ValueTransformer<>() {
 			private KeyValueStore<String, ?> store;
 
@@ -32,10 +31,10 @@ public class QueryAllSupp<T> implements ValueTransformerSupplier<Command, List<T
 			}
 
 			@Override
-			public List<T> transform(Command value) {
+			public List<NV> transform(OV value) {
 				// https://docs.confluent.io/current/streams/faq.html#why-does-my-kstreams-application-use-so-much-memory
 				try (KeyValueIterator<String, ?> iterator = store.all()) {
-					List<T> records = new ArrayList<>();
+					List<NV> records = new ArrayList<>();
 					while (iterator.hasNext()) {
 						KeyValue<String, ?> kv = iterator.next();
 						records.add(valueFrom((ValueAndTimestamp) kv.value));
