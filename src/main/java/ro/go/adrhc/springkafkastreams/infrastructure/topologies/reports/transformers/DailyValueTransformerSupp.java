@@ -1,6 +1,6 @@
 package ro.go.adrhc.springkafkastreams.infrastructure.topologies.reports.transformers;
 
-import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.exceeds.daily.messages.DailyTotalSpent;
+import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.range.daily.messages.DailyTotalSpent;
 
 import java.time.LocalDate;
 

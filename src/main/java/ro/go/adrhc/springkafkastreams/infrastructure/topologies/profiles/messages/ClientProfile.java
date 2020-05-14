@@ -3,7 +3,7 @@
  * <p>
  * DO NOT EDIT DIRECTLY
  */
-package ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages;
+package ro.go.adrhc.springkafkastreams.infrastructure.topologies.profiles.messages;
 
 import org.apache.avro.message.BinaryMessageDecoder;
 import org.apache.avro.message.BinaryMessageEncoder;
@@ -12,8 +12,8 @@ import org.apache.avro.specific.SpecificData;
 
 @org.apache.avro.specific.AvroGenerated
 public class ClientProfile extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-	public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"ClientProfile\",\"namespace\":\"ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"dailyMaxAmount\",\"type\":\"int\"},{\"name\":\"periodMaxAmount\",\"type\":\"int\"}]}");
-	private static final long serialVersionUID = -4596003412416913023L;
+	public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"ClientProfile\",\"namespace\":\"ro.go.adrhc.springkafkastreams.infrastructure.topologies.profiles.messages\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"dailyMaxAmount\",\"type\":\"int\"},{\"name\":\"periodMaxAmount\",\"type\":\"int\"}]}");
+	private static final long serialVersionUID = 3314481211579910021L;
 	private static final SpecificData MODEL$ = new SpecificData();
 	private static final BinaryMessageEncoder<ClientProfile> ENCODER =
 			new BinaryMessageEncoder<ClientProfile>(MODEL$, SCHEMA$);
@@ -38,8 +38,9 @@ public class ClientProfile extends org.apache.avro.specific.SpecificRecordBase i
 
 	/**
 	 * All-args constructor.
-	 * @param clientId The new value for clientId
-	 * @param dailyMaxAmount The new value for dailyMaxAmount
+	 *
+	 * @param clientId        The new value for clientId
+	 * @param dailyMaxAmount  The new value for dailyMaxAmount
 	 * @param periodMaxAmount The new value for periodMaxAmount
 	 */
 	public ClientProfile(java.lang.String clientId, java.lang.Integer dailyMaxAmount, java.lang.Integer periodMaxAmount) {
@@ -52,6 +53,7 @@ public class ClientProfile extends org.apache.avro.specific.SpecificRecordBase i
 
 	/**
 	 * Return the BinaryMessageEncoder instance used by this class.
+	 *
 	 * @return the message encoder used by this class
 	 */
 	public static BinaryMessageEncoder<ClientProfile> getEncoder() {
@@ -60,6 +62,7 @@ public class ClientProfile extends org.apache.avro.specific.SpecificRecordBase i
 
 	/**
 	 * Return the BinaryMessageDecoder instance used by this class.
+	 *
 	 * @return the message decoder used by this class
 	 */
 	public static BinaryMessageDecoder<ClientProfile> getDecoder() {
@@ -68,6 +71,7 @@ public class ClientProfile extends org.apache.avro.specific.SpecificRecordBase i
 
 	/**
 	 * Create a new BinaryMessageDecoder instance for this class that uses the specified {@link SchemaStore}.
+	 *
 	 * @param resolver a {@link SchemaStore} used to find schemas by fingerprint
 	 * @return a BinaryMessageDecoder instance for this class backed by the given SchemaStore
 	 */
@@ -77,6 +81,7 @@ public class ClientProfile extends org.apache.avro.specific.SpecificRecordBase i
 
 	/**
 	 * Deserializes a ClientProfile from a ByteBuffer.
+	 *
 	 * @param b a byte buffer holding serialized data for an instance of this class
 	 * @return a ClientProfile instance decoded from the given buffer
 	 * @throws java.io.IOException if the given bytes could not be deserialized into an instance of this class
@@ -88,40 +93,44 @@ public class ClientProfile extends org.apache.avro.specific.SpecificRecordBase i
 
 	/**
 	 * Creates a new ClientProfile RecordBuilder.
+	 *
 	 * @return A new ClientProfile RecordBuilder
 	 */
-	public static ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.ClientProfile.Builder newBuilder() {
-		return new ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.ClientProfile.Builder();
+	public static ro.go.adrhc.springkafkastreams.infrastructure.topologies.profiles.messages.ClientProfile.Builder newBuilder() {
+		return new ro.go.adrhc.springkafkastreams.infrastructure.topologies.profiles.messages.ClientProfile.Builder();
 	}
 
 	/**
 	 * Creates a new ClientProfile RecordBuilder by copying an existing Builder.
+	 *
 	 * @param other The existing builder to copy.
 	 * @return A new ClientProfile RecordBuilder
 	 */
-	public static ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.ClientProfile.Builder newBuilder(ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.ClientProfile.Builder other) {
+	public static ro.go.adrhc.springkafkastreams.infrastructure.topologies.profiles.messages.ClientProfile.Builder newBuilder(ro.go.adrhc.springkafkastreams.infrastructure.topologies.profiles.messages.ClientProfile.Builder other) {
 		if (other == null) {
-			return new ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.ClientProfile.Builder();
+			return new ro.go.adrhc.springkafkastreams.infrastructure.topologies.profiles.messages.ClientProfile.Builder();
 		} else {
-			return new ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.ClientProfile.Builder(other);
+			return new ro.go.adrhc.springkafkastreams.infrastructure.topologies.profiles.messages.ClientProfile.Builder(other);
 		}
 	}
 
 	/**
 	 * Creates a new ClientProfile RecordBuilder by copying an existing ClientProfile instance.
+	 *
 	 * @param other The existing instance to copy.
 	 * @return A new ClientProfile RecordBuilder
 	 */
-	public static ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.ClientProfile.Builder newBuilder(ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.ClientProfile other) {
+	public static ro.go.adrhc.springkafkastreams.infrastructure.topologies.profiles.messages.ClientProfile.Builder newBuilder(ro.go.adrhc.springkafkastreams.infrastructure.topologies.profiles.messages.ClientProfile other) {
 		if (other == null) {
-			return new ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.ClientProfile.Builder();
+			return new ro.go.adrhc.springkafkastreams.infrastructure.topologies.profiles.messages.ClientProfile.Builder();
 		} else {
-			return new ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.ClientProfile.Builder(other);
+			return new ro.go.adrhc.springkafkastreams.infrastructure.topologies.profiles.messages.ClientProfile.Builder(other);
 		}
 	}
 
 	/**
 	 * Serializes this ClientProfile to a ByteBuffer.
+	 *
 	 * @return a buffer holding the serialized data for this instance
 	 * @throws java.io.IOException if this instance could not be serialized
 	 */
@@ -167,6 +176,7 @@ public class ClientProfile extends org.apache.avro.specific.SpecificRecordBase i
 
 	/**
 	 * Gets the value of the 'clientId' field.
+	 *
 	 * @return The value of the 'clientId' field.
 	 */
 	public java.lang.String getClientId() {
@@ -175,6 +185,7 @@ public class ClientProfile extends org.apache.avro.specific.SpecificRecordBase i
 
 	/**
 	 * Sets the value of the 'clientId' field.
+	 *
 	 * @param value the value to set.
 	 */
 	public void setClientId(java.lang.String value) {
@@ -183,6 +194,7 @@ public class ClientProfile extends org.apache.avro.specific.SpecificRecordBase i
 
 	/**
 	 * Gets the value of the 'dailyMaxAmount' field.
+	 *
 	 * @return The value of the 'dailyMaxAmount' field.
 	 */
 	public int getDailyMaxAmount() {
@@ -191,6 +203,7 @@ public class ClientProfile extends org.apache.avro.specific.SpecificRecordBase i
 
 	/**
 	 * Sets the value of the 'dailyMaxAmount' field.
+	 *
 	 * @param value the value to set.
 	 */
 	public void setDailyMaxAmount(int value) {
@@ -199,6 +212,7 @@ public class ClientProfile extends org.apache.avro.specific.SpecificRecordBase i
 
 	/**
 	 * Gets the value of the 'periodMaxAmount' field.
+	 *
 	 * @return The value of the 'periodMaxAmount' field.
 	 */
 	public int getPeriodMaxAmount() {
@@ -207,6 +221,7 @@ public class ClientProfile extends org.apache.avro.specific.SpecificRecordBase i
 
 	/**
 	 * Sets the value of the 'periodMaxAmount' field.
+	 *
 	 * @param value the value to set.
 	 */
 	public void setPeriodMaxAmount(int value) {
@@ -283,16 +298,19 @@ public class ClientProfile extends org.apache.avro.specific.SpecificRecordBase i
 		private int dailyMaxAmount;
 		private int periodMaxAmount;
 
-		/** Creates a new Builder */
+		/**
+		 * Creates a new Builder
+		 */
 		private Builder() {
 			super(SCHEMA$);
 		}
 
 		/**
 		 * Creates a Builder by copying an existing Builder.
+		 *
 		 * @param other The existing Builder to copy.
 		 */
-		private Builder(ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.ClientProfile.Builder other) {
+		private Builder(ro.go.adrhc.springkafkastreams.infrastructure.topologies.profiles.messages.ClientProfile.Builder other) {
 			super(other);
 			if (isValidValue(fields()[0], other.clientId)) {
 				this.clientId = data().deepCopy(fields()[0].schema(), other.clientId);
@@ -310,9 +328,10 @@ public class ClientProfile extends org.apache.avro.specific.SpecificRecordBase i
 
 		/**
 		 * Creates a Builder by copying an existing ClientProfile instance
+		 *
 		 * @param other The existing instance to copy.
 		 */
-		private Builder(ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.ClientProfile other) {
+		private Builder(ro.go.adrhc.springkafkastreams.infrastructure.topologies.profiles.messages.ClientProfile other) {
 			super(SCHEMA$);
 			if (isValidValue(fields()[0], other.clientId)) {
 				this.clientId = data().deepCopy(fields()[0].schema(), other.clientId);
@@ -330,6 +349,7 @@ public class ClientProfile extends org.apache.avro.specific.SpecificRecordBase i
 
 		/**
 		 * Gets the value of the 'clientId' field.
+		 *
 		 * @return The value.
 		 */
 		public java.lang.String getClientId() {
@@ -339,10 +359,11 @@ public class ClientProfile extends org.apache.avro.specific.SpecificRecordBase i
 
 		/**
 		 * Sets the value of the 'clientId' field.
+		 *
 		 * @param value The value of 'clientId'.
 		 * @return This builder.
 		 */
-		public ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.ClientProfile.Builder setClientId(java.lang.String value) {
+		public ro.go.adrhc.springkafkastreams.infrastructure.topologies.profiles.messages.ClientProfile.Builder setClientId(java.lang.String value) {
 			validate(fields()[0], value);
 			this.clientId = value;
 			fieldSetFlags()[0] = true;
@@ -351,6 +372,7 @@ public class ClientProfile extends org.apache.avro.specific.SpecificRecordBase i
 
 		/**
 		 * Checks whether the 'clientId' field has been set.
+		 *
 		 * @return True if the 'clientId' field has been set, false otherwise.
 		 */
 		public boolean hasClientId() {
@@ -360,9 +382,10 @@ public class ClientProfile extends org.apache.avro.specific.SpecificRecordBase i
 
 		/**
 		 * Clears the value of the 'clientId' field.
+		 *
 		 * @return This builder.
 		 */
-		public ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.ClientProfile.Builder clearClientId() {
+		public ro.go.adrhc.springkafkastreams.infrastructure.topologies.profiles.messages.ClientProfile.Builder clearClientId() {
 			clientId = null;
 			fieldSetFlags()[0] = false;
 			return this;
@@ -370,6 +393,7 @@ public class ClientProfile extends org.apache.avro.specific.SpecificRecordBase i
 
 		/**
 		 * Gets the value of the 'dailyMaxAmount' field.
+		 *
 		 * @return The value.
 		 */
 		public int getDailyMaxAmount() {
@@ -379,10 +403,11 @@ public class ClientProfile extends org.apache.avro.specific.SpecificRecordBase i
 
 		/**
 		 * Sets the value of the 'dailyMaxAmount' field.
+		 *
 		 * @param value The value of 'dailyMaxAmount'.
 		 * @return This builder.
 		 */
-		public ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.ClientProfile.Builder setDailyMaxAmount(int value) {
+		public ro.go.adrhc.springkafkastreams.infrastructure.topologies.profiles.messages.ClientProfile.Builder setDailyMaxAmount(int value) {
 			validate(fields()[1], value);
 			this.dailyMaxAmount = value;
 			fieldSetFlags()[1] = true;
@@ -391,6 +416,7 @@ public class ClientProfile extends org.apache.avro.specific.SpecificRecordBase i
 
 		/**
 		 * Checks whether the 'dailyMaxAmount' field has been set.
+		 *
 		 * @return True if the 'dailyMaxAmount' field has been set, false otherwise.
 		 */
 		public boolean hasDailyMaxAmount() {
@@ -400,15 +426,17 @@ public class ClientProfile extends org.apache.avro.specific.SpecificRecordBase i
 
 		/**
 		 * Clears the value of the 'dailyMaxAmount' field.
+		 *
 		 * @return This builder.
 		 */
-		public ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.ClientProfile.Builder clearDailyMaxAmount() {
+		public ro.go.adrhc.springkafkastreams.infrastructure.topologies.profiles.messages.ClientProfile.Builder clearDailyMaxAmount() {
 			fieldSetFlags()[1] = false;
 			return this;
 		}
 
 		/**
 		 * Gets the value of the 'periodMaxAmount' field.
+		 *
 		 * @return The value.
 		 */
 		public int getPeriodMaxAmount() {
@@ -418,10 +446,11 @@ public class ClientProfile extends org.apache.avro.specific.SpecificRecordBase i
 
 		/**
 		 * Sets the value of the 'periodMaxAmount' field.
+		 *
 		 * @param value The value of 'periodMaxAmount'.
 		 * @return This builder.
 		 */
-		public ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.ClientProfile.Builder setPeriodMaxAmount(int value) {
+		public ro.go.adrhc.springkafkastreams.infrastructure.topologies.profiles.messages.ClientProfile.Builder setPeriodMaxAmount(int value) {
 			validate(fields()[2], value);
 			this.periodMaxAmount = value;
 			fieldSetFlags()[2] = true;
@@ -430,6 +459,7 @@ public class ClientProfile extends org.apache.avro.specific.SpecificRecordBase i
 
 		/**
 		 * Checks whether the 'periodMaxAmount' field has been set.
+		 *
 		 * @return True if the 'periodMaxAmount' field has been set, false otherwise.
 		 */
 		public boolean hasPeriodMaxAmount() {
@@ -439,9 +469,10 @@ public class ClientProfile extends org.apache.avro.specific.SpecificRecordBase i
 
 		/**
 		 * Clears the value of the 'periodMaxAmount' field.
+		 *
 		 * @return This builder.
 		 */
-		public ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.ClientProfile.Builder clearPeriodMaxAmount() {
+		public ro.go.adrhc.springkafkastreams.infrastructure.topologies.profiles.messages.ClientProfile.Builder clearPeriodMaxAmount() {
 			fieldSetFlags()[2] = false;
 			return this;
 		}

@@ -37,7 +37,8 @@ public class Command extends org.apache.avro.specific.SpecificRecordBase impleme
 
 	/**
 	 * All-args constructor.
-	 * @param name The new value for name
+	 *
+	 * @param name       The new value for name
 	 * @param parameters The new value for parameters
 	 */
 	public Command(java.lang.String name, java.util.List<java.lang.String> parameters) {
@@ -49,6 +50,7 @@ public class Command extends org.apache.avro.specific.SpecificRecordBase impleme
 
 	/**
 	 * Return the BinaryMessageEncoder instance used by this class.
+	 *
 	 * @return the message encoder used by this class
 	 */
 	public static BinaryMessageEncoder<Command> getEncoder() {
@@ -57,6 +59,7 @@ public class Command extends org.apache.avro.specific.SpecificRecordBase impleme
 
 	/**
 	 * Return the BinaryMessageDecoder instance used by this class.
+	 *
 	 * @return the message decoder used by this class
 	 */
 	public static BinaryMessageDecoder<Command> getDecoder() {
@@ -65,6 +68,7 @@ public class Command extends org.apache.avro.specific.SpecificRecordBase impleme
 
 	/**
 	 * Create a new BinaryMessageDecoder instance for this class that uses the specified {@link SchemaStore}.
+	 *
 	 * @param resolver a {@link SchemaStore} used to find schemas by fingerprint
 	 * @return a BinaryMessageDecoder instance for this class backed by the given SchemaStore
 	 */
@@ -74,6 +78,7 @@ public class Command extends org.apache.avro.specific.SpecificRecordBase impleme
 
 	/**
 	 * Deserializes a Command from a ByteBuffer.
+	 *
 	 * @param b a byte buffer holding serialized data for an instance of this class
 	 * @return a Command instance decoded from the given buffer
 	 * @throws java.io.IOException if the given bytes could not be deserialized into an instance of this class
@@ -85,6 +90,7 @@ public class Command extends org.apache.avro.specific.SpecificRecordBase impleme
 
 	/**
 	 * Creates a new Command RecordBuilder.
+	 *
 	 * @return A new Command RecordBuilder
 	 */
 	public static ro.go.adrhc.springkafkastreams.infrastructure.topologies.reports.messages.Command.Builder newBuilder() {
@@ -93,6 +99,7 @@ public class Command extends org.apache.avro.specific.SpecificRecordBase impleme
 
 	/**
 	 * Creates a new Command RecordBuilder by copying an existing Builder.
+	 *
 	 * @param other The existing builder to copy.
 	 * @return A new Command RecordBuilder
 	 */
@@ -106,6 +113,7 @@ public class Command extends org.apache.avro.specific.SpecificRecordBase impleme
 
 	/**
 	 * Creates a new Command RecordBuilder by copying an existing Command instance.
+	 *
 	 * @param other The existing instance to copy.
 	 * @return A new Command RecordBuilder
 	 */
@@ -119,6 +127,7 @@ public class Command extends org.apache.avro.specific.SpecificRecordBase impleme
 
 	/**
 	 * Serializes this Command to a ByteBuffer.
+	 *
 	 * @return a buffer holding the serialized data for this instance
 	 * @throws java.io.IOException if this instance could not be serialized
 	 */
@@ -159,6 +168,7 @@ public class Command extends org.apache.avro.specific.SpecificRecordBase impleme
 
 	/**
 	 * Gets the value of the 'name' field.
+	 *
 	 * @return The value of the 'name' field.
 	 */
 	public java.lang.String getName() {
@@ -167,6 +177,7 @@ public class Command extends org.apache.avro.specific.SpecificRecordBase impleme
 
 	/**
 	 * Sets the value of the 'name' field.
+	 *
 	 * @param value the value to set.
 	 */
 	public void setName(java.lang.String value) {
@@ -175,6 +186,7 @@ public class Command extends org.apache.avro.specific.SpecificRecordBase impleme
 
 	/**
 	 * Gets the value of the 'parameters' field.
+	 *
 	 * @return The value of the 'parameters' field.
 	 */
 	public java.util.List<java.lang.String> getParameters() {
@@ -183,6 +195,7 @@ public class Command extends org.apache.avro.specific.SpecificRecordBase impleme
 
 	/**
 	 * Sets the value of the 'parameters' field.
+	 *
 	 * @param value the value to set.
 	 */
 	public void setParameters(java.util.List<java.lang.String> value) {
@@ -303,13 +316,16 @@ public class Command extends org.apache.avro.specific.SpecificRecordBase impleme
 		private java.lang.String name;
 		private java.util.List<java.lang.String> parameters;
 
-		/** Creates a new Builder */
+		/**
+		 * Creates a new Builder
+		 */
 		private Builder() {
 			super(SCHEMA$);
 		}
 
 		/**
 		 * Creates a Builder by copying an existing Builder.
+		 *
 		 * @param other The existing Builder to copy.
 		 */
 		private Builder(ro.go.adrhc.springkafkastreams.infrastructure.topologies.reports.messages.Command.Builder other) {
@@ -326,6 +342,7 @@ public class Command extends org.apache.avro.specific.SpecificRecordBase impleme
 
 		/**
 		 * Creates a Builder by copying an existing Command instance
+		 *
 		 * @param other The existing instance to copy.
 		 */
 		private Builder(ro.go.adrhc.springkafkastreams.infrastructure.topologies.reports.messages.Command other) {
@@ -342,6 +359,7 @@ public class Command extends org.apache.avro.specific.SpecificRecordBase impleme
 
 		/**
 		 * Gets the value of the 'name' field.
+		 *
 		 * @return The value.
 		 */
 		public java.lang.String getName() {
@@ -351,6 +369,7 @@ public class Command extends org.apache.avro.specific.SpecificRecordBase impleme
 
 		/**
 		 * Sets the value of the 'name' field.
+		 *
 		 * @param value The value of 'name'.
 		 * @return This builder.
 		 */
@@ -363,6 +382,7 @@ public class Command extends org.apache.avro.specific.SpecificRecordBase impleme
 
 		/**
 		 * Checks whether the 'name' field has been set.
+		 *
 		 * @return True if the 'name' field has been set, false otherwise.
 		 */
 		public boolean hasName() {
@@ -372,6 +392,7 @@ public class Command extends org.apache.avro.specific.SpecificRecordBase impleme
 
 		/**
 		 * Clears the value of the 'name' field.
+		 *
 		 * @return This builder.
 		 */
 		public ro.go.adrhc.springkafkastreams.infrastructure.topologies.reports.messages.Command.Builder clearName() {
@@ -382,6 +403,7 @@ public class Command extends org.apache.avro.specific.SpecificRecordBase impleme
 
 		/**
 		 * Gets the value of the 'parameters' field.
+		 *
 		 * @return The value.
 		 */
 		public java.util.List<java.lang.String> getParameters() {
@@ -391,6 +413,7 @@ public class Command extends org.apache.avro.specific.SpecificRecordBase impleme
 
 		/**
 		 * Sets the value of the 'parameters' field.
+		 *
 		 * @param value The value of 'parameters'.
 		 * @return This builder.
 		 */
@@ -403,6 +426,7 @@ public class Command extends org.apache.avro.specific.SpecificRecordBase impleme
 
 		/**
 		 * Checks whether the 'parameters' field has been set.
+		 *
 		 * @return True if the 'parameters' field has been set, false otherwise.
 		 */
 		public boolean hasParameters() {
@@ -412,6 +436,7 @@ public class Command extends org.apache.avro.specific.SpecificRecordBase impleme
 
 		/**
 		 * Clears the value of the 'parameters' field.
+		 *
 		 * @return This builder.
 		 */
 		public ro.go.adrhc.springkafkastreams.infrastructure.topologies.reports.messages.Command.Builder clearParameters() {

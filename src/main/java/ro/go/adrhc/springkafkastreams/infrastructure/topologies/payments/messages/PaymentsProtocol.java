@@ -5,10 +5,12 @@
  */
 package ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages;
 
-/** payments protocol */
+/**
+ * payments protocol
+ */
 @org.apache.avro.specific.AvroGenerated
 public interface PaymentsProtocol {
-	org.apache.avro.Protocol PROTOCOL = org.apache.avro.Protocol.parse("{\"protocol\":\"PaymentsProtocol\",\"namespace\":\"ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages\",\"doc\":\"payments protocol\",\"types\":[{\"type\":\"record\",\"name\":\"ClientProfile\",\"fields\":[{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"dailyMaxAmount\",\"type\":\"int\"},{\"name\":\"periodMaxAmount\",\"type\":\"int\"}]},{\"type\":\"record\",\"name\":\"Transaction\",\"fields\":[{\"name\":\"time\",\"type\":{\"type\":\"int\",\"logicalType\":\"date\"}},{\"name\":\"merchantId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"amount\",\"type\":\"int\"}]}],\"messages\":{}}");
+	org.apache.avro.Protocol PROTOCOL = org.apache.avro.Protocol.parse("{\"protocol\":\"PaymentsProtocol\",\"namespace\":\"ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages\",\"doc\":\"payments protocol\",\"types\":[{\"type\":\"record\",\"name\":\"Transaction\",\"fields\":[{\"name\":\"time\",\"type\":{\"type\":\"int\",\"logicalType\":\"date\"}},{\"name\":\"merchantId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"clientId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"amount\",\"type\":\"int\"}]}],\"messages\":{}}");
 
 	@SuppressWarnings("all")
 	/** payments protocol */

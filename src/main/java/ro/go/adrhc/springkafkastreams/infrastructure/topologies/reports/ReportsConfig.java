@@ -14,8 +14,8 @@ import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.KStream
 import ro.go.adrhc.springkafkastreams.infrastructure.reporting.ConfigReport;
 import ro.go.adrhc.springkafkastreams.infrastructure.reporting.DailyTotalSpentReport;
 import ro.go.adrhc.springkafkastreams.infrastructure.reporting.PeriodTotalSpentReport;
-import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.exceeds.period.PeriodExceedsWithExtensions;
-import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.ClientProfile;
+import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.range.period.PeriodExceedsWithExtensions;
+import ro.go.adrhc.springkafkastreams.infrastructure.topologies.profiles.messages.ClientProfile;
 import ro.go.adrhc.springkafkastreams.infrastructure.topologies.reports.messages.Command;
 import ro.go.adrhc.springkafkastreams.infrastructure.topologies.reports.transformers.DailyValueTransformerSupp;
 import ro.go.adrhc.springkafkastreams.infrastructure.topologies.reports.transformers.PeriodValueTransformerSupp;

@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.exceeds.daily;
+package ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.range.daily;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Serdes;
@@ -11,11 +11,11 @@ import ro.go.adrhc.springkafkastreams.config.AppProperties;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
 import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.StreamsBuilderEx;
 import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.operators.aggregators.LocalDateBasedKey;
-import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.exceeds.AbstractExceeds;
-import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.exceeds.daily.messages.DailyExceeded;
-import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.exceeds.daily.messages.DailyTotalSpent;
-import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.ClientProfile;
+import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.range.AbstractExceeds;
+import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.range.daily.messages.DailyExceeded;
+import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.range.daily.messages.DailyTotalSpent;
 import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.Transaction;
+import ro.go.adrhc.springkafkastreams.infrastructure.topologies.profiles.messages.ClientProfile;
 
 import java.time.Duration;
 import java.util.Optional;

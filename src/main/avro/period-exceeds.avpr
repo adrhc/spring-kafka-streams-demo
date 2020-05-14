@@ -1,5 +1,5 @@
 {
-  "namespace": "ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.exceeds.period.messages",
+  "namespace": "ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.range.period.messages",
   "protocol": "PeriodExceedsProtocol",
   "doc": "period exceeds protocol",
   "types": [

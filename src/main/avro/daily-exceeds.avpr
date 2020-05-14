@@ -1,5 +1,5 @@
 {
-  "namespace": "ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.exceeds.daily.messages",
+  "namespace": "ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.range.daily.messages",
   "protocol": "DailyExceedsProtocol",
   "doc": "daily exceeds protocol",
   "types": [

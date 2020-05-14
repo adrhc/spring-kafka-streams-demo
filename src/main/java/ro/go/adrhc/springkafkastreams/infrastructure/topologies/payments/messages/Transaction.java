@@ -42,18 +42,21 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 	private java.lang.String merchantId;
 	private java.lang.String clientId;
 	private int amount;
+
 	/**
 	 * Default constructor.  Note that this does not initialize fields
 	 * to their default values from the schema.  If that is desired then
 	 * one should use <code>newBuilder()</code>.
 	 */
 	public Transaction() {}
+
 	/**
 	 * All-args constructor.
-	 * @param time The new value for time
+	 *
+	 * @param time       The new value for time
 	 * @param merchantId The new value for merchantId
-	 * @param clientId The new value for clientId
-	 * @param amount The new value for amount
+	 * @param clientId   The new value for clientId
+	 * @param amount     The new value for amount
 	 */
 	public Transaction(java.time.LocalDate time, java.lang.String merchantId, java.lang.String clientId, java.lang.Integer amount) {
 		this.time = time;
@@ -66,6 +69,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
 	/**
 	 * Return the BinaryMessageEncoder instance used by this class.
+	 *
 	 * @return the message encoder used by this class
 	 */
 	public static BinaryMessageEncoder<Transaction> getEncoder() {
@@ -74,6 +78,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
 	/**
 	 * Return the BinaryMessageDecoder instance used by this class.
+	 *
 	 * @return the message decoder used by this class
 	 */
 	public static BinaryMessageDecoder<Transaction> getDecoder() {
@@ -82,6 +87,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
 	/**
 	 * Create a new BinaryMessageDecoder instance for this class that uses the specified {@link SchemaStore}.
+	 *
 	 * @param resolver a {@link SchemaStore} used to find schemas by fingerprint
 	 * @return a BinaryMessageDecoder instance for this class backed by the given SchemaStore
 	 */
@@ -91,6 +97,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
 	/**
 	 * Deserializes a Transaction from a ByteBuffer.
+	 *
 	 * @param b a byte buffer holding serialized data for an instance of this class
 	 * @return a Transaction instance decoded from the given buffer
 	 * @throws java.io.IOException if the given bytes could not be deserialized into an instance of this class
@@ -102,6 +109,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
 	/**
 	 * Creates a new Transaction RecordBuilder.
+	 *
 	 * @return A new Transaction RecordBuilder
 	 */
 	public static ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.Transaction.Builder newBuilder() {
@@ -110,6 +118,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
 	/**
 	 * Creates a new Transaction RecordBuilder by copying an existing Builder.
+	 *
 	 * @param other The existing builder to copy.
 	 * @return A new Transaction RecordBuilder
 	 */
@@ -123,6 +132,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
 	/**
 	 * Creates a new Transaction RecordBuilder by copying an existing Transaction instance.
+	 *
 	 * @param other The existing instance to copy.
 	 * @return A new Transaction RecordBuilder
 	 */
@@ -136,6 +146,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
 	/**
 	 * Serializes this Transaction to a ByteBuffer.
+	 *
 	 * @return a buffer holding the serialized data for this instance
 	 * @throws java.io.IOException if this instance could not be serialized
 	 */
@@ -191,6 +202,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
 	/**
 	 * Gets the value of the 'time' field.
+	 *
 	 * @return The value of the 'time' field.
 	 */
 	public java.time.LocalDate getTime() {
@@ -199,6 +211,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
 	/**
 	 * Sets the value of the 'time' field.
+	 *
 	 * @param value the value to set.
 	 */
 	public void setTime(java.time.LocalDate value) {
@@ -207,6 +220,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
 	/**
 	 * Gets the value of the 'merchantId' field.
+	 *
 	 * @return The value of the 'merchantId' field.
 	 */
 	public java.lang.String getMerchantId() {
@@ -215,6 +229,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
 	/**
 	 * Sets the value of the 'merchantId' field.
+	 *
 	 * @param value the value to set.
 	 */
 	public void setMerchantId(java.lang.String value) {
@@ -223,6 +238,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
 	/**
 	 * Gets the value of the 'clientId' field.
+	 *
 	 * @return The value of the 'clientId' field.
 	 */
 	public java.lang.String getClientId() {
@@ -231,6 +247,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
 	/**
 	 * Sets the value of the 'clientId' field.
+	 *
 	 * @param value the value to set.
 	 */
 	public void setClientId(java.lang.String value) {
@@ -239,6 +256,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
 	/**
 	 * Gets the value of the 'amount' field.
+	 *
 	 * @return The value of the 'amount' field.
 	 */
 	public int getAmount() {
@@ -247,6 +265,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
 	/**
 	 * Sets the value of the 'amount' field.
+	 *
 	 * @param value the value to set.
 	 */
 	public void setAmount(int value) {
@@ -277,13 +296,16 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 		private java.lang.String clientId;
 		private int amount;
 
-		/** Creates a new Builder */
+		/**
+		 * Creates a new Builder
+		 */
 		private Builder() {
 			super(SCHEMA$);
 		}
 
 		/**
 		 * Creates a Builder by copying an existing Builder.
+		 *
 		 * @param other The existing Builder to copy.
 		 */
 		private Builder(ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.Transaction.Builder other) {
@@ -308,6 +330,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
 		/**
 		 * Creates a Builder by copying an existing Transaction instance
+		 *
 		 * @param other The existing instance to copy.
 		 */
 		private Builder(ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.Transaction other) {
@@ -332,6 +355,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
 		/**
 		 * Gets the value of the 'time' field.
+		 *
 		 * @return The value.
 		 */
 		public java.time.LocalDate getTime() {
@@ -341,6 +365,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
 		/**
 		 * Sets the value of the 'time' field.
+		 *
 		 * @param value The value of 'time'.
 		 * @return This builder.
 		 */
@@ -353,6 +378,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
 		/**
 		 * Checks whether the 'time' field has been set.
+		 *
 		 * @return True if the 'time' field has been set, false otherwise.
 		 */
 		public boolean hasTime() {
@@ -362,6 +388,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
 		/**
 		 * Clears the value of the 'time' field.
+		 *
 		 * @return This builder.
 		 */
 		public ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.Transaction.Builder clearTime() {
@@ -371,6 +398,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
 		/**
 		 * Gets the value of the 'merchantId' field.
+		 *
 		 * @return The value.
 		 */
 		public java.lang.String getMerchantId() {
@@ -380,6 +408,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
 		/**
 		 * Sets the value of the 'merchantId' field.
+		 *
 		 * @param value The value of 'merchantId'.
 		 * @return This builder.
 		 */
@@ -392,6 +421,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
 		/**
 		 * Checks whether the 'merchantId' field has been set.
+		 *
 		 * @return True if the 'merchantId' field has been set, false otherwise.
 		 */
 		public boolean hasMerchantId() {
@@ -401,6 +431,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
 		/**
 		 * Clears the value of the 'merchantId' field.
+		 *
 		 * @return This builder.
 		 */
 		public ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.Transaction.Builder clearMerchantId() {
@@ -411,6 +442,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
 		/**
 		 * Gets the value of the 'clientId' field.
+		 *
 		 * @return The value.
 		 */
 		public java.lang.String getClientId() {
@@ -420,6 +452,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
 		/**
 		 * Sets the value of the 'clientId' field.
+		 *
 		 * @param value The value of 'clientId'.
 		 * @return This builder.
 		 */
@@ -432,6 +465,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
 		/**
 		 * Checks whether the 'clientId' field has been set.
+		 *
 		 * @return True if the 'clientId' field has been set, false otherwise.
 		 */
 		public boolean hasClientId() {
@@ -441,6 +475,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
 		/**
 		 * Clears the value of the 'clientId' field.
+		 *
 		 * @return This builder.
 		 */
 		public ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.Transaction.Builder clearClientId() {
@@ -451,6 +486,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
 		/**
 		 * Gets the value of the 'amount' field.
+		 *
 		 * @return The value.
 		 */
 		public int getAmount() {
@@ -460,6 +496,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
 		/**
 		 * Sets the value of the 'amount' field.
+		 *
 		 * @param value The value of 'amount'.
 		 * @return This builder.
 		 */
@@ -472,6 +509,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
 		/**
 		 * Checks whether the 'amount' field has been set.
+		 *
 		 * @return True if the 'amount' field has been set, false otherwise.
 		 */
 		public boolean hasAmount() {
@@ -481,6 +519,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
 		/**
 		 * Clears the value of the 'amount' field.
+		 *
 		 * @return This builder.
 		 */
 		public ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.Transaction.Builder clearAmount() {

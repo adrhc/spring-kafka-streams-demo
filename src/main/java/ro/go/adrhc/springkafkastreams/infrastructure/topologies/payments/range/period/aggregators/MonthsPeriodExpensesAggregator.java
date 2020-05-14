@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.exceeds.period.aggregators;
+package ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.range.period.aggregators;
 
 import lombok.extern.slf4j.Slf4j;
 import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.operators.aggregators.PeriodAggregator;

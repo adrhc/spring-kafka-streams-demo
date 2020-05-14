@@ -10,11 +10,11 @@ import ro.go.adrhc.springkafkastreams.config.AppProperties;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
 import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.StreamsBuilderEx;
 import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.KStreamEx;
-import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.exceeds.daily.DailyExceeds;
-import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.exceeds.period.PeriodExceeds;
-import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.exceeds.period.PeriodExceedsWithExtensions;
-import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.ClientProfile;
+import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.range.daily.DailyExceeds;
+import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.range.period.PeriodExceeds;
+import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.range.period.PeriodExceedsWithExtensions;
 import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.Transaction;
+import ro.go.adrhc.springkafkastreams.infrastructure.topologies.profiles.messages.ClientProfile;
 
 import static ro.go.adrhc.springkafkastreams.infrastructure.kextensions.util.KafkaEx.enhance;
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.format;
@@ -29,14 +29,14 @@ import static ro.go.adrhc.springkafkastreams.util.DateUtils.localDateTimeOf;
 @Configuration
 @Profile("!test")
 @Slf4j
-public class PaymentsConfig {
+public class ExceedsConfig {
 	private final AppProperties app;
 	private final TopicsProperties topicsProperties;
 	private final DailyExceeds dailyExceeds;
 	private final PeriodExceeds periodExceeds;
 	private final PeriodExceedsWithExtensions periodExceedsWithExtensions;
 
-	public PaymentsConfig(AppProperties app, TopicsProperties topicsProperties, DailyExceeds dailyExceeds, PeriodExceeds periodExceeds, PeriodExceedsWithExtensions periodExceedsWithExtensions) {
+	public ExceedsConfig(AppProperties app, TopicsProperties topicsProperties, DailyExceeds dailyExceeds, PeriodExceeds periodExceeds, PeriodExceedsWithExtensions periodExceedsWithExtensions) {
 		this.app = app;
 		this.topicsProperties = topicsProperties;
 		this.dailyExceeds = dailyExceeds;
@@ -45,13 +45,10 @@ public class PaymentsConfig {
 	}
 
 	@Bean
-	public KStream<String, ?> transactions(StreamsBuilder pStreamsBuilder) {
+	public KStream<String, Transaction> transactions(
+			KTable<String, ClientProfile> clientProfileTable, StreamsBuilder pStreamsBuilder) {
 		StreamsBuilderEx streamsBuilder = enhance(pStreamsBuilder);
-
-		KTable<String, ClientProfile> clientProfileTable = clientProfileTable(streamsBuilder);
 		KStreamEx<String, Transaction> transactions = transactionsStream(streamsBuilder);
-
-		processClientProfiles(clientProfileTable);
 
 		// total expenses per day
 		KGroupedStream<String, Transaction> txGroupedByCli = txGroupedByClientId(transactions);
@@ -67,6 +64,11 @@ public class PaymentsConfig {
 		return transactions;
 	}
 
+	private KStreamEx<String, Transaction> transactionsStream(StreamsBuilderEx streamsBuilder) {
+		return streamsBuilder.stream(topicsProperties.getTransactions(),
+				Consumed.as(topicsProperties.getTransactions()));
+	}
+
 	/**
 	 * group transactions by clientId
 	 */
@@ -80,25 +82,6 @@ public class PaymentsConfig {
 							it.value.getAmount(), app.getCurrency(), format(it.value.getTime()));
 					it.context.headers().forEach(h -> log.trace(h.toString()));
 				})
-				.groupByKey(transactionsGroupedByClientId());
-	}
-
-	private void processClientProfiles(KTable<String, ClientProfile> clientProfileTable) {
-		clientProfileTable.toStream().foreach((clientId, profile) -> log.debug("\n\t{}", profile));
-	}
-
-	private KTable<String, ClientProfile> clientProfileTable(StreamsBuilderEx streamsBuilder) {
-		return streamsBuilder.table(topicsProperties.getClientProfiles(),
-				Consumed.as(topicsProperties.getClientProfiles()),
-				Materialized.as(topicsProperties.getClientProfiles()));
-	}
-
-	private KStreamEx<String, Transaction> transactionsStream(StreamsBuilderEx streamsBuilder) {
-		return streamsBuilder.stream(topicsProperties.getTransactions(),
-				Consumed.as(topicsProperties.getTransactions()));
-	}
-
-	private Grouped<String, Transaction> transactionsGroupedByClientId() {
-		return Grouped.as("transactionsGroupedByClientId");
+				.groupByKey(Grouped.as("transactionsGroupedByClientId"));
 	}
 }

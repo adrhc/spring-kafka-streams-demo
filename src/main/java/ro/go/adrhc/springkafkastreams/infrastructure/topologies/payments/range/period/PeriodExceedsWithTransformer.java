@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.exceeds.period;
+package ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.range.period;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Serdes;
@@ -11,9 +11,9 @@ import org.apache.kafka.streams.state.Stores;
 import org.springframework.stereotype.Component;
 import ro.go.adrhc.springkafkastreams.config.AppProperties;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
-import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.exceeds.period.aggregators.DaysPeriodExpensesAggregator;
-import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.ClientProfile;
+import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.range.period.aggregators.DaysPeriodExpensesAggregator;
 import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.Transaction;
+import ro.go.adrhc.springkafkastreams.infrastructure.topologies.profiles.messages.ClientProfile;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 

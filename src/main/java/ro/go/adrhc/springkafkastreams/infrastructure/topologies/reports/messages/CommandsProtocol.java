@@ -5,7 +5,9 @@
  */
 package ro.go.adrhc.springkafkastreams.infrastructure.topologies.reports.messages;
 
-/** commands protocol */
+/**
+ * commands protocol
+ */
 @org.apache.avro.specific.AvroGenerated
 public interface CommandsProtocol {
 	org.apache.avro.Protocol PROTOCOL = org.apache.avro.Protocol.parse("{\"protocol\":\"CommandsProtocol\",\"namespace\":\"ro.go.adrhc.springkafkastreams.infrastructure.topologies.reports.messages\",\"doc\":\"commands protocol\",\"types\":[{\"type\":\"record\",\"name\":\"Command\",\"fields\":[{\"name\":\"name\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"parameters\",\"type\":[\"null\",{\"type\":\"array\",\"items\":{\"type\":\"string\",\"avro.java.string\":\"String\"}}]}]}],\"messages\":{}}");
