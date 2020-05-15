@@ -10,7 +10,7 @@ It's about a person having a bank account with 2 cards attached: his own and one
 - querying KTable stores from within the kafka streams topology without using a REST endpoints or other similar external approach (see PaymentsReport)
 # Setup
 ```bash
-export CONFLUENT_HOME="/home/adr/tools/confluent/confluent-5.4.1"
+export CONFLUENT_HOME="/home/adr/tools/confluent/confluent-5.5.0"
 export PATH="$CONFLUENT_HOME/bin:$PATH"
 confluent local start
 ```

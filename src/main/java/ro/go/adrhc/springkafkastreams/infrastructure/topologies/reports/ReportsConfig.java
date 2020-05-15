@@ -48,16 +48,16 @@ public class ReportsConfig {
 	 * KTable<String, Integer> periodTotalSpentTable
 	 */
 	@Bean
-	public KStream<String, ?> reportingCommands(StreamsBuilder pStreamsBuilder) {
+	public KStream<String, Command> reportingCommands(StreamsBuilder pStreamsBuilder) {
 		String totalSpentStoreName = app.isKafkaEnhanced() ?
 				periodExceedsWithExtensions.periodTotalSpentByClientIdStoreName() :
 				topicsProperties.getPeriodTotalSpent();
 
 		StreamsBuilderEx streamsBuilder = enhance(pStreamsBuilder);
-		KStreamEx<String, Command> stream = commandsStream(streamsBuilder);
+		KStreamEx<String, Command> commands = commandsStream(streamsBuilder);
 
 		// daily report
-		stream
+		commands
 				.filter((k, cmd) -> cmd.getParameters().contains("daily"))
 				.transformValues(
 						new DailyValueTransformerSupp(topicsProperties.getDailyTotalSpent()),
@@ -65,7 +65,7 @@ public class ReportsConfig {
 				.foreach((k, list) -> dailyTotalSpentReport.report(list));
 
 		// period report
-		stream
+		commands
 				.filter((k, cmd) -> cmd.getParameters().contains("period"))
 				.transformValues(
 						new PeriodValueTransformerSupp(totalSpentStoreName),
@@ -73,17 +73,17 @@ public class ReportsConfig {
 				.foreach((k, list) -> periodTotalSpentReport.report(list));
 
 		// configuration report
-		stream
+		commands
 				.filter((k, cmd) -> cmd.getParameters().contains("config"))
 				.foreach((k, v) -> configReport.report());
 
 		// clients profiles
-		stream
+		commands
 				.filter((k, cmd) -> cmd.getParameters().contains("profiles"))
 				.<ClientProfile>allOf(topicsProperties.getClientProfiles())
 				.foreach((k, profiles) -> profiles.forEach(profile -> log.debug("\n\t{}", profile)));
 
-		return stream.getDelegate();
+		return commands.getDelegate();
 	}
 
 	private KStreamEx<String, Command> commandsStream(StreamsBuilderEx streamsBuilder) {
