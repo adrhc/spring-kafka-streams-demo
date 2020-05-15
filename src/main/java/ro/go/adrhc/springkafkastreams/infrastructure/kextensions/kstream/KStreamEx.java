@@ -2,11 +2,13 @@ package ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.apache.kafka.common.utils.Bytes;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.*;
 import org.apache.kafka.streams.processor.ProcessorSupplier;
 import org.apache.kafka.streams.processor.TopicNameExtractor;
+import org.apache.kafka.streams.state.KeyValueStore;
 import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.operators.aggregators.WindowByEx;
 import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.operators.peek.KPeek;
 import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.operators.peek.KPeekParams;
@@ -21,6 +23,93 @@ import java.util.function.Consumer;
 public class KStreamEx<K, V> implements KStream<K, V> {
 	private final KStream<K, V> delegate;
 	private final StreamsBuilder streamsBuilder;
+
+	@Override
+	public KStream<K, V> filter(Predicate<? super K, ? super V> predicate, Named named) {return delegate.filter(predicate, named);}
+
+	@Override
+	public KStream<K, V> filterNot(Predicate<? super K, ? super V> predicate, Named named) {return delegate.filterNot(predicate, named);}
+
+	@Override
+	public <KR> KStream<KR, V> selectKey(KeyValueMapper<? super K, ? super V, ? extends KR> mapper, Named named) {return delegate.selectKey(mapper, named);}
+
+	@Override
+	public <KR, VR> KStream<KR, VR> map(KeyValueMapper<? super K, ? super V, ? extends KeyValue<? extends KR, ? extends VR>> mapper, Named named) {return delegate.map(mapper, named);}
+
+	@Override
+	public <VR> KStream<K, VR> mapValues(ValueMapper<? super V, ? extends VR> mapper, Named named) {return delegate.mapValues(mapper, named);}
+
+	@Override
+	public <VR> KStream<K, VR> mapValues(ValueMapperWithKey<? super K, ? super V, ? extends VR> mapper, Named named) {return delegate.mapValues(mapper, named);}
+
+	@Override
+	public <KR, VR> KStream<KR, VR> flatMap(KeyValueMapper<? super K, ? super V, ? extends Iterable<? extends KeyValue<? extends KR, ? extends VR>>> mapper, Named named) {return delegate.flatMap(mapper, named);}
+
+	@Override
+	public <VR> KStream<K, VR> flatMapValues(ValueMapper<? super V, ? extends Iterable<? extends VR>> mapper, Named named) {return delegate.flatMapValues(mapper, named);}
+
+	@Override
+	public <VR> KStream<K, VR> flatMapValues(ValueMapperWithKey<? super K, ? super V, ? extends Iterable<? extends VR>> mapper, Named named) {return delegate.flatMapValues(mapper, named);}
+
+	@Override
+	public void foreach(ForeachAction<? super K, ? super V> action, Named named) {delegate.foreach(action, named);}
+
+	@Override
+	public KStream<K, V> peek(ForeachAction<? super K, ? super V> action, Named named) {return delegate.peek(action, named);}
+
+	@Override
+	public KStream<K, V>[] branch(Named named, Predicate<? super K, ? super V>... predicates) {return delegate.branch(named, predicates);}
+
+	@Override
+	public KStream<K, V> merge(KStream<K, V> stream, Named named) {return delegate.merge(stream, named);}
+
+	@Override
+	public KTable<K, V> toTable() {return delegate.toTable();}
+
+	@Override
+	public KTable<K, V> toTable(Named named) {return delegate.toTable(named);}
+
+	@Override
+	public KTable<K, V> toTable(Materialized<K, V, KeyValueStore<Bytes, byte[]>> materialized) {return delegate.toTable(materialized);}
+
+	@Override
+	public KTable<K, V> toTable(Named named, Materialized<K, V, KeyValueStore<Bytes, byte[]>> materialized) {return delegate.toTable(named, materialized);}
+
+	@Override
+	public <VO, VR> KStream<K, VR> join(KStream<K, VO> otherStream, ValueJoiner<? super V, ? super VO, ? extends VR> joiner, JoinWindows windows, StreamJoined<K, V, VO> streamJoined) {return delegate.join(otherStream, joiner, windows, streamJoined);}
+
+	@Override
+	public <VO, VR> KStream<K, VR> leftJoin(KStream<K, VO> otherStream, ValueJoiner<? super V, ? super VO, ? extends VR> joiner, JoinWindows windows, StreamJoined<K, V, VO> streamJoined) {return delegate.leftJoin(otherStream, joiner, windows, streamJoined);}
+
+	@Override
+	public <VO, VR> KStream<K, VR> outerJoin(KStream<K, VO> otherStream, ValueJoiner<? super V, ? super VO, ? extends VR> joiner, JoinWindows windows, StreamJoined<K, V, VO> streamJoined) {return delegate.outerJoin(otherStream, joiner, windows, streamJoined);}
+
+	@Override
+	public <GK, GV, RV> KStream<K, RV> join(GlobalKTable<GK, GV> globalTable, KeyValueMapper<? super K, ? super V, ? extends GK> keySelector, ValueJoiner<? super V, ? super GV, ? extends RV> joiner, Named named) {return delegate.join(globalTable, keySelector, joiner, named);}
+
+	@Override
+	public <GK, GV, RV> KStream<K, RV> leftJoin(GlobalKTable<GK, GV> globalTable, KeyValueMapper<? super K, ? super V, ? extends GK> keySelector, ValueJoiner<? super V, ? super GV, ? extends RV> valueJoiner, Named named) {return delegate.leftJoin(globalTable, keySelector, valueJoiner, named);}
+
+	@Override
+	public <K1, V1> KStream<K1, V1> transform(TransformerSupplier<? super K, ? super V, KeyValue<K1, V1>> transformerSupplier, Named named, String... stateStoreNames) {return delegate.transform(transformerSupplier, named, stateStoreNames);}
+
+	@Override
+	public <K1, V1> KStream<K1, V1> flatTransform(TransformerSupplier<? super K, ? super V, Iterable<KeyValue<K1, V1>>> transformerSupplier, Named named, String... stateStoreNames) {return delegate.flatTransform(transformerSupplier, named, stateStoreNames);}
+
+	@Override
+	public <VR> KStream<K, VR> transformValues(ValueTransformerSupplier<? super V, ? extends VR> valueTransformerSupplier, Named named, String... stateStoreNames) {return delegate.transformValues(valueTransformerSupplier, named, stateStoreNames);}
+
+	@Override
+	public <VR> KStream<K, VR> transformValues(ValueTransformerWithKeySupplier<? super K, ? super V, ? extends VR> valueTransformerSupplier, Named named, String... stateStoreNames) {return delegate.transformValues(valueTransformerSupplier, named, stateStoreNames);}
+
+	@Override
+	public <VR> KStream<K, VR> flatTransformValues(ValueTransformerSupplier<? super V, Iterable<VR>> valueTransformerSupplier, Named named, String... stateStoreNames) {return delegate.flatTransformValues(valueTransformerSupplier, named, stateStoreNames);}
+
+	@Override
+	public <VR> KStream<K, VR> flatTransformValues(ValueTransformerWithKeySupplier<? super K, ? super V, Iterable<VR>> valueTransformerSupplier, Named named, String... stateStoreNames) {return delegate.flatTransformValues(valueTransformerSupplier, named, stateStoreNames);}
+
+	@Override
+	public void process(ProcessorSupplier<? super K, ? super V> processorSupplier, Named named, String... stateStoreNames) {delegate.process(processorSupplier, named, stateStoreNames);}
 
 	/**
 	 * It queries storeName returning all its values as a List.
