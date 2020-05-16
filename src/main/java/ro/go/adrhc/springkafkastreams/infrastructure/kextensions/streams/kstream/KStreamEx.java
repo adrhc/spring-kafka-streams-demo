@@ -124,7 +124,7 @@ public class KStreamEx<K, V> implements KStream<K, V> {
 	}
 
 	/**
-	 * similar to KStream.peek() but also allow partially access to ProcessorContext
+	 * similar to KStream.peek() but also allows partially access to ProcessorContext
 	 */
 	public KStreamEx<K, V> peek(Consumer<KPeekParams<K, V>> consumer) {
 		return new KStreamEx<>(delegate.transformValues(new KPeek<>(consumer)), streamsBuilder);
