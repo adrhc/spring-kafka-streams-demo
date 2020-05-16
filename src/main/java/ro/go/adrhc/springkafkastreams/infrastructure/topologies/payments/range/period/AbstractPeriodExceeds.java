@@ -17,8 +17,8 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 
+import static ro.go.adrhc.kafkastreamsextensions.streams.kstream.operators.util.DateUtils.localDateOf;
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.format;
-import static ro.go.adrhc.springkafkastreams.util.DateUtils.localDateOf;
 
 @Slf4j
 public abstract class AbstractPeriodExceeds extends AbstractExceeds {

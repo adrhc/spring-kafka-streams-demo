@@ -7,12 +7,12 @@ import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.*;
 import org.apache.kafka.streams.state.KeyValueStore;
 import org.springframework.stereotype.Component;
+import ro.go.adrhc.kafkastreamsextensions.streams.StreamsBuilderEx;
+import ro.go.adrhc.kafkastreamsextensions.streams.kstream.operators.aggregation.LocalDateBasedKey;
 import ro.go.adrhc.springkafkastreams.config.AppProperties;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
-import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.streams.StreamsBuilderEx;
-import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.streams.kstream.operators.aggregation.LocalDateBasedKey;
-import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.range.AbstractExceeds;
 import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.Transaction;
+import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.range.AbstractExceeds;
 import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.range.daily.messages.DailyExceeded;
 import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.range.daily.messages.DailyTotalSpent;
 import ro.go.adrhc.springkafkastreams.infrastructure.topologies.profiles.messages.ClientProfile;
@@ -21,8 +21,8 @@ import java.time.Duration;
 import java.util.Optional;
 
 import static java.time.temporal.ChronoUnit.DAYS;
-import static ro.go.adrhc.springkafkastreams.infrastructure.kextensions.streams.kstream.operators.aggregation.LocalDateBasedKey.keyOf;
-import static ro.go.adrhc.springkafkastreams.infrastructure.kextensions.streams.kstream.operators.aggregation.LocalDateBasedKey.parseWithStringData;
+import static ro.go.adrhc.kafkastreamsextensions.streams.kstream.operators.aggregation.LocalDateBasedKey.keyOf;
+import static ro.go.adrhc.kafkastreamsextensions.streams.kstream.operators.aggregation.LocalDateBasedKey.parseWithStringData;
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.format;
 
 @Component

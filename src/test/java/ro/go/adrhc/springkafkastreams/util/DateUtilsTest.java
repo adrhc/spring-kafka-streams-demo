@@ -9,7 +9,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static ro.go.adrhc.springkafkastreams.util.DateUtils.*;
+import static ro.go.adrhc.kafkastreamsextensions.streams.kstream.operators.util.DateUtils.*;
+import static ro.go.adrhc.springkafkastreams.util.DateUtils.format;
 
 @Slf4j
 class DateUtilsTest {

@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-import static ro.go.adrhc.springkafkastreams.util.DateUtils.millisecondsOf;
+import static ro.go.adrhc.kafkastreamsextensions.streams.kstream.operators.util.DateUtils.millisecondsOf;
 
 public class CustomTimestampExtractor implements TimestampExtractor {
 	private static final Map<Class<?>, Function<Object, Long>> map = Map.of(
