@@ -13,7 +13,7 @@ import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.streams.kstream
 public class StreamsBuilderEx {
 	private final StreamsBuilder streamsBuilder;
 
-	public static StreamsBuilderEx enhance(StreamsBuilder streamsBuilder) {
+	public static StreamsBuilderEx extend(StreamsBuilder streamsBuilder) {
 		return new StreamsBuilderEx(streamsBuilder);
 	}
 

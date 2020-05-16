@@ -20,7 +20,7 @@ import ro.go.adrhc.springkafkastreams.infrastructure.topologies.reports.messages
 import ro.go.adrhc.springkafkastreams.infrastructure.topologies.reports.transformers.DailyValueTransformerSupp;
 import ro.go.adrhc.springkafkastreams.infrastructure.topologies.reports.transformers.PeriodValueTransformerSupp;
 
-import static ro.go.adrhc.springkafkastreams.infrastructure.kextensions.streams.StreamsBuilderEx.enhance;
+import static ro.go.adrhc.springkafkastreams.infrastructure.kextensions.streams.StreamsBuilderEx.extend;
 
 @Configuration
 @Profile("!test")
@@ -53,7 +53,7 @@ public class ReportsConfig {
 				periodExceedsWithExtensions.periodTotalSpentByClientIdStoreName() :
 				topicsProperties.getPeriodTotalSpent();
 
-		StreamsBuilderEx streamsBuilder = enhance(pStreamsBuilder);
+		StreamsBuilderEx streamsBuilder = extend(pStreamsBuilder);
 		KStreamEx<String, Command> commands = commandsStream(streamsBuilder);
 
 		// daily report
