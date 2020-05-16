@@ -9,8 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import ro.go.adrhc.springkafkastreams.config.AppProperties;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
-import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.StreamsBuilderEx;
-import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.KStreamEx;
+import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.streams.StreamsBuilderEx;
+import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.streams.kstream.KStreamEx;
 import ro.go.adrhc.springkafkastreams.infrastructure.reporting.ConfigReport;
 import ro.go.adrhc.springkafkastreams.infrastructure.reporting.DailyTotalSpentReport;
 import ro.go.adrhc.springkafkastreams.infrastructure.reporting.PeriodTotalSpentReport;
@@ -20,7 +20,7 @@ import ro.go.adrhc.springkafkastreams.infrastructure.topologies.reports.messages
 import ro.go.adrhc.springkafkastreams.infrastructure.topologies.reports.transformers.DailyValueTransformerSupp;
 import ro.go.adrhc.springkafkastreams.infrastructure.topologies.reports.transformers.PeriodValueTransformerSupp;
 
-import static ro.go.adrhc.springkafkastreams.infrastructure.kextensions.util.KafkaEx.enhance;
+import static ro.go.adrhc.springkafkastreams.infrastructure.kextensions.streams.StreamsBuilderEx.enhance;
 
 @Configuration
 @Profile("!test")

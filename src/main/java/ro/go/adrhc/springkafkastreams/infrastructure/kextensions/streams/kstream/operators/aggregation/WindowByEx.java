@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.operators.aggregators;
+package ro.go.adrhc.springkafkastreams.infrastructure.kextensions.streams.kstream.operators.aggregation;
 
 import lombok.AllArgsConstructor;
 import org.apache.kafka.common.serialization.Serdes;
@@ -8,7 +8,7 @@ import org.apache.kafka.streams.processor.StateStore;
 import org.apache.kafka.streams.state.KeyValueStore;
 import org.apache.kafka.streams.state.StoreBuilder;
 import org.apache.kafka.streams.state.Stores;
-import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.MaterializedEx;
+import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.streams.kstream.MaterializedEx;
 
 import java.time.temporal.TemporalUnit;
 

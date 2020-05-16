@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.operators.aggregators;
+package ro.go.adrhc.springkafkastreams.infrastructure.kextensions.streams.kstream.operators.aggregation;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

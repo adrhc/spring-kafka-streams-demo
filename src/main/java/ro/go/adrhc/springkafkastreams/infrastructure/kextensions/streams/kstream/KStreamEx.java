@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream;
+package ro.go.adrhc.springkafkastreams.infrastructure.kextensions.streams.kstream;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,10 +9,10 @@ import org.apache.kafka.streams.kstream.*;
 import org.apache.kafka.streams.processor.ProcessorSupplier;
 import org.apache.kafka.streams.processor.TopicNameExtractor;
 import org.apache.kafka.streams.state.KeyValueStore;
-import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.operators.aggregators.WindowByEx;
-import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.operators.peek.KPeek;
-import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.operators.peek.KPeekParams;
-import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.transformers.queries.QueryAllSupp;
+import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.streams.kstream.operators.aggregation.WindowByEx;
+import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.streams.kstream.operators.peek.KPeek;
+import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.streams.kstream.operators.peek.KPeekParams;
+import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.streams.kstream.operators.query.QueryAllSupp;
 
 import java.time.temporal.TemporalUnit;
 import java.util.List;

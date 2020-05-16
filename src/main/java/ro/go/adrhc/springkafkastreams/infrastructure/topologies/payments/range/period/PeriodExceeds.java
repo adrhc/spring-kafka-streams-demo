@@ -9,8 +9,8 @@ import org.apache.kafka.streams.state.KeyValueStore;
 import org.springframework.stereotype.Component;
 import ro.go.adrhc.springkafkastreams.config.AppProperties;
 import ro.go.adrhc.springkafkastreams.config.TopicsProperties;
-import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.StreamsBuilderEx;
-import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.operators.aggregators.LocalDateBasedKey;
+import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.streams.StreamsBuilderEx;
+import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.streams.kstream.operators.aggregation.LocalDateBasedKey;
 import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.messages.Transaction;
 import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.range.period.messages.PeriodTotalSpent;
 import ro.go.adrhc.springkafkastreams.infrastructure.topologies.profiles.messages.ClientProfile;
@@ -20,8 +20,8 @@ import java.time.temporal.TemporalUnit;
 import java.util.Optional;
 
 import static java.time.temporal.ChronoUnit.DAYS;
-import static ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.operators.aggregators.LocalDateBasedKey.keyOf;
-import static ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.operators.aggregators.LocalDateBasedKey.parseWithStringData;
+import static ro.go.adrhc.springkafkastreams.infrastructure.kextensions.streams.kstream.operators.aggregation.LocalDateBasedKey.keyOf;
+import static ro.go.adrhc.springkafkastreams.infrastructure.kextensions.streams.kstream.operators.aggregation.LocalDateBasedKey.parseWithStringData;
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.format;
 
 @Component

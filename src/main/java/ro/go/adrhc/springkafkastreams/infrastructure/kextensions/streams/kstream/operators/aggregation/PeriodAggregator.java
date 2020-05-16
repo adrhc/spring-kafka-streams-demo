@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.operators.aggregators;
+package ro.go.adrhc.springkafkastreams.infrastructure.kextensions.streams.kstream.operators.aggregation;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.streams.KeyValue;
@@ -12,7 +12,7 @@ import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.operators.aggregators.LocalDateBasedKey.keyOf;
+import static ro.go.adrhc.springkafkastreams.infrastructure.kextensions.streams.kstream.operators.aggregation.LocalDateBasedKey.keyOf;
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.localDateOf;
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.millisecondsOf;
 

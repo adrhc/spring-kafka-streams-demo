@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.infrastructure.kextensions;
+package ro.go.adrhc.springkafkastreams.infrastructure.kextensions.streams;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.common.utils.Bytes;
@@ -7,11 +7,15 @@ import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.KTable;
 import org.apache.kafka.streams.kstream.Materialized;
 import org.apache.kafka.streams.state.KeyValueStore;
-import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.kstream.KStreamEx;
+import ro.go.adrhc.springkafkastreams.infrastructure.kextensions.streams.kstream.KStreamEx;
 
 @RequiredArgsConstructor
 public class StreamsBuilderEx {
 	private final StreamsBuilder streamsBuilder;
+
+	public static StreamsBuilderEx enhance(StreamsBuilder streamsBuilder) {
+		return new StreamsBuilderEx(streamsBuilder);
+	}
 
 	public <K, V> KStreamEx<K, V> stream(String topic, Consumed<K, V> consumed) {
 		return new KStreamEx<>(streamsBuilder.stream(topic, consumed), streamsBuilder);

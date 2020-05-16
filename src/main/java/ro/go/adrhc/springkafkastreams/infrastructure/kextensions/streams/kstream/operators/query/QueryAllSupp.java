@@ -1,4 +1,4 @@
-package ro.go.adrhc.springkafkastreams.infrastructure.kextensions.transformers.queries;
+package ro.go.adrhc.springkafkastreams.infrastructure.kextensions.streams.kstream.operators.query;
 
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.ValueTransformer;
