@@ -16,7 +16,7 @@ import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.range.p
 import ro.go.adrhc.springkafkastreams.infrastructure.topologies.payments.range.period.PeriodExceedsWithExtensions;
 import ro.go.adrhc.springkafkastreams.infrastructure.topologies.profiles.messages.ClientProfile;
 
-import static ro.go.adrhc.kafkastreamsextensions.streams.StreamsBuilderEx.extend;
+import static ro.go.adrhc.kafkastreamsextensions.streams.StreamsBuilderEx.from;
 import static ro.go.adrhc.kafkastreamsextensions.streams.kstream.operators.util.DateUtils.localDateTimeOf;
 import static ro.go.adrhc.springkafkastreams.util.DateUtils.format;
 
@@ -47,7 +47,7 @@ public class ExceedsConfig {
 	@Bean
 	public KStream<String, Transaction> transactions(
 			KTable<String, ClientProfile> clientProfileTable, StreamsBuilder pStreamsBuilder) {
-		StreamsBuilderEx streamsBuilder = extend(pStreamsBuilder);
+		StreamsBuilderEx streamsBuilder = from(pStreamsBuilder);
 		KStreamEx<String, Transaction> transactions = transactionsStream(streamsBuilder);
 
 		// total expenses per day
